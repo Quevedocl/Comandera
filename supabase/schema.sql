@@ -30,7 +30,7 @@ do $$ declare t text; begin foreach t in array array['products','dining_tables',
   execute format('create policy %1$s_read on %1$I for select using (true)', t);
   execute format('create policy %1$s_write on %1$I for all to authenticated using (is_owner(restaurant_id)) with check (is_owner(restaurant_id))', t);
 end loop; end $$;
-create policy o_ins on orders for insert to anon, authenticated with check (restaurant_id is not null and exists (select 1 from restaurants where id = restaurant_id));
+create policy o_ins on orders for insert to anon, authenticated with check (restaurant_id is not null and exists (select 1 from restaurants where id = restaurant_id) and (table_id is null or exists (select 1 from dining_tables d where d.id = table_id and d.restaurant_id = orders.restaurant_id)));
 create policy o_own on orders for all to authenticated using (is_owner(restaurant_id)) with check (is_owner(restaurant_id));
 
 do $$ declare t text; begin foreach t in array array['orders','products','promotions','dining_tables'] loop

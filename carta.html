@@ -280,6 +280,7 @@ $('#send').onclick = async () => {
   const gone = lastGone; lastGone = [];
   if (gone.length) { renderCart(); fail('Se agotó: ' + gone.join(', ') + '. Lo quitamos de tu pedido.'); return; }
   if (!cart.size) { $('#cart').close(); return; }
+  if (TID) { const { data: ok } = await sb.from('dining_tables').select('id').eq('id', TID).maybeSingle(); if (!ok) { fail('Esta mesa ya no está activa. Pide a un mesero un QR actualizado.'); return; } }
 
   const btn = $('#send'); btn.disabled = true; btn.textContent = 'Enviando…';
   const items = [...cart.values()].map(l => ({ id: l.id, name: l.name, qty: l.qty, price: l.price, note: l.note.trim() || undefined, promo: disc(l) ? promoFor(l.id).title : undefined }));
@@ -318,11 +319,17 @@ async function init() {
   const { data: r } = await sb.from('restaurants').select('id,name').eq('slug', SLUG).maybeSingle();
   if (!r) return bad('No encontramos este restaurante. Avisa a un mesero.');
   RID = r.id; NOMBRE = r.name; CART_KEY += '-' + RID;
-  if (TID_Q) { const { data: t } = await sb.from('dining_tables').select('id,name').eq('id', TID_Q).eq('restaurant_id', RID).maybeSingle(); if (t) { TID = t.id; mesa = t.name; $('#mesaTag').textContent = t.name; } }
+  if (TID_Q) {
+    const { data: t, error: te } = await sb.from('dining_tables').select('id,name').eq('id', TID_Q).eq('restaurant_id', RID).maybeSingle();
+    if (te) return bad('No pudimos verificar tu mesa. Revisa tu conexión e inténtalo otra vez.');
+    if (!t) return bad('Esta mesa ya no está activa. Pide a un mesero un QR actualizado.');
+    TID = t.id; mesa = t.name; $('#mesaTag').textContent = t.name;
+  }
   $('#ttl').textContent = NOMBRE; document.title = NOMBRE + ' · Haz tu pedido';
   loadCart(); load();
   const f = 'restaurant_id=eq.' + RID;
-  sb.channel('carta').on('postgres_changes', { event: '*', schema: 'public', table: 'products', filter: f }, () => load()).on('postgres_changes', { event: '*', schema: 'public', table: 'promotions', filter: f }, () => load()).subscribe();
+  sb.channel('carta').on('postgres_changes', { event: '*', schema: 'public', table: 'products', filter: f }, () => load()).on('postgres_changes', { event: '*', schema: 'public', table: 'promotions', filter: f }, () => load())
+    .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'dining_tables' }, p => { if (TID && p.old && String(p.old.id) === TID) location.reload(); }).subscribe();
 }
 init();
 document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
