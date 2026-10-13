@@ -1,6 +1,6 @@
-# ALTiro
+# kepasa
 
-> Pedidos **al tiro** desde la mesa.
+> Pedidos **sin esperas** desde la mesa.
 
 Pedidos desde la mesa por QR para restaurantes, vendido como **suscripción mensual**. El cliente escanea el QR, ve la carta y pide; el restaurante ve los pedidos en vivo, llama al mesero y administra su carta. **No procesa pagos ni boletas: el cobro lo hace el mesero** (la app solo deja registrado qué mesa ya pagó).
 
@@ -57,5 +57,5 @@ Ejecuta en **SQL Editor**, en este orden, solo las que te falten (todas son repe
 ## Identidad visual
 
 - Paleta: azul noche `#0F172A` (texto y fondos oscuros), naranja `#F2530F` (acento y botones principales), fondo `#F5F6F8`. En los tickets: azul = nuevo, ámbar = en preparación, verde = listo.
-- Para cambiar el color de acento, edita `--acc` y `--acc2` en el bloque `ALTiro · identidad visual` de `index.html` y en el de `carta.html`.
-- Cada restaurante ve su propio nombre y logo en el panel y en la carta; ALTiro aparece como marca de la plataforma (logo en la barra superior y "Pedidos con ALTiro" al pie de la carta).
+- Para cambiar el color de acento, edita `--acc` y `--acc2` en el bloque `kepasa · identidad visual` de `index.html` y en el de `carta.html`.
+- Cada restaurante ve su propio nombre y logo en el panel y en la carta; kepasa aparece como marca de la plataforma (logo en la barra superior y "Pedidos con kepasa" al pie de la carta).

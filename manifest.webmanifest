@@ -1,7 +1,7 @@
 {
-  "name": "ALTiro · Panel del restaurante",
-  "short_name": "ALTiro",
-  "description": "Pedidos al tiro desde la mesa: pedidos, mesas y llamadas al mesero en tiempo real.",
+  "name": "kepasa · Panel del restaurante",
+  "short_name": "kepasa",
+  "description": "Pedidos desde la mesa: pedidos, mesas y llamadas al mesero en tiempo real.",
   "start_url": "index.html",
   "scope": "./",
   "display": "standalone",

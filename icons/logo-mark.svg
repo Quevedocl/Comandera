@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ALTiro">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="kepasa">
   <defs><linearGradient id="g" x1="8" y1="4" x2="56" y2="62" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF8A2B"/><stop offset="1" stop-color="#F0420F"/></linearGradient></defs>
   <rect width="64" height="64" rx="16" fill="url(#g)"/>
   <path d="M17 47 32 15l15 32" fill="none" stroke="#fff" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>

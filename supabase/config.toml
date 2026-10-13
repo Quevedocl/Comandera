@@ -1,6 +1,6 @@
 # Configuración para el CLI de Supabase (opcional: solo si trabajas en local con `supabase start`).
 # En el panel de Supabase se configura igual en Authentication > Sign In / Providers > Email.
-project_id = "altiro"
+project_id = "kepasa"
 
 [auth]
 enable_signup = true

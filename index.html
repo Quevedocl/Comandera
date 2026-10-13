@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
-<title>ALTiro · Panel del restaurante</title>
-<meta name="description" content="ALTiro: pedidos al tiro desde la mesa. Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
-<meta property="og:type" content="website"><meta property="og:title" content="ALTiro · Panel del restaurante"><meta property="og:description" content="Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ALTiro">
+<title>kepasa · Panel del restaurante</title>
+<meta name="description" content="kepasa: pedidos desde la mesa. Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
+<meta property="og:type" content="website"><meta property="og:title" content="kepasa · Panel del restaurante"><meta property="og:description" content="Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="kepasa">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; font-src 'self' data:; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <link rel="icon" href="icons/logo-mark.svg" type="image/svg+xml"><link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest">
@@ -227,7 +227,7 @@ nav button:hover{color:var(--tx)}
 .cf{position:fixed;width:9px;height:14px;z-index:40;pointer-events:none;border-radius:2px;animation:cf 1.3s cubic-bezier(.2,.7,.4,1) forwards}
 @keyframes cf{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
 
-/* ===== ALTiro · identidad visual ===== */
+/* ===== kepasa · identidad visual ===== */
 :root{--bg:#F5F6F8;--card:#fff;--ln:#E4E7EC;--tx:#0F172A;--mu:#64748B;--ink:#0F172A;--acc:#F2530F;--acc2:#D9440A;--accs:#FFF1EA;--blue:#2563EB;--red:#DC2626;--amb:#F59E0B;--grn:#16A34A;--sh1:0 1px 2px rgba(15,23,42,.06);--sh2:0 1px 3px rgba(15,23,42,.06),0 10px 28px rgba(15,23,42,.07)}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 body{background:var(--bg)}
@@ -348,8 +348,8 @@ dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.
 </head>
 <body>
 <header class="top">
-  <a class="al" href="./" aria-label="ALTiro" title="ALTiro"><img src="icons/logo-mark.svg" alt="ALTiro" width="34" height="34"></a><span class="sep" aria-hidden="true"></span>
-  <div class="brand"><span class="mk">A</span><span class="t">ALTiro</span></div>
+  <a class="al" href="./" aria-label="kepasa" title="kepasa"><img src="icons/logo-mark.svg" alt="kepasa" width="34" height="34"></a><span class="sep" aria-hidden="true"></span>
+  <div class="brand"><span class="mk">k</span><span class="t">kepasa</span></div>
   <nav>
     <button data-v="orders" class="on">Pedidos<i id="cnt" data-v="0"></i></button>
     <button data-v="menu">Carta</button>
@@ -503,7 +503,7 @@ dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.
   <aside class="lg-side" aria-hidden="true">
     <img class="lg-logo" src="icons/logo-full-light.svg" alt="">
     <div>
-      <h2>Pedidos <em>al tiro</em>, mesas felices.</h2>
+      <h2>Pedidos <em>sin esperas</em>, mesas felices.</h2>
       <p class="lead">Tus clientes piden desde el celular con un QR y cocina lo ve al instante. Sin apps, sin errores de comanda.</p>
       <ul class="lg-feats">
         <li><i><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h3v3h-3zM20 14v6h-3"/></svg></i><span><b>Carta por QR en cada mesa</b>Se actualiza al momento, con fotos, agregados y promos.</span></li>
@@ -514,7 +514,7 @@ dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.
     <div class="lg-demo"><div class="h"><span>Mesa 5</span><small>Recién</small></div><ul><li><b>2×</b>Pisco Sour</li><li><b>1×</b>Pastel de papa</li></ul><div class="b">Marcar en preparación</div></div>
   </aside>
   <div class="lg-main"><div class="lg-card">
-    <div class="lg-top"><img src="icons/logo-full.svg" alt="ALTiro"></div>
+    <div class="lg-top"><img src="icons/logo-full.svg" alt="kepasa"></div>
     <div id="coin">
       <form id="lf">
         <h1>Ingresa a tu cuenta</h1><p class="sub">Administra los pedidos de tu restaurante.</p>
@@ -526,7 +526,7 @@ dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.
         <p class="alt">¿No tienes cuenta? <button type="button" class="lnk" id="goSignup">Regístrate</button></p>
       </form>
       <form id="sf" hidden inert>
-        <h1>Crea tu cuenta</h1><p class="sub">Registra tu restaurante en ALTiro.</p>
+        <h1>Crea tu cuenta</h1><p class="sub">Registra tu restaurante en kepasa.</p>
         <label class="fl"><span>Nombre del restaurante</span><input id="sr" required maxlength="50" placeholder="Ej. Restaurante de JP" aria-label="Nombre del restaurante" autocomplete="organization"></label>
         <label class="fl"><span>Correo</span><input id="se" type="email" required placeholder="tu@restaurante.cl" aria-label="Correo" autocomplete="email"></label>
         <label class="fl"><span>Contraseña</span><input id="sp" type="password" required minlength="6" placeholder="Mínimo 6 caracteres" aria-label="Contraseña" autocomplete="new-password"></label>
@@ -543,7 +543,7 @@ dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.
       <button class="nbtn" id="vsub" type="submit">Verificar</button>
       <p class="alt"><button type="button" class="lnk" id="vre">Reenviar código</button> · <button type="button" class="lnk" id="vback">Volver</button></p>
     </form>
-    <p class="lg-foot">ALTiro · Pedidos al tiro para restaurantes</p>
+    <p class="lg-foot">kepasa · Pedidos desde la mesa para restaurantes</p>
   </div></div>
 </div>
 <div id="bn" role="alert"></div><div id="toast" role="status"></div><div id="printArea" aria-hidden="true"></div>
@@ -601,7 +601,7 @@ const api = {
   /* cierra la mesa: completa sus pedidos, atiende sus llamadas y cambia su sesión (el cliente anterior ya no puede pedir) */
   async chargeTable(tid, name, upto, callId) { const { error } = await sb.rpc('charge_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name, p_upto: upto, p_call: callId || null }); if (error) { toast('No se pudo registrar el cobro: ' + error.message); return false; } return true; },
   async closeTable(tid, name, release = false) { const { error } = await sb.rpc('close_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name, p_release: release }); if (error) { toast('No se pudo cerrar la mesa: ' + error.message); return false; } return true; },
-  watch(cb) { let c = sb.channel('altiro'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls', 'product_addons'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, p => { try { orderEvent(p); } catch (e) {} cb(); })); c.subscribe(); }
+  watch(cb) { let c = sb.channel('kepasa'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls', 'product_addons'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, p => { try { orderEvent(p); } catch (e) {} cb(); })); c.subscribe(); }
 };
 
 /* ===== ESTADO ===== */
@@ -866,7 +866,7 @@ function setBrand() {
   const mk = $('.brand .mk');
   if (R && R.logo_url) { mk.innerHTML = `\x3Cimg src="${esc(R.logo_url)}" alt="">`; mk.classList.add('has'); }
   else { mk.textContent = initials(R ? R.name : 'A'); mk.classList.remove('has'); }
-  $('.brand .t').textContent = R ? R.name : 'ALTiro'; hello();
+  $('.brand .t').textContent = R ? R.name : 'kepasa'; hello();
   $('#susp').hidden = !(R && R.active === false); renderOpen();
 }
 function cfgPrev() {
@@ -964,7 +964,7 @@ async function refresh() {
 }
 const clk = () => $('#clk').textContent = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
 function hello() { const d = new Date(), h = d.getHours(), n = ($('.brand .t') || {}).textContent || '', g = h < 12 ? 'Buenos días' : h < 20 ? 'Buenas tardes' : 'Buenas noches';
-  $('#hDay').textContent = d.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' }); $('#hName').innerHTML = g + (n && n !== 'ALTiro' && n !== 'Administrador' ? ', <em>' + esc(n) + '</em>' : '') + ' 👋'; }
+  $('#hDay').textContent = d.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' }); $('#hName').innerHTML = g + (n && n !== 'kepasa' && n !== 'Administrador' ? ', <em>' + esc(n) + '</em>' : '') + ' 👋'; }
 hello(); setInterval(hello, 30000);
 clk(); setInterval(clk, 10000); setInterval(tick, 10000);
 function renderOpen() {

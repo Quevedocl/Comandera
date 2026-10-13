@@ -1,4 +1,4 @@
--- ALTiro · migración 7: seguridad y robustez
+-- kepasa · migración 7: seguridad y robustez
 --   · el total y los precios de cada pedido se calculan en el SERVIDOR (el celular del cliente ya no puede mandar precios inventados)
 --   · tope de pedidos por mesa (anti-spam), un pedido nuevo nunca nace "pagado"
 --   · índices para que el panel siga rápido con muchos pedidos

@@ -1,7 +1,7 @@
-/* Service worker de ALTiro: deja instalar el panel como app y abrirlo aunque se cortó el internet.
+/* Service worker de kepasa: deja instalar el panel como app y abrirlo aunque se cortó el internet.
    Estrategia "red primero": siempre intenta traer lo último; si no hay conexión, usa la copia guardada.
    Nunca guarda llamadas a Supabase (pedidos, cuentas, etc.): esas siempre van a la red. */
-const CACHE = 'altiro-shell-v1';
+const CACHE = 'kepasa-shell-v2';
 const SHELL = ['./', 'index.html', 'carta.html', 'config.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/logo-mark.svg'];
 
 self.addEventListener('install', e => {
