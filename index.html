@@ -19,19 +19,53 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
 .mk{width:28px;height:28px;border-radius:8px;background:var(--ink);display:grid;place-items:center;color:#fff}
 .mk svg{width:16px;height:16px}
-nav{display:flex;height:100%}
+.brand .mk{width:32px;height:32px;overflow:hidden}.mk.has{background:#fff;border:1px solid var(--ln)}.mk img{width:100%;height:100%;object-fit:cover}
+#susp{background:#fef2f2;color:#991b1b;border-bottom:1px solid #fecaca;padding:10px 20px;font-weight:600;text-align:center;font-size:14px}
+/* configuración */
+.cfg{padding:20px;max-width:720px;width:100%;margin:0 auto;overflow-y:auto;flex:1;min-height:0}
+.cfg h2{margin:0;font-size:24px;letter-spacing:-.01em}.cfg .sub{margin:4px 0 20px;color:var(--mu)}
+.card{background:#fff;border:1px solid var(--ln);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.card h3{margin:0 0 4px;font-size:16px}.card .hint{margin:0 0 16px;color:var(--mu);font-size:13.5px}
+.idrow{display:flex;align-items:center;gap:18px;margin-bottom:18px;flex-wrap:wrap}
+.av{width:84px;height:84px;border-radius:50%;background:var(--bg);border:1px solid var(--ln);display:grid;place-items:center;overflow:hidden;flex:none;font-weight:700;font-size:26px;color:var(--mu)}
+.av img{width:100%;height:100%;object-fit:cover}
+.avb{display:flex;flex-direction:column;gap:8px;align-items:flex-start}.avb .row{display:flex;gap:8px;flex-wrap:wrap}.avb small{color:var(--mu)}
+.fld label{display:block;margin:0 0 6px;font-size:13px;font-weight:600;color:var(--mu)}
+.fld input{width:100%;height:44px;padding:0 12px;border:1px solid var(--ln);border-radius:10px;outline:0;font-size:15px;background:#fff}.fld input:focus{border-color:#2563eb}
+.acts{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.pv{background:var(--bg);border-radius:12px;padding:14px;border:1px dashed var(--ln)}
+.pvh{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border-radius:12px;padding:12px 14px;border:1px solid var(--ln)}
+.pvh .l{display:flex;align-items:center;gap:10px;min-width:0}.pvh .l .av{width:36px;height:36px;font-size:14px}.pvh .l b{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pvh .tg{background:var(--ink);color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:13px;white-space:nowrap}
+.acc{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.acc span{color:var(--mu);word-break:break-all}
+/* admin */
+.adm{padding:4px 20px 28px;overflow-y:auto;flex:1;min-height:0}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.kp div{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:14px 16px}.kp b{display:block;font-size:26px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}.kp span{color:var(--mu);font-size:13px;font-weight:600}
+.ar{display:grid;grid-template-columns:48px 1fr auto;gap:14px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--ln)}.ar:last-child{border:0}
+.ar .av{width:48px;height:48px;font-size:17px}
+.ar .nm small{display:block;word-break:break-all}
+.mt{display:flex;gap:6px 14px;flex-wrap:wrap;margin-top:6px;font-size:13px;color:var(--mu);font-weight:600}.mt b{color:var(--tx)}
+.bd{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 9px;margin-left:8px;vertical-align:middle;background:#e7f7ed;color:#15703e}.bd.off{background:#fee2e2;color:#991b1b}
+.ar .ac2{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+a.gh{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
+@media (max-width:720px){.ar{grid-template-columns:48px 1fr}.ar .ac2{grid-column:1/-1;justify-content:flex-start}.cfg,.adm{padding-left:12px;padding-right:12px}}
+nav{display:flex;height:100%;min-width:0;overflow-x:auto;scrollbar-width:none}nav::-webkit-scrollbar{display:none}nav button{flex:none;white-space:nowrap}.brand{flex:none}
 nav button{position:relative;border:0;background:none;padding:0 16px;font-weight:600;color:var(--mu);display:flex;align-items:center;gap:8px;transition:color .2s}
 nav button.on{color:var(--tx)}
 nav button::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--ink);transform:scaleX(0);transition:transform .25s}
 nav button.on::after{transform:scaleX(1)}
 #cnt,#ccnt{background:var(--red);color:#fff;border-radius:99px;min-width:22px;height:22px;padding:0 6px;font:700 12px/22px var(--f);text-align:center;font-style:normal}
 #cnt[data-v="0"],#ccnt[data-v="0"]{display:none}
-.r{margin-left:auto;display:flex;align-items:center;gap:14px}
+.r{margin-left:auto;display:flex;align-items:center;gap:14px;flex:none}
 .live{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--mu);font-weight:600}
 .live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--grn);animation:live 2s infinite}
 #clk{font-weight:700;font-variant-numeric:tabular-nums}
 .ib{width:38px;height:38px;border-radius:10px;border:1px solid var(--ln);background:#fff;display:grid;place-items:center;color:var(--mu);transition:all .2s}
 .ib[aria-pressed=true]{color:var(--grn);border-color:var(--grn);background:#effaf3}
+.ib.on{background:var(--ink);border-color:var(--ink);color:#fff}
+#snd.need{color:#92400e;border-color:var(--amb);background:#fff7e6;animation:needp 1.4s infinite}
+@keyframes needp{50%{box-shadow:0 0 0 6px rgba(245,165,36,.3)}}
 main{flex:1;min-height:0;display:flex;flex-direction:column}
 .view{flex:1;min-height:0;display:flex;flex-direction:column;animation:fade .3s}.view[hidden]{display:none}
 .tbr{display:flex;align-items:center;gap:12px;padding:14px 20px;flex-wrap:wrap}
@@ -65,7 +99,6 @@ select,.srch{height:38px;border-radius:10px;border:1px solid var(--ln);backgroun
 .tk.nuevo{animation:in .4s both,ping 1s .4s 3}
 .tk.moved{animation:move .5s}
 .tk.leave{animation:out .3s forwards;pointer-events:none}
-#unl{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;border:0;border-radius:99px;background:var(--amb);color:#2b1d00;font-weight:700;padding:12px 20px;box-shadow:0 8px 24px rgba(16,24,40,.3);max-width:92vw}
 /* llamadas al mesero */
 .cl{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;padding:4px 20px 24px;align-content:start;align-items:start;flex:1;min-height:0;overflow-y:auto}
 .cl:empty::after{content:"Nadie está llamando al mesero";grid-column:1/-1;text-align:center;color:var(--mu);padding:80px 0;font-weight:600}
@@ -121,7 +154,7 @@ dialog input[type=file]{height:auto;padding:9px 12px}
 @keyframes saved{30%{background:#e7f7ed}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @media (max-width:720px){
- .top{gap:8px;padding:0 12px}.brand span.t,.live,#clk{display:none}nav button{padding:0 12px}
+ .top{gap:8px;padding:0 12px}.brand span.t,.live,#clk{display:none}.r{gap:8px}nav button{padding:0 12px}
  .tbr{padding:12px}.grid{padding:4px 12px 20px;grid-template-columns:1fr}.pg{padding:0 12px 24px}
  .sp{margin-left:0}.gh span{display:none}
  .rw{grid-template-columns:44px 1fr auto 48px 36px;gap:10px;padding:10px 12px}.st{display:none}.pi input{width:68px}
@@ -145,15 +178,18 @@ dialog input[type=checkbox]{width:auto;height:auto}
     <button data-v="promos">Promos</button>
     <button data-v="calls">Llamadas<i id="ccnt" data-v="0"></i></button>
     <button data-v="tables">Mesas</button>
+    <button data-v="admin" hidden>Admin</button>
   </nav>
   <div class="r">
     <span class="live" id="mode"></span>
     <time id="clk"></time>
+    <button class="ib" id="cfg" hidden aria-label="Configuración" title="Configuración"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg></button>
     <button class="ib" id="logout" hidden aria-label="Cerrar sesión" title="Cerrar sesión"><svg viewBox="0 0 24 24"><path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/></svg></button>
     <button class="ib" id="snd" aria-pressed="true" aria-label="Sonido de avisos" title="Sonido de avisos"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 010 6"/></svg></button>
   </div>
 </header>
 
+<div id="susp" hidden>Tu cuenta está suspendida: tus clientes no pueden hacer pedidos. Escríbenos por WhatsApp para reactivarla.</div>
 <main>
   <section class="view" id="orders">
     <div class="tbr">
@@ -186,6 +222,30 @@ dialog input[type=checkbox]{width:auto;height:auto}
   <section class="view" id="calls" hidden>
     <div class="tbr"><span class="stt">Clientes que piden un mesero (cobrar, quejas u otras consultas)</span></div>
     <div class="cl" id="cl"></div>
+  </section>
+
+  <section class="view" id="settings" hidden>
+    <div class="cfg">
+      <h2>Configuración</h2><p class="sub">Así se presenta tu negocio ante tus clientes.</p>
+      <div class="card">
+        <h3>Identidad del negocio</h3><p class="hint">El nombre y el logo aparecen arriba en la carta que ven tus clientes.</p>
+        <div class="idrow">
+          <div class="av" id="cfgAv"></div>
+          <div class="avb"><div class="row"><button class="gh" id="lgUp" type="button">Subir logo</button><button class="gh" id="lgDel" type="button">Quitar</button></div><small>PNG, JPG o WebP · se ajusta solo a un tamaño liviano</small></div>
+          <input type="file" id="lgFile" accept="image/png,image/jpeg,image/webp" hidden>
+        </div>
+        <div class="fld"><label for="cfgName">Nombre del negocio</label><input id="cfgName" maxlength="50" autocomplete="off"></div>
+        <div class="acts"><button class="gh" id="cfgReset" type="button">Descartar</button><button class="pri" id="cfgSave" type="button">Guardar cambios</button></div>
+      </div>
+      <div class="card"><h3>Vista previa</h3><p class="hint">Así se ve la cabecera de tu carta en el celular del cliente.</p>
+        <div class="pv"><div class="pvh"><div class="l"><div class="av" id="pvAv"></div><b id="pvName"></b></div><span class="tg">Mesa 5</span></div></div></div>
+      <div class="card"><h3>Cuenta</h3><div class="acc"><span id="accMail"></span><button class="gh" id="logout2" type="button">Cerrar sesión</button></div></div>
+    </div>
+  </section>
+
+  <section class="view" id="admin" hidden>
+    <div class="tbr"><label class="srch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="aq" type="search" placeholder="Buscar negocio o correo"></label><span class="stt sp">Todos los negocios de la plataforma</span><button class="gh" id="arf">Actualizar</button></div>
+    <div class="adm"><div class="kp" id="akp"></div><div class="lst" id="alist"></div></div>
   </section>
 
   <section class="view" id="tables" hidden>
@@ -227,7 +287,6 @@ dialog input[type=checkbox]{width:auto;height:auto}
     <button class="pri" id="lsub" type="submit">Ingresar</button><button type="button" class="gh" id="sw" style="width:100%;margin-top:10px">Crear cuenta nueva</button>
   </form>
 </div>
-<button id="unl" hidden>🔔 Toca aquí para activar el sonido de los pedidos</button>
 <div id="bn" role="alert"></div><div id="toast" role="status"></div>
 
 <script>
@@ -276,7 +335,15 @@ const mins = iso => Math.floor((Date.now() - new Date(iso)) / 6e4);
 /* ===== SONIDO Y AVISOS ===== */
 /* El navegador solo deja sonar audio después de que alguien toca la pantalla una vez: por eso se "desbloquea" con el primer toque */
 function audio() { try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === 'suspended') ctx.resume(); } catch (e) {} return ctx; }
-function syncSnd() { $('#snd').setAttribute('aria-pressed', soundOn); $('#unl').hidden = !(soundOn && (!ctx || ctx.state !== 'running')); }
+const SND_ON = '<path d="M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 010 6"/>', SND_OFF = '<path d="M4 9v6h4l5 4V5L8 9zM17 9l4 6M21 9l-4 6"/>';
+const sndNeeds = () => soundOn && (!ctx || ctx.state !== 'running');     // activado, pero el navegador aún no deja sonar
+function syncSnd() {
+  const b = $('#snd'), need = sndNeeds();
+  b.setAttribute('aria-pressed', soundOn && !need); b.classList.toggle('need', need);
+  b.querySelector('svg').innerHTML = soundOn ? SND_ON : SND_OFF;
+  const t = !soundOn ? 'Sonido desactivado · toca para activar' : need ? 'Toca para activar el sonido de los avisos' : 'Sonido activado · toca para silenciar';
+  b.title = t; b.setAttribute('aria-label', t);
+}
 function tones(seq, vol = .6) {                       // seq: [[frecuencia, inicio, duración], …]
   const c = audio(); if (!c) return; const t0 = c.currentTime + .02;
   seq.forEach(([f, at, d]) => { const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = f;
@@ -292,8 +359,7 @@ function beep(kind) {
 }
 try { soundOn = localStorage.getItem('cmd-sound') !== '0'; } catch (e) { soundOn = true; }   // activado por defecto; se recuerda la elección
 ['pointerdown', 'keydown', 'touchstart'].forEach(ev => addEventListener(ev, () => { if (soundOn) { audio(); syncSnd(); } }, { passive: true }));
-$('#unl').onclick = () => { audio(); beep(); syncSnd(); };
-$('#snd').onclick = () => { soundOn = !soundOn; try { localStorage.setItem('cmd-sound', soundOn ? '1' : '0'); } catch (e) {} syncSnd(); toast(soundOn ? 'Sonido activado' : 'Sonido desactivado'); if (soundOn) beep(); };
+$('#snd').onclick = () => { if (sndNeeds()) { audio(); beep(); setTimeout(syncSnd, 200); toast('Sonido activado'); return; } soundOn = !soundOn; try { localStorage.setItem('cmd-sound', soundOn ? '1' : '0'); } catch (e) {} syncSnd(); toast(soundOn ? 'Sonido activado' : 'Sonido desactivado'); if (soundOn) beep(); };
 syncSnd();
 let bt;
 function alertNew(list) {
@@ -444,11 +510,104 @@ $('#frm').addEventListener('submit', async () => {
 });
 
 /* ===== NAVEGACIÓN Y ARRANQUE ===== */
-$$('nav button').forEach(b => b.onclick = () => {
-  view = b.dataset.v; $$('nav button').forEach(x => x.classList.toggle('on', x === b));
-  ['orders', 'menu', 'promos', 'calls', 'tables'].forEach(v => $('#' + v).hidden = view !== v);
-  if (view === 'menu') { menuMeta(); renderMenu(true); }
+function go(v) {
+  view = v;
+  $$('nav button').forEach(x => x.classList.toggle('on', x.dataset.v === v)); $('#cfg').classList.toggle('on', v === 'settings');
+  $$('main > .view').forEach(x => x.hidden = x.id !== v);
+  if (v === 'menu') { menuMeta(); renderMenu(true); }
+  if (v === 'settings') cfgFill();
+  if (v === 'admin') loadAdmin();
+}
+$$('nav button').forEach(b => b.onclick = () => go(b.dataset.v));
+$('#cfg').onclick = () => go('settings');
+
+/* ===== CONFIGURACIÓN: nombre y logo ===== */
+const initials = n => (String(n || '').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('') || '?').toUpperCase();
+const avatar = (name, url) => url ? `<img src="${esc(url)}" alt="">` : `<span>${esc(initials(name))}</span>`;
+let pend = null;                                  // logo elegido sin guardar: {blob, url} | 'remove'
+function setBrand() {
+  const mk = $('.brand .mk');
+  if (R && R.logo_url) { mk.innerHTML = `<img src="${esc(R.logo_url)}" alt="">`; mk.classList.add('has'); }
+  else { mk.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>'; mk.classList.remove('has'); }
+  $('.brand .t').textContent = R ? R.name : 'Comandera';
+  $('#susp').hidden = !(R && R.active === false);
+}
+function cfgPrev() {
+  const name = $('#cfgName').value.trim() || (R && R.name) || '', url = pend === 'remove' ? null : pend ? pend.url : R && R.logo_url;
+  $('#cfgAv').innerHTML = $('#pvAv').innerHTML = avatar(name, url); $('#pvName').textContent = name;
+  $('#lgDel').hidden = !url;
+}
+function cfgFill() { pend = null; $('#cfgName').value = R ? R.name : ''; $('#accMail').textContent = mail; cfgPrev(); }
+$('#cfgName').oninput = cfgPrev;
+$('#lgUp').onclick = () => $('#lgFile').click();
+$('#lgDel').onclick = () => { pend = 'remove'; cfgPrev(); };
+$('#cfgReset').onclick = cfgFill;
+$('#logout2').onclick = () => $('#logout').click();
+async function prepLogo(file) {                    // reduce a máx. 512 px para que cargue rápido en el celular del cliente
+  if (!/^image\/(png|jpe?g|webp)$/.test(file.type)) throw new Error('Usa una imagen PNG, JPG o WebP.');
+  if (file.size > 12 * 1024 * 1024) throw new Error('La imagen es demasiado pesada.');
+  const bmp = await createImageBitmap(file), k = Math.min(1, 512 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(bmp.width * k)); c.height = Math.max(1, Math.round(bmp.height * k));
+  c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+  const blob = await new Promise(r => c.toBlob(r, 'image/webp', .9));
+  if (!blob || blob.size > 2 * 1024 * 1024) throw new Error('No se pudo procesar la imagen.');
+  return blob;
+}
+$('#lgFile').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { const blob = await prepLogo(f); if (pend && pend.url) URL.revokeObjectURL(pend.url); pend = { blob, url: URL.createObjectURL(blob) }; cfgPrev(); }
+  catch (err) { toast(err.message || 'No se pudo leer la imagen'); }
+};
+$('#cfgSave').onclick = async () => {
+  const name = $('#cfgName').value.trim();
+  if (name.length < 2) return toast('Escribe el nombre del negocio');
+  const btn = $('#cfgSave'); btn.disabled = true; btn.textContent = 'Guardando…';
+  const old = R.logo_url || null; let logo_url = old;
+  try {
+    if (pend === 'remove') logo_url = null;
+    else if (pend) {
+      const ext = pend.blob.type === 'image/png' ? 'png' : 'webp', path = `${R.id}/logo-${Date.now()}.${ext}`;
+      const up = await sb.storage.from('logos').upload(path, pend.blob, { contentType: pend.blob.type, cacheControl: '3600' });
+      if (up.error) throw up.error;
+      logo_url = sb.storage.from('logos').getPublicUrl(path).data.publicUrl;
+    }
+    const { error } = await sb.from('restaurants').update({ name, logo_url }).eq('id', R.id);
+    if (error) throw error;
+    if (old && old !== logo_url) { const m = old.split('/logos/')[1]; if (m) sb.storage.from('logos').remove([decodeURIComponent(m)]); }
+    R = { ...R, name, logo_url }; setBrand(); cfgFill(); toast('Cambios guardados');
+  } catch (err) { toast('No se pudo guardar: ' + (err.message || err)); }
+  btn.disabled = false; btn.textContent = 'Guardar cambios';
+};
+
+/* ===== ADMINISTRADOR: todos los negocios ===== */
+let isAdmin = false, adminRows = [], mail = '';
+const ago = iso => { if (!iso) return 'Sin pedidos'; const m = mins(iso); return m < 1 ? 'hace instantes' : m < 60 ? `hace ${m} min` : m < 1440 ? `hace ${Math.floor(m / 60)} h` : new Date(iso).toLocaleDateString('es-CL', { day: 'numeric', month: 'short' }); };
+async function loadAdmin() {
+  const { data: d, error } = await sb.rpc('admin_overview');
+  if (error) { toast('No se pudo cargar el panel de administrador'); return; }
+  adminRows = d || []; renderAdmin();
+}
+function renderAdmin() {
+  const all = adminRows, q = $('#aq').value.trim().toLowerCase();
+  const rows = all.filter(r => !q || (r.name || '').toLowerCase().includes(q) || (r.owner_email || '').toLowerCase().includes(q) || (r.slug || '').includes(q));
+  const sum = k => all.reduce((a, r) => a + Number(r[k] || 0), 0), act = all.filter(r => r.active).length;
+  $('#akp').innerHTML = [[all.length, 'Negocios'], [act, 'Activos'], [all.length - act, 'Suspendidos'], [sum('orders_today'), 'Pedidos hoy'], [sum('orders_total'), 'Pedidos totales']].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('');
+  $('#alist').innerHTML = rows.length ? rows.map(r => `<div class="ar"><div class="av">${avatar(r.name, r.logo_url)}</div>
+    <div class="nm"><b>${esc(r.name)}</b><span class="bd${r.active ? '' : ' off'}">${r.active ? 'Activo' : 'Suspendido'}</span><small>${esc(r.owner_email || 'sin correo')}</small>
+      <div class="mt"><span><b>${r.tables_count}</b> mesas</span><span><b>${r.products_count}</b> productos</span><span><b>${r.orders_today}</b> pedidos hoy</span><span><b>${r.orders_total}</b> en total</span>${r.open_calls ? `<span style="color:var(--red)"><b>${r.open_calls}</b> llamadas abiertas</span>` : ''}<span>Último pedido: ${esc(ago(r.last_order_at))}</span><span>Creado ${new Date(r.created_at).toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' })}</span></div></div>
+    <div class="ac2"><a class="gh" href="carta.html?r=${encodeURIComponent(r.slug)}" target="_blank" rel="noopener">Ver carta</a><button class="gh" data-act="${r.id}" data-to="${r.active ? 0 : 1}">${r.active ? 'Suspender' : 'Reactivar'}</button></div></div>`).join('') : '<p class="empty">No hay negocios que coincidan.</p>';
+}
+$('#aq').oninput = renderAdmin; $('#arf').onclick = loadAdmin;
+$('#alist').addEventListener('click', async e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const r = adminRows.find(x => x.id === b.dataset.act), on = b.dataset.to === '1'; if (!r) return;
+  if (!on && !confirm(`¿Suspender "${r.name}"?\n\nSus clientes ya no podrán hacer pedidos ni llamar al mesero hasta que lo reactives.`)) return;
+  b.disabled = true;
+  const { error } = await sb.rpc('admin_set_active', { p_id: r.id, p_active: on });
+  if (error) toast('No se pudo cambiar el estado: ' + error.message); else toast(on ? 'Negocio reactivado' : 'Negocio suspendido');
+  await loadAdmin();
 });
+setInterval(() => { if (view === 'admin' && !document.hidden) loadAdmin(); }, 60000);
 async function refresh() {
   data = await api.load(); renderOrders(); renderCalls(); menuMeta(); renderPromos(); renderTables();
   if (view === 'menu' && !(document.activeElement && document.activeElement.closest('#pg'))) renderMenu();
@@ -507,15 +666,20 @@ async function start() {
   if (!sb) { toast('Sin conexión'); return; }
   const { data: d } = await sb.auth.getSession();
   if (!d.session) { $('#login').hidden = false; return; }
-  const u = d.session.user;
+  const u = d.session.user; mail = u.email || '';
+  try { const { data: a } = await sb.rpc('is_admin'); isAdmin = a === true; } catch (e) {}
   let { data: r } = await sb.from('restaurants').select('*').eq('owner_id', u.id).maybeSingle();
+  if (!r && isAdmin) {                                   // cuenta solo de administrador: sin local propio
+    $$('nav button').forEach(b => b.hidden = b.dataset.v !== 'admin'); $('#cfg').hidden = true; $('#logout').hidden = false;
+    $('.brand .t').textContent = 'Administrador'; $('#mode').textContent = 'Administrador'; started = true; go('admin'); return;
+  }
   if (!r) {
     const name = (u.user_metadata && u.user_metadata.restaurant_name) || 'Mi restaurante';
     const slug = (name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'resto') + '-' + Math.random().toString(36).slice(2, 6);
     ({ data: r } = await sb.from('restaurants').insert({ name, slug, owner_id: u.id }).select().single());
   }
   if (!r) { toast('No se pudo crear el restaurante'); return; }
-  R = r; $('.brand .t').textContent = r.name; $('#logout').hidden = false;
+  R = r; setBrand(); $('#logout').hidden = false; $('#cfg').hidden = false; if (isAdmin) $('nav [data-v=admin]').hidden = false;
   started = true; api.watch(refresh); refresh();
 }
 $('#sw').onclick = () => { signup = !signup; $('#rn').hidden = !signup; $('#lr').required = signup; $('#lsub').textContent = signup ? 'Crear cuenta' : 'Ingresar'; $('#sw').textContent = signup ? 'Ya tengo cuenta' : 'Crear cuenta nueva'; $('#lerr').textContent = ''; };

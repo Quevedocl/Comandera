@@ -18,6 +18,7 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}
 /* cabecera fija */
 .sticky{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--ln);padding-top:env(safe-area-inset-top,0px)}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px 8px}
+.bk{display:flex;align-items:center;gap:10px;min-width:0}.bk img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid var(--ln);flex:none;background:#fff}.bk img[hidden]{display:none}
 .top h1{margin:0;font-size:22px;letter-spacing:-.01em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mesa{white-space:nowrap;max-width:42vw;overflow:hidden;text-overflow:ellipsis;font-weight:700;font-size:14px;background:var(--ink);color:#fff;border-radius:99px;padding:5px 12px}
 .mesa:empty{display:none}
@@ -122,7 +123,7 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
 <body>
 <div class="sticky">
   <div class="wrap">
-    <div class="top"><h1 id="ttl">Carta</h1><div class="tr"><span class="mesa" id="mesaTag"></span><button class="callb" id="callBtn" hidden><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l1.5 2h-15zM10 21h4"/></svg>Mesero</button></div></div>
+    <div class="top"><div class="bk"><img id="logo" alt="" hidden><h1 id="ttl">Carta</h1></div><div class="tr"><span class="mesa" id="mesaTag"></span><button class="callb" id="callBtn" hidden><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l1.5 2h-15zM10 21h4"/></svg>Mesero</button></div></div>
     <div class="lockbar" id="lockbar" hidden role="alert"><b>Esta mesa ya fue cerrada.</b><br>Gracias por tu visita. Si vuelves a sentarte, avisa a un mesero para que reabra la mesa y luego recarga esta página.</div>
     <div class="chips" id="chips"></div>
   </div>
@@ -437,9 +438,11 @@ let sesState = 'ok';
 async function init() {
   const bad = m => { $('#menu').innerHTML = `<p class="msg">${m}</p>`; };
   if (!sb || !SLUG) return bad('Enlace inválido. Escanea de nuevo el QR de tu mesa.');
-  const { data: r } = await sb.from('restaurants').select('id,name').eq('slug', SLUG).maybeSingle();
+  const { data: r } = await sb.from('restaurants').select('*').eq('slug', SLUG).maybeSingle();
   if (!r) return bad('No encontramos este restaurante. Avisa a un mesero.');
+  if (r.active === false) return bad('Este local no está disponible por ahora.');
   RID = r.id; NOMBRE = r.name; CART_KEY += '-' + RID;
+  if (r.logo_url) { const im = $('#logo'); im.src = r.logo_url; im.hidden = false; im.onerror = () => { im.hidden = true; }; }
   if (TID_Q) {
     const { data: t, error: te } = await sb.from('dining_tables').select('id,name,session_id,released_sid').eq('id', TID_Q).eq('restaurant_id', RID).maybeSingle();
     if (te) return bad('No pudimos verificar tu mesa. Revisa tu conexión e inténtalo otra vez.');
