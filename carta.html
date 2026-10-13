@@ -361,8 +361,9 @@ function pinSession(cur) {
   try { localStorage.setItem(sesKey(), JSON.stringify({ sid: cur, ts: Date.now() })); } catch (e) {}
   return r;
 }
-function lockUp() {
+function lockUp(html) {
   if (locked) return;
+  if (html) $('#lockbar').innerHTML = html;
   locked = true; document.body.classList.add('locked'); $('#lockbar').hidden = false;
   cart.clear(); try { localStorage.removeItem(CART_KEY); } catch (e) {}
   ['#cart', '#call'].forEach(d => { try { $(d).close(); } catch (e) {} });
@@ -453,9 +454,12 @@ async function init() {
     sesState = pinSession(t.session_id);
     if (sesState === 'nueva') { try { localStorage.removeItem(CART_KEY); } catch (e) {} }   // visita nueva: sin restos de un pedido anterior
   }
-  $('#callBtn').hidden = false;
+  $('#callBtn').hidden = !TID;
   $('#ttl').textContent = NOMBRE; document.title = NOMBRE + ' · Haz tu pedido';
-  loadCart(); if (sesState === 'cerrada') lockUp(); load();
+  loadCart();
+  if (!TID) lockUp('<b>Escanea el QR de tu mesa</b><br>Así sabemos en qué mesa estás. Desde este enlace solo puedes ver la carta.');
+  else if (sesState === 'cerrada') lockUp();
+  load();
   const f = 'restaurant_id=eq.' + RID;
   sb.channel('carta').on('postgres_changes', { event: '*', schema: 'public', table: 'products', filter: f }, () => load()).on('postgres_changes', { event: '*', schema: 'public', table: 'promotions', filter: f }, () => load())
     .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'dining_tables' }, p => { if (TID && p.old && String(p.old.id) === TID) location.reload(); })
