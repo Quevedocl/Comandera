@@ -65,6 +65,7 @@ select,.srch{height:38px;border-radius:10px;border:1px solid var(--ln);backgroun
 .tk.nuevo{animation:in .4s both,ping 1s .4s 3}
 .tk.moved{animation:move .5s}
 .tk.leave{animation:out .3s forwards;pointer-events:none}
+#unl{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;border:0;border-radius:99px;background:var(--amb);color:#2b1d00;font-weight:700;padding:12px 20px;box-shadow:0 8px 24px rgba(16,24,40,.3);max-width:92vw}
 /* llamadas al mesero */
 .cl{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;padding:4px 20px 24px;align-content:start;align-items:start;flex:1;min-height:0;overflow-y:auto}
 .cl:empty::after{content:"Nadie está llamando al mesero";grid-column:1/-1;text-align:center;color:var(--mu);padding:80px 0;font-weight:600}
@@ -149,7 +150,7 @@ dialog input[type=checkbox]{width:auto;height:auto}
     <span class="live" id="mode"></span>
     <time id="clk"></time>
     <button class="ib" id="logout" hidden aria-label="Cerrar sesión" title="Cerrar sesión"><svg viewBox="0 0 24 24"><path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/></svg></button>
-    <button class="ib" id="snd" aria-pressed="false" aria-label="Alerta sonora" title="Alerta sonora"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 010 6"/></svg></button>
+    <button class="ib" id="snd" aria-pressed="true" aria-label="Sonido de avisos" title="Sonido de avisos"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 010 6"/></svg></button>
   </div>
 </header>
 
@@ -226,6 +227,7 @@ dialog input[type=checkbox]{width:auto;height:auto}
     <button class="pri" id="lsub" type="submit">Ingresar</button><button type="button" class="gh" id="sw" style="width:100%;margin-top:10px">Crear cuenta nueva</button>
   </form>
 </div>
+<button id="unl" hidden>🔔 Toca aquí para activar el sonido de los pedidos</button>
 <div id="bn" role="alert"></div><div id="toast" role="status"></div>
 
 <script>
@@ -272,12 +274,27 @@ const tn = o => o.table_name || 'Mesa ' + o.table_number;
 const mins = iso => Math.floor((Date.now() - new Date(iso)) / 6e4);
 
 /* ===== SONIDO Y AVISOS ===== */
-function beep() {
-  if (!soundOn) return;
-  ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
-  [880, 660, 880].forEach((f, i) => { const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + i * .2; o.frequency.value = f; g.gain.setValueAtTime(.25, t); g.gain.exponentialRampToValueAtTime(.001, t + .18); o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + .2); });
+/* El navegador solo deja sonar audio después de que alguien toca la pantalla una vez: por eso se "desbloquea" con el primer toque */
+function audio() { try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === 'suspended') ctx.resume(); } catch (e) {} return ctx; }
+function syncSnd() { $('#snd').setAttribute('aria-pressed', soundOn); $('#unl').hidden = !(soundOn && (!ctx || ctx.state !== 'running')); }
+function tones(seq, vol = .6) {                       // seq: [[frecuencia, inicio, duración], …]
+  const c = audio(); if (!c) return; const t0 = c.currentTime + .02;
+  seq.forEach(([f, at, d]) => { const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t0 + at); g.gain.exponentialRampToValueAtTime(vol, t0 + at + .02); g.gain.exponentialRampToValueAtTime(.001, t0 + at + d);
+    o.connect(g).connect(c.destination); o.start(t0 + at); o.stop(t0 + at + d + .05); });
 }
-$('#snd').onclick = e => { soundOn = !soundOn; e.currentTarget.setAttribute('aria-pressed', soundOn); toast(soundOn ? 'Alerta sonora activada' : 'Alerta sonora desactivada'); if (soundOn) beep(); };
+/* pedido nuevo: campanita doble · llamada al mesero: tres tonos más agudos */
+function beep(kind) {
+  if (!soundOn) return;
+  if (kind === 'call') tones([[1046, 0, .22], [1318, .25, .22], [1568, .5, .35], [1046, 1.0, .22], [1318, 1.25, .22], [1568, 1.5, .35]]);
+  else tones([[880, 0, .25], [1175, .28, .25], [880, .7, .25], [1175, .98, .35]]);
+  setTimeout(syncSnd, 300);
+}
+try { soundOn = localStorage.getItem('cmd-sound') !== '0'; } catch (e) { soundOn = true; }   // activado por defecto; se recuerda la elección
+['pointerdown', 'keydown', 'touchstart'].forEach(ev => addEventListener(ev, () => { if (soundOn) { audio(); syncSnd(); } }, { passive: true }));
+$('#unl').onclick = () => { audio(); beep(); syncSnd(); };
+$('#snd').onclick = () => { soundOn = !soundOn; try { localStorage.setItem('cmd-sound', soundOn ? '1' : '0'); } catch (e) {} syncSnd(); toast(soundOn ? 'Sonido activado' : 'Sonido desactivado'); if (soundOn) beep(); };
+syncSnd();
 let bt;
 function alertNew(list) {
   beep(); const b = $('#bn');
@@ -359,7 +376,7 @@ function renderCalls() {
   seenCalls = ids;
 }
 function alertCall(list) {
-  beep(); const b = $('#bn'), c = list[0];
+  beep('call'); const b = $('#bn'), c = list[0];
   b.textContent = list.length > 1 ? `${list.length} llamadas al mesero` : `${c.table_name} · ${(WHY[c.reason] || WHY.help)[0].replace(/^\S+\s/, '')}`;
   b.classList.add('on'); clearTimeout(bt); bt = setTimeout(() => b.classList.remove('on'), 4500);
 }

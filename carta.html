@@ -18,10 +18,10 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}
 /* cabecera fija */
 .sticky{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--ln);padding-top:env(safe-area-inset-top,0px)}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px 8px}
-.top h1{margin:0;font-size:22px;letter-spacing:-.01em}
-.mesa{font-weight:700;font-size:14px;background:var(--ink);color:#fff;border-radius:99px;padding:5px 12px}
+.top h1{margin:0;font-size:22px;letter-spacing:-.01em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mesa{white-space:nowrap;max-width:42vw;overflow:hidden;text-overflow:ellipsis;font-weight:700;font-size:14px;background:var(--ink);color:#fff;border-radius:99px;padding:5px 12px}
 .mesa:empty{display:none}
-.tr{display:flex;align-items:center;gap:8px}
+.tr{display:flex;align-items:center;gap:8px;flex:none}
 .callb{display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:99px;border:1.5px solid var(--ink);background:#fff;font-weight:700;font-size:14px}
 .callb svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .lockbar{margin:12px 12px 0;padding:14px 16px;border-radius:14px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:600;text-align:center}
@@ -235,26 +235,18 @@ const ctl = p => {
     : `<button class="add" data-a="inc" aria-label="Agregar ${esc(p.name)}">+</button>`;
 };
 
+let cat = '';   // categoría elegida ('' = Todo)
 function render() {
   const cats = [...new Set(products.map(p => p.category))];
   if (!cats.length) { $('#menu').innerHTML = '<p class="msg">La carta aún no tiene productos.</p>'; $('#chips').innerHTML = ''; return; }
-  $('#chips').innerHTML = cats.map((c, i) => `<button data-c="c${i}" class="${i === 0 ? 'on' : ''}">${esc(c)}</button>`).join('');
-  $('#menu').innerHTML = promoBox() + cats.map((c, i) => `<section id="c${i}"><h2>${esc(c)}</h2><div class="lst">${
+  if (cat && !cats.includes(cat)) cat = '';
+  $('#chips').innerHTML = ['', ...cats].map(c => `<button data-c="${esc(c)}" class="${c === cat ? 'on' : ''}">${c ? esc(c) : 'Todo'}</button>`).join('');
+  const show = cats.filter(c => !cat || c === cat);
+  $('#menu').innerHTML = (cat ? '' : promoBox()) + show.map(c => `<section><h2>${esc(c)}</h2><div class="lst">${
     products.filter(p => p.category === c).map(p => `<article class="it${p.is_available ? '' : ' off'}" data-id="${esc(p.id)}">
       <div class="ph" style="${p.image_url ? `background-image:url('${esc(p.image_url)}')` : ''}">${p.image_url ? '' : esc((p.name || '?')[0])}</div>
       <div class="nm"><b>${esc(p.name)}</b><span class="pr">${clp(p.price)}</span>${badge(p)}</div>
       <div class="ctl">${ctl(p)}</div></article>`).join('')}</div></section>`).join('');
-  watchSections();
-}
-
-function watchSections() {
-  if (spy) spy.disconnect();
-  spy = new IntersectionObserver(es => es.forEach(e => {
-    if (!e.isIntersecting) return;
-    document.querySelectorAll('#chips button').forEach(b => b.classList.toggle('on', b.dataset.c === e.target.id));
-    const on = document.querySelector('#chips button.on'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' });
-  }), { rootMargin: '-130px 0px -65% 0px' });
-  document.querySelectorAll('main section').forEach(s => spy.observe(s));
 }
 
 function refreshCtl(id) {
@@ -285,7 +277,9 @@ $('#menu').addEventListener('click', e => {
 });
 $('#chips').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
-  document.getElementById(b.dataset.c)?.scrollIntoView({ behavior: 'smooth' });
+  cat = b.dataset.c; render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const on = document.querySelector('#chips button.on'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' });
 });
 
 /* ===== hoja del pedido ===== */
