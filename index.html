@@ -292,55 +292,16 @@ dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.
 @media (max-width:1380px){#clk{display:none}}
 @media (max-width:1180px){nav button{padding:0 10px}}
 /* inicio de sesión */
-#login{position:fixed;inset:0;z-index:30;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);background:#fff;overflow:auto}
+#login{position:fixed;inset:0;z-index:30;background:var(--bg);display:grid;place-items:center;padding:20px;overflow:auto}
 #login[hidden]{display:none}
-.lg-side{position:relative;overflow:hidden;color:#fff;padding:44px 56px;display:flex;flex-direction:column;justify-content:space-between;gap:28px;background:radial-gradient(760px 420px at 8% -6%,rgba(255,138,43,.42),transparent 62%),radial-gradient(640px 460px at 108% 108%,rgba(240,66,15,.34),transparent 62%),#0F172A}
-.lg-side img.lg-logo{height:40px;width:auto;display:block;align-self:flex-start}
-.lg-side h2{margin:0 0 14px;font-size:clamp(30px,3.4vw,46px);line-height:1.06;letter-spacing:-.035em;font-weight:800;max-width:15ch}
-.lg-side h2 em{font-style:normal;color:#FF8A2B}
-.lg-side .lead{margin:0;color:#CBD5E1;font-size:16.5px;max-width:44ch}
-.lg-feats{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:14px}
-.lg-feats li{display:flex;gap:12px;align-items:flex-start;color:#E2E8F0;font-size:15px}
-.lg-feats i{flex:none;width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.1);display:grid;place-items:center}
-.lg-feats svg{width:16px;height:16px;stroke:#FF8A2B;stroke-width:2.2}
-.lg-feats b{display:block;color:#fff;font-weight:700}
-.lg-demo{align-self:flex-start;width:min(300px,100%);background:#fff;color:var(--tx);border-radius:16px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.35);transform:rotate(-2deg)}
-.lg-demo .h{display:flex;justify-content:space-between;align-items:center;background:var(--blue);color:#fff;padding:12px 16px;font-weight:800;font-size:18px}.lg-demo .h small{font-weight:600;opacity:.9;font-size:13px}
-.lg-demo ul{list-style:none;margin:0;padding:6px 16px}.lg-demo li{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--ln);font-size:15px}.lg-demo li:last-child{border:0}.lg-demo li b{min-width:24px}
-.lg-demo .b{background:#FEF3C7;color:#78350F;text-align:center;font-weight:700;padding:12px;font-size:14px}
-.lg-main{display:flex;align-items:center;justify-content:center;padding:32px 24px}
-.lg-card{width:100%;max-width:392px}
-.lg-top{display:none;margin:0 0 26px}.lg-top img{height:38px;width:auto}
-.lg-card h1{margin:0 0 6px;font-size:28px;letter-spacing:-.025em;line-height:1.15}
-.lg-card .sub{margin:0 0 24px;color:var(--mu);font-size:15px}
-.lg-card form[hidden],#coin[hidden]{display:none}
-.fl{display:block;margin:0 0 14px;text-align:left}
-.fl[hidden]{display:none}
-.fl>span{display:block;margin:0 0 6px;font-size:13px;font-weight:600;color:#334155}
-.fl input{display:block;width:100%;height:46px;padding:0 14px;border:1px solid #CBD5E1;border-radius:12px;background:#fff;color:var(--tx);font-size:15px;outline:0;transition:border-color .15s,box-shadow .15s}
-.fl input::placeholder{color:#94A3B8}
-.fl input:focus{border-color:var(--acc);box-shadow:0 0 0 4px rgba(242,83,15,.14)}
-.fl.code input{height:58px;padding:0 0 0 .4em;text-align:center;font-size:26px;font-weight:700;letter-spacing:.4em;font-variant-numeric:tabular-nums}
-.vrow{display:flex;justify-content:space-between;align-items:center;gap:6px 12px;flex-wrap:wrap;margin:2px 0 18px}
-.rem{display:flex;align-items:center;gap:10px;margin:0;font-size:14px;color:#475569;cursor:pointer}
-.tg2{appearance:none;flex:none;width:38px;height:22px;margin:0;border-radius:99px;background:#CBD5E1;position:relative;cursor:pointer;transition:background .2s}
-.tg2::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s}
-.tg2:checked{background:var(--acc)}.tg2:checked::after{transform:translateX(16px)}
-.lnk{border:0;background:none;padding:0;color:var(--acc2);font-weight:700;font-size:inherit;cursor:pointer}
-.lnk:hover{text-decoration:underline}.lnk:disabled{opacity:.5;cursor:default;text-decoration:none}
-.nbtn{display:block;width:100%;height:48px;border:0;border-radius:12px;background:var(--acc);color:#fff;font-weight:700;font-size:15px;box-shadow:0 1px 2px rgba(0,0,0,.1),0 8px 18px rgba(242,83,15,.28);transition:background .2s,transform .15s}
-.nbtn:hover{background:var(--acc2)}.nbtn:active{transform:scale(.99)}.nbtn:disabled{opacity:.6}
-/* moneda: el formulario gira en 3D entre «Ingresar» y «Crear cuenta» */
-.lg-card{perspective:1600px}
-#coin{display:grid;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.45,.05,.25,1)}
-#coin.flip{transform:rotateY(180deg)}
-#coin>form{grid-area:1/1;align-self:start;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-#sf{transform:rotateY(180deg)}
-.alt{margin:20px 0 0;text-align:center;color:var(--mu);font-size:14px}
-#lerr,#serr,#verr{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#FEF2F2;color:#B91C1C;font-size:13.5px;font-weight:600;text-align:left}
-#lerr:empty,#serr:empty,#verr:empty{display:none}
-.lg-foot{margin-top:28px;text-align:center;color:#94A3B8;font-size:12.5px}
-@media (max-width:900px){#login{grid-template-columns:1fr}.lg-side{display:none}.lg-top{display:block}.lg-main{align-items:flex-start;padding:36px 22px}}
+#lf,#vf{width:min(380px,100%);background:#fff;border:1px solid var(--ln);border-radius:16px;padding:28px;box-shadow:0 10px 40px rgba(16,24,40,.08);animation:pop .3s}
+#lf h2,#vf h2{margin:14px 0 2px;font-size:22px}#lf p,#vf p{margin:0;color:var(--mu)}
+#lf label,#vf label{display:block;margin:16px 0 6px;font-size:13px;font-weight:600;color:var(--mu)}
+#lf input,#vf input{width:100%;height:44px;padding:0 12px;border:1px solid var(--ln);border-radius:9px;outline:0}#lf input:focus,#vf input:focus{border-color:#2563eb}
+#lf .pri,#vf .pri{width:100%;height:46px;justify-content:center;margin-top:18px}
+#lerr,#verr{color:var(--red)!important;font-size:13.5px;font-weight:600;min-height:20px;margin-top:10px!important}
+#lf .lnk,#vf .lnk{display:block;margin:14px auto 0;border:0;background:none;padding:0;color:var(--mu);font-weight:600;font-size:13px;cursor:pointer}
+#lf .lnk:hover,#vf .lnk:hover{color:var(--ink);text-decoration:underline}.lnk:disabled{opacity:.5;cursor:default;text-decoration:none}
 @media (max-width:720px){.hello{padding:16px 14px 0}.top{gap:12px}.brand .t{max-width:120px}.sep{display:none}}
 /* impresión de comandas (ticket de cocina de 80 mm) */
 .prn{flex:none;border:0;background:rgba(0,0,0,.18);color:inherit;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;transition:background .2s}.prn:hover{background:rgba(0,0,0,.3)}
@@ -515,51 +476,25 @@ document.addEventListener('gesturestart',function(e){e.preventDefault();});})();
 </div></dialog>
 <dialog id="qrd"><div style="text-align:center"><h3 id="qrt"></h3><div id="qrb"></div><div class="bt" style="justify-content:center"><button class="gh" id="qrdl">Descargar PNG</button><button class="gh" id="qrx">Cerrar</button></div></div></dialog>
 <div id="login" hidden>
-  <aside class="lg-side" aria-hidden="true">
-    <img class="lg-logo" src="icons/logo-full-light.svg?v=2" alt="">
-    <div>
-      <h2>Pedidos <em>sin esperas</em>, mesas felices.</h2>
-      <p class="lead">Tus clientes piden desde el celular con un QR y cocina lo ve al instante. Sin apps, sin errores de comanda.</p>
-      <ul class="lg-feats">
-        <li><i><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h3v3h-3zM20 14v6h-3"/></svg></i><span><b>Carta por QR en cada mesa</b>Se actualiza al momento, con fotos, agregados y promos.</span></li>
-        <li><i><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></i><span><b>Pedidos en vivo en cocina</b>Nuevo, en preparación y listo, con aviso sonoro.</span></li>
-        <li><i><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l1.5 2h-15zM10 21h4"/></svg></i><span><b>Llama al mesero con un toque</b>La cuenta, dudas o reclamos llegan directo al panel.</span></li>
-      </ul>
-    </div>
-    <div class="lg-demo"><div class="h"><span>Mesa 5</span><small>Recién</small></div><ul><li><b>2×</b>Pisco Sour</li><li><b>1×</b>Pastel de papa</li></ul><div class="b">Marcar en preparación</div></div>
-  </aside>
-  <div class="lg-main"><div class="lg-card">
-    <div class="lg-top"><img src="icons/logo-full.svg?v=2" alt="kepasa"></div>
-    <div id="coin">
-      <form id="lf">
-        <h1>Ingresa a tu cuenta</h1><p class="sub">Administra los pedidos de tu restaurante.</p>
-        <label class="fl"><span>Correo</span><input id="le" type="email" required placeholder="tu@restaurante.cl" aria-label="Correo" autocomplete="username"></label>
-        <label class="fl"><span>Contraseña</span><input id="lp" type="password" required placeholder="Tu contraseña" aria-label="Contraseña" autocomplete="current-password"></label>
-        <div class="vrow"><label class="rem"><input type="checkbox" class="tg2" id="remMail"><span>Recordar mi correo</span></label><button type="button" class="lnk" id="goForgot">¿Olvidaste tu contraseña?</button></div>
-        <p id="lerr" role="alert"></p>
-        <button class="nbtn" id="lsub" type="submit">Ingresar</button>
-        <p class="alt">¿No tienes cuenta? <button type="button" class="lnk" id="goSignup">Regístrate</button></p>
-      </form>
-      <form id="sf" inert>
-        <h1>Crea tu cuenta</h1><p class="sub">Registra tu restaurante en kepasa.</p>
-        <label class="fl"><span>Nombre del restaurante</span><input id="sr" required maxlength="50" placeholder="Ej. Restaurante de JP" aria-label="Nombre del restaurante" autocomplete="organization"></label>
-        <label class="fl"><span>Correo</span><input id="se" type="email" required placeholder="tu@restaurante.cl" aria-label="Correo" autocomplete="email"></label>
-        <label class="fl"><span>Contraseña</span><input id="sp" type="password" required minlength="6" placeholder="Mínimo 6 caracteres" aria-label="Contraseña" autocomplete="new-password"></label>
-        <p id="serr" role="alert"></p>
-        <button class="nbtn" id="ssub" type="submit">Crear cuenta</button>
-        <p class="alt">¿Ya tienes cuenta? <button type="button" class="lnk" id="goLogin">Inicia sesión</button></p>
-      </form>
-    </div>
-    <form id="vf" hidden autocomplete="off">
-      <h1 id="vh">Verifica tu correo</h1><p class="sub" id="vs"></p>
-      <label class="fl code"><input id="vc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="••••••" aria-label="Código de verificación"></label>
-      <label class="fl" id="vpBox" hidden><span>Nueva contraseña</span><input id="vp" type="password" minlength="6" placeholder="Mínimo 6 caracteres" aria-label="Nueva contraseña" autocomplete="new-password"></label>
-      <p id="verr" role="alert"></p>
-      <button class="nbtn" id="vsub" type="submit">Verificar</button>
-      <p class="alt"><button type="button" class="lnk" id="vre">Reenviar código</button> · <button type="button" class="lnk" id="vback">Volver</button></p>
-    </form>
-    <p class="lg-foot">kepasa · Pedidos desde la mesa para restaurantes</p>
-  </div></div>
+  <form id="lf">
+    <span class="mk has"><img src="icons/logo-mark.svg?v=2" alt=""></span>
+    <h2>kepasa</h2><p>Ingresa o crea la cuenta de tu restaurante</p>
+    <div id="rn" hidden><label for="lr">Nombre del restaurante</label><input id="lr" maxlength="50" autocomplete="organization"></div>
+    <label for="le">Correo</label><input id="le" type="email" required autocomplete="username">
+    <label for="lp">Contraseña</label><input id="lp" type="password" required autocomplete="current-password">
+    <p id="lerr" role="alert"></p>
+    <button class="pri" id="lsub" type="submit">Ingresar</button><button type="button" class="gh" id="sw" style="width:100%;margin-top:10px">Crear cuenta nueva</button>
+    <button type="button" class="lnk" id="goForgot">¿Olvidaste tu contraseña?</button>
+  </form>
+  <form id="vf" hidden autocomplete="off">
+    <span class="mk has"><img src="icons/logo-mark.svg?v=2" alt=""></span>
+    <h2 id="vh">Verifica tu correo</h2><p id="vs"></p>
+    <label for="vc">Código</label><input id="vc" inputmode="numeric" autocomplete="one-time-code" maxlength="10">
+    <div id="vpBox" hidden><label for="vp">Nueva contraseña</label><input id="vp" type="password" minlength="6" autocomplete="new-password"></div>
+    <p id="verr" role="alert"></p>
+    <button class="pri" id="vsub" type="submit">Verificar</button><button type="button" class="gh" id="vre" style="width:100%;margin-top:10px">Reenviar código</button>
+    <button type="button" class="lnk" id="vback">Volver</button>
+  </form>
 </div>
 <div id="bn" role="alert"></div><div id="toast" role="status"></div><div id="printArea" aria-hidden="true"></div>
 
@@ -1191,21 +1126,18 @@ const authMsg = e => { const m = (e && e.message) || '';
   if (/rate limit|too many|seconds/i.test(m)) return 'Demasiados intentos. Espera un momento y vuelve a intentar.';
   if (/invalid.*email|unable to validate/i.test(m)) return 'Revisa que el correo esté bien escrito.';
   return m || 'No se pudo completar. Inténtalo otra vez.'; };
-try { const m = localStorage.getItem('cmd-mail'); if (m) { $('#le').value = m; $('#remMail').checked = true; } } catch (e) {}
-
-function flipTo(toSignup) {                         // alterna entre "Ingresar" y "Crear cuenta"
-  if (signup === toSignup) return; signup = toSignup;
-  $('#lerr').textContent = $('#serr').textContent = '';
-  $('#coin').classList.toggle('flip', toSignup); $('#lf').inert = toSignup; $('#sf').inert = !toSignup;
-  const f = (toSignup ? $('#sf') : $('#lf')).querySelector('input'); if (f) f.focus({ preventScroll: true });
-}
-$('#goSignup').onclick = () => flipTo(true);
-$('#goLogin').onclick = () => flipTo(false);
-
+$('#sw').onclick = () => { signup = !signup; $('#rn').hidden = !signup; $('#lr').required = signup; $('#lsub').textContent = signup ? 'Crear cuenta' : 'Ingresar'; $('#sw').textContent = signup ? 'Ya tengo cuenta' : 'Crear cuenta nueva'; $('#lp').autocomplete = signup ? 'new-password' : 'current-password'; $('#goForgot').hidden = signup; $('#lerr').textContent = ''; };
 $('#lf').onsubmit = async e => {
   e.preventDefault(); const err = $('#lerr'); err.textContent = '';
   const email = $('#le').value.trim(), password = $('#lp').value, btn = $('#lsub'); btn.disabled = true;
   try {
+    if (signup) {
+      const { data: d, error } = await sb.auth.signUp({ email, password, options: { data: { restaurant_name: $('#lr').value.trim() } } });
+      if (error) { err.textContent = authMsg(error); return; }
+      if (d.user && Array.isArray(d.user.identities) && d.user.identities.length === 0) { err.textContent = 'Este correo ya está registrado. Inicia sesión.'; return; }
+      if (!d.session) { $('#lp').value = ''; showVerify('signup', email); return; }   // el proyecto exige verificar el correo: se pide el código
+      $('#lp').value = ''; $('#login').hidden = true; confetti(); start(); return;
+    }
     const { error } = await sb.auth.signInWithPassword({ email, password });
     if (error) {
       if (error.code === 'email_not_confirmed' || /not confirmed/i.test(error.message || '')) {   // se registró pero nunca verificó: se le envía un código nuevo
@@ -1215,21 +1147,8 @@ $('#lf').onsubmit = async e => {
       }
       err.textContent = 'Correo o contraseña incorrectos.'; return;
     }
-    try { if ($('#remMail').checked) localStorage.setItem('cmd-mail', email); else localStorage.removeItem('cmd-mail'); } catch (e) {}
     $('#lp').value = ''; $('#login').hidden = true; start();
   } finally { btn.disabled = false; }
-};
-$('#sf').onsubmit = async e => {
-  e.preventDefault(); const err = $('#serr'); err.textContent = '';
-  const email = $('#se').value.trim(), password = $('#sp').value, name = $('#sr').value.trim(), btn = $('#ssub');
-  btn.disabled = true; btn.textContent = 'Creando…';
-  try {
-    const { data: d, error } = await sb.auth.signUp({ email, password, options: { data: { restaurant_name: name } } });
-    if (error) { err.textContent = authMsg(error); return; }
-    if (d.user && Array.isArray(d.user.identities) && d.user.identities.length === 0) { err.textContent = 'Este correo ya está registrado. Inicia sesión.'; return; }
-    if (!d.session) { $('#sp').value = ''; showVerify('signup', email); return; }   // el proyecto exige verificar el correo: se pide el código
-    $('#sp').value = ''; $('#login').hidden = true; confetti(); start();
-  } finally { btn.disabled = false; btn.textContent = 'Crear cuenta'; }
 };
 /* ===== código de 6 dígitos: verificar correo al registrarse y recuperar contraseña ===== */
 let vmode = 'signup', vmail = '', vtimer = null, vleft = 0;
@@ -1240,7 +1159,7 @@ function cooldown(sec) {
 }
 function showVerify(mode, email) {
   vmode = mode; vmail = email;
-  $('#coin').hidden = true; $('#vf').hidden = false;
+  $('#lf').hidden = true; $('#vf').hidden = false;
   $('#vh').textContent = mode === 'recovery' ? 'Nueva contraseña' : 'Verifica tu correo';
   $('#vs').textContent = 'Escribe el código que enviamos a ' + email;
   $('#vpBox').hidden = mode !== 'recovery'; $('#vp').required = mode === 'recovery';
@@ -1248,7 +1167,7 @@ function showVerify(mode, email) {
   $('#vc').value = ''; $('#vp').value = ''; $('#verr').textContent = '';
   cooldown(60); $('#vc').focus();
 }
-function hideVerify() { clearInterval(vtimer); $('#vf').hidden = true; $('#coin').hidden = false; }
+function hideVerify() { clearInterval(vtimer); $('#vf').hidden = true; $('#lf').hidden = false; }
 $('#vc').oninput = e => { e.target.value = e.target.value.replace(/\D/g, ''); };
 $('#vback').onclick = hideVerify;
 $('#vre').onclick = async () => {
