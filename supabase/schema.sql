@@ -42,3 +42,15 @@ create policy products_upload on storage.objects for insert to authenticated wit
 
 -- Productos que ya tenías (sin restaurante): crea tu cuenta en la app y luego corre:
 -- update products set restaurant_id = (select id from restaurants where name = 'TU RESTAURANTE') where restaurant_id is null;
+
+-- ===== seguimiento de pedido y llamada al mesero =====
+alter table orders add column if not exists public_id uuid;
+create unique index if not exists orders_public_id_key on orders (public_id);
+create or replace function order_status(refs uuid[]) returns table (public_id uuid, status text) language sql security definer stable set search_path = public as
+$$ select o.public_id, o.status from orders o where o.public_id = any(refs) $$;
+grant execute on function order_status(uuid[]) to anon, authenticated;
+create table if not exists waiter_calls (id uuid primary key default gen_random_uuid(), restaurant_id uuid not null references restaurants on delete cascade, table_id uuid, table_name text not null, reason text not null check (reason in ('pay','complaint','help')), note text, status text not null default 'open' check (status in ('open','done')), created_at timestamptz default now());
+alter table waiter_calls enable row level security;
+create policy wc_ins on waiter_calls for insert to anon, authenticated with check (exists (select 1 from restaurants r where r.id = waiter_calls.restaurant_id) and (table_id is null or exists (select 1 from dining_tables d where d.id = waiter_calls.table_id and d.restaurant_id = waiter_calls.restaurant_id)) and not exists (select 1 from waiter_calls w where w.restaurant_id = waiter_calls.restaurant_id and w.table_name = waiter_calls.table_name and w.reason = waiter_calls.reason and w.status = 'open'));
+create policy wc_own on waiter_calls for all to authenticated using (is_owner(restaurant_id)) with check (is_owner(restaurant_id));
+do $$ begin alter publication supabase_realtime add table waiter_calls; exception when others then null; end $$;
