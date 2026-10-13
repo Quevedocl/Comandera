@@ -1,4 +1,4 @@
--- Comandera · migración 3: panel de administrador, logo/nombre del negocio y suspensión de locales
+-- Fogón · migración 3: panel de administrador, logo/nombre del negocio y suspensión de locales
 -- Ejecutar UNA vez en Supabase > SQL Editor (después de las migraciones anteriores). Es seguro repetirla.
 
 -- 1) Marca del negocio y estado

@@ -258,6 +258,58 @@ nav button:hover{color:var(--tx)}
 .vm{color:#7b808a;font-weight:600;font-size:13.5px;margin:6px 0 16px!important}.vm b{color:#33363b;word-break:break-all}
 .row2{display:flex;justify-content:space-between;gap:10px;margin-top:16px;font-size:13px}
 @media (max-width:520px){.coin{width:100%;max-width:440px}.nc{width:auto;height:auto;border-radius:36px;padding:34px 26px}.nc::before{inset:10px;border-radius:28px}}
+
+/* ===== identidad Fogón: la moneda y las sombras suaves del login, en todo el panel ===== */
+:root{--bg:#e6e7ea;--ln:#d6d9de;--acc:#8b1a1a;--acc2:#a82222;--sd:#c3c6cc;--sl:#fff;--raise:8px 8px 20px var(--sd),-8px -8px 20px var(--sl);--raise-s:4px 4px 10px var(--sd),-4px -4px 10px var(--sl);--press:inset 3px 3px 7px var(--sd),inset -3px -3px 7px var(--sl);--surf:linear-gradient(145deg,#f6f7f9,#e8e9ec)}
+body{background:radial-gradient(900px 420px at 92% -8%,rgba(139,26,26,.09),transparent 65%),radial-gradient(700px 400px at -5% 110%,rgba(139,26,26,.05),transparent 60%),var(--bg)}
+.top{background:rgba(246,247,249,.8);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:0;box-shadow:0 8px 26px rgba(16,24,40,.07)}
+.brand{font-weight:800;letter-spacing:-.02em}
+.brand .mk{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#c9382c,#8b1a1a 58%,#5a0f0f);box-shadow:3px 3px 8px var(--sd),-2px -2px 6px var(--sl),inset 0 0 0 3px rgba(255,255,255,.2);animation:coinSpin 8s ease-in-out infinite}
+.brand .mk.has{background:#fff;box-shadow:var(--raise-s);animation:none}
+@keyframes coinSpin{0%,84%{transform:perspective(260px) rotateY(0)}100%{transform:perspective(260px) rotateY(360deg)}}
+nav{align-items:center;gap:4px}
+nav button{height:40px;border-radius:99px;padding:0 16px;transition:color .2s,background .25s,box-shadow .25s}
+nav button::after{display:none}
+nav button:hover{color:var(--acc)}
+nav button.on{color:#fff;background:linear-gradient(145deg,var(--acc2),var(--acc));box-shadow:0 6px 14px rgba(139,26,26,.35),inset 0 1px 0 rgba(255,255,255,.2)}
+nav button.on #cnt,nav button.on #ccnt{background:#fff;color:var(--acc)}
+.ib{border:0;background:var(--surf);box-shadow:var(--raise-s);border-radius:12px}
+.ib:active{box-shadow:var(--press)}
+.ib.on{background:linear-gradient(145deg,var(--acc2),var(--acc));color:#fff}
+.seg{padding:6px 4px}
+.seg button{border:0;background:var(--surf);box-shadow:var(--raise-s)}
+.seg button:hover{color:var(--acc)}
+.seg button.on{background:linear-gradient(145deg,var(--acc2),var(--acc));color:#fff;box-shadow:inset 2px 2px 6px rgba(0,0,0,.3),0 4px 12px rgba(139,26,26,.25)}
+select,.srch,.fld input,dialog input{border:0;background:var(--bg);box-shadow:var(--press)}
+.pi{border:0;background:var(--bg);box-shadow:var(--press)}
+.gh{border:0;background:var(--surf);box-shadow:var(--raise-s)}.gh:hover{background:var(--surf);color:var(--acc)}.gh:active{box-shadow:var(--press)}
+.pri{background:linear-gradient(145deg,var(--acc2),var(--acc));box-shadow:0 6px 16px rgba(139,26,26,.3)}.pri:hover{background:linear-gradient(145deg,#b52626,#8b1a1a)}
+.card,.lst,.kp div,.cc,.pv{border:0;border-radius:20px;background:var(--surf);box-shadow:var(--raise)}
+.pvh{border:0;box-shadow:var(--raise-s);background:var(--surf)}
+.rw:hover{background:rgba(255,255,255,.55)}
+.tk{border:0;border-radius:22px;background:var(--surf);box-shadow:var(--raise);transition:box-shadow .3s}
+.tk:hover{box-shadow:12px 14px 28px var(--sd),-8px -8px 20px var(--sl)}
+.hd{background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 68%,#000));padding:14px 18px}
+.mn{font-weight:800;letter-spacing:-.02em}
+.tk li{border-bottom:1px dashed var(--ln)}
+.go{border-top:0;font-weight:800;letter-spacing:.02em}
+.pending .go{background:linear-gradient(145deg,#ffb938,var(--amb))}.preparing .go{background:linear-gradient(145deg,#2bb56a,var(--grn))}.ready .go{background:linear-gradient(145deg,#3a3d44,#23252a)}
+.cc{border-left:0;position:relative;overflow:hidden}
+.cc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--red)}.cc.pay::before{background:var(--grn)}.cc.help::before{background:var(--amb)}
+.grid:not(:has(.tk:not([hidden]):not(.leave)))::after{content:"🍽️\A No hay pedidos en esta vista";white-space:pre;line-height:2.2;font-size:15px}
+.cl:empty::after{content:"🔔\A Nadie está llamando al mesero";white-space:pre;line-height:2.2}
+dialog{border-radius:26px;background:var(--bg);box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.sw:checked{background:var(--acc)}
+.kp b{background:linear-gradient(135deg,#2b2d31,var(--acc));-webkit-background-clip:text;background-clip:text;color:transparent}
+.paidb{background:linear-gradient(145deg,#2bb56a,#1f9d55)}
+/* saludo del inicio */
+.hello{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px 0}
+.hello small{display:block;color:var(--mu);font-weight:700;text-transform:capitalize;letter-spacing:.01em}
+.hello h2{margin:2px 0 0;font-size:clamp(22px,3.2vw,30px);letter-spacing:-.025em;line-height:1.1}
+.hello h2 em{font-style:normal;color:var(--acc)}
+.hcoin{flex:none;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#c9382c,#8b1a1a 58%,#5a0f0f);box-shadow:5px 5px 12px var(--sd),-4px -4px 10px var(--sl),inset 0 0 0 5px rgba(255,255,255,.16),inset 0 0 0 9px rgba(0,0,0,.08);animation:coinSpin 6s ease-in-out infinite;display:grid;place-items:center;color:rgba(255,255,255,.85);font-weight:800;font-size:20px}
+@media (max-width:720px){.hello{padding:14px 14px 0}.hcoin{width:42px;height:42px;font-size:16px}.top{gap:12px}}
+@media (prefers-reduced-motion:reduce){.brand .mk,.hcoin{animation:none}}
 </style>
 </head>
 <body>
@@ -285,6 +337,7 @@ nav button:hover{color:var(--tx)}
 <div id="susp" hidden>Tu cuenta está suspendida: tus clientes no pueden hacer pedidos. Escríbenos por WhatsApp para reactivarla.</div>
 <main>
   <section class="view" id="orders">
+    <div class="hello"><div><small id="hDay"></small><h2 id="hName"></h2></div><div class="hcoin" aria-hidden="true">$</div></div>
     <div class="tbr">
       <div class="seg" id="seg">
         <button data-f="" class="on">Todos <b>0</b></button>
@@ -735,7 +788,7 @@ function setBrand() {
   const mk = $('.brand .mk');
   if (R && R.logo_url) { mk.innerHTML = `<img src="${esc(R.logo_url)}" alt="">`; mk.classList.add('has'); }
   else { mk.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>'; mk.classList.remove('has'); }
-  $('.brand .t').textContent = R ? R.name : 'Fogón';
+  $('.brand .t').textContent = R ? R.name : 'Fogón'; hello();
   $('#susp').hidden = !(R && R.active === false);
 }
 function cfgPrev() {
@@ -822,6 +875,9 @@ async function refresh() {
   if (view === 'menu' && !(document.activeElement && document.activeElement.closest('#pg'))) renderMenu();
 }
 const clk = () => $('#clk').textContent = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+function hello() { const d = new Date(), h = d.getHours(), n = ($('.brand .t') || {}).textContent || '', g = h < 12 ? 'Buenos días' : h < 20 ? 'Buenas tardes' : 'Buenas noches';
+  $('#hDay').textContent = d.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' }); $('#hName').innerHTML = g + (n && n !== 'Fogón' && n !== 'Administrador' ? ', <em>' + esc(n) + '</em>' : '') + ' 👋'; }
+hello(); setInterval(hello, 30000);
 clk(); setInterval(clk, 10000); setInterval(tick, 10000);
 $('#mode').textContent = sb ? 'En vivo' : 'Modo demo';
 

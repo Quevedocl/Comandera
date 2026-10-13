@@ -219,6 +219,56 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
 .ads{color:var(--mu)}
 .wide{width:100%;margin-top:10px}
 #done .pri{margin-bottom:0}
+
+/* ===== identidad Fogón en el celular ===== */
+:root{--bg:#e6e7ea;--ln:#d6d9de;--acc:#8b1a1a;--acc2:#a82222;--sd:#c3c6cc;--sl:#fff;--raise:7px 7px 16px var(--sd),-6px -6px 16px var(--sl);--raise-s:3px 3px 8px var(--sd),-3px -3px 8px var(--sl);--press:inset 3px 3px 7px var(--sd),inset -3px -3px 7px var(--sl);--surf:linear-gradient(145deg,#f7f8fa,#e9eaed)}
+body{background:radial-gradient(520px 300px at 100% 0,rgba(139,26,26,.09),transparent 65%),var(--bg)}
+.sticky{background:rgba(246,247,249,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:0;box-shadow:0 8px 24px rgba(16,24,40,.08)}
+.top h1{font-weight:800;letter-spacing:-.03em}
+.bk img{border:0;box-shadow:var(--raise-s)}
+.mesa{background:linear-gradient(145deg,var(--acc2),var(--acc));box-shadow:0 4px 10px rgba(139,26,26,.3)}
+.callb{border:0;background:var(--surf);box-shadow:var(--raise-s);color:var(--acc)}.callb:active{box-shadow:var(--press)}
+.chips{padding:6px 16px 14px}
+.chips button{border:0;background:var(--surf);box-shadow:var(--raise-s);color:#4a4e55}
+.chips button.on{background:linear-gradient(145deg,var(--acc2),var(--acc));color:#fff;box-shadow:inset 2px 2px 6px rgba(0,0,0,.3),0 4px 12px rgba(139,26,26,.28)}
+.tkm,.tkb{border:0;border-radius:16px}
+.tkm{background:var(--surf);box-shadow:var(--raise-s)}
+.tkb{background:linear-gradient(145deg,var(--acc2),var(--acc));box-shadow:0 5px 12px rgba(139,26,26,.3)}
+.tkm.ready{background:linear-gradient(145deg,#f1fbf5,#dff3e8)}
+/* bienvenida con moneda */
+.hero0{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:14px;margin:14px 12px 4px;padding:20px 20px;border-radius:24px;color:#fff;background:radial-gradient(circle at 12% 0,rgba(255,255,255,.18),transparent 45%),linear-gradient(135deg,#a82222,#6e1212);box-shadow:0 14px 30px rgba(139,26,26,.35),inset 0 1px 0 rgba(255,255,255,.2);animation:rise .5s cubic-bezier(.2,1,.3,1) both}
+.hero0 small{display:block;font-weight:700;opacity:.8;letter-spacing:.06em;text-transform:uppercase;font-size:11px}
+.hero0 h2{margin:2px 0 4px;font-size:25px;line-height:1.1;letter-spacing:-.03em;overflow-wrap:anywhere}
+.hero0 p{margin:0;opacity:.85;font-size:14px;max-width:24ch}
+.coin0{flex:none;width:68px;height:68px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#ffe08a,#e0a52b 55%,#a8721a);box-shadow:0 8px 18px rgba(0,0,0,.3),inset 0 0 0 6px rgba(255,255,255,.22),inset 0 0 0 11px rgba(0,0,0,.08);display:grid;place-items:center;color:#7a4f0c;font-weight:800;font-size:28px;animation:coinSpin 5s ease-in-out infinite}
+.coin0::after{content:"$"}
+@keyframes coinSpin{0%,80%{transform:perspective(300px) rotateY(0)}100%{transform:perspective(300px) rotateY(360deg)}}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+body.locked .hero0{display:none}
+/* platos como tarjetas */
+section h2{margin:26px 6px 10px;color:#33363b;font-size:17px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+section h2::before{content:"";width:5px;height:18px;border-radius:4px;background:linear-gradient(var(--acc2),var(--acc))}
+.lst{background:none;border:0;border-radius:0;overflow:visible;display:grid;gap:12px}
+.it{grid-template-columns:78px 1fr auto;gap:14px;padding:12px;border:0;border-radius:20px;background:var(--surf);box-shadow:var(--raise);transition:box-shadow .25s}
+.it:active{box-shadow:var(--press)}
+.ph{width:78px;height:78px;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.04),3px 3px 8px rgba(0,0,0,.12)}
+.nm b{font-size:16px;letter-spacing:-.01em}
+.pr{color:var(--acc);font-size:16px}
+.add{background:linear-gradient(145deg,var(--acc2),var(--acc));box-shadow:0 6px 14px rgba(139,26,26,.35)}
+.stp button:first-child{box-shadow:var(--raise-s);border:0;background:var(--surf)}
+.stp button:not(:first-child){background:linear-gradient(145deg,var(--acc2),var(--acc))}
+/* barra del pedido */
+#bar{background:linear-gradient(to top,var(--bg) 55%,rgba(230,231,234,0))}
+#open{height:58px;border-radius:99px;background:linear-gradient(135deg,var(--acc2),#6e1212);box-shadow:0 12px 28px rgba(139,26,26,.4),inset 0 1px 0 rgba(255,255,255,.22)}
+#bn{display:grid;place-items:center;min-width:30px;height:30px;border-radius:50%;background:#fff;color:var(--acc);font-weight:800;font-size:14px}
+/* hojas y botones */
+dialog{background:var(--bg);border-radius:28px 28px 0 0}
+.pri{background:linear-gradient(145deg,var(--acc2),var(--acc));box-shadow:0 8px 20px rgba(139,26,26,.32);border-radius:99px}
+.res{background:linear-gradient(135deg,#2e3036,#1d1f23);box-shadow:0 12px 26px rgba(0,0,0,.25)}
+.tips button,.opt{border:0;background:var(--surf);box-shadow:var(--raise-s)}
+.tips button.on,.opt.on{background:linear-gradient(145deg,var(--acc2),var(--acc));color:#fff;box-shadow:inset 2px 2px 6px rgba(0,0,0,.3)}
+.opt.on small,.tips button.on small{color:rgba(255,255,255,.8)}
+@media (prefers-reduced-motion:reduce){.coin0{animation:none}.hero0{animation:none}}
 </style>
 </head>
 <body>
@@ -234,6 +284,7 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
     <div class="chips" id="chips"></div>
   </div>
 </div>
+<div class="wrap"><div class="hero0" id="hero0"><div><small>Bienvenido</small><h2 id="heroT">Carta</h2><p>Elige tus platos y pide desde tu mesa</p></div><div class="coin0" aria-hidden="true"></div></div></div>
 <main class="wrap" id="menu"><p class="msg">Cargando carta…</p></main>
 
 <div id="bar" hidden>
@@ -893,7 +944,7 @@ async function init() {
     loadMine();
   }
   $('#callBtn').hidden = !TID;
-  $('#ttl').textContent = NOMBRE; document.title = NOMBRE + ' · Haz tu pedido';
+  $('#ttl').textContent = NOMBRE; $('#heroT').textContent = NOMBRE; document.title = NOMBRE + ' · Haz tu pedido';
   loadCart();
   if (!TID) lockUp('<b>Escanea el QR de tu mesa</b><br>Así sabemos en qué mesa estás. Desde este enlace solo puedes ver la carta.');
   else if (sesState === 'cerrada') lockUp();

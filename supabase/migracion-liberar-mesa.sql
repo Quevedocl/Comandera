@@ -1,4 +1,4 @@
--- Comandera · migración 2: "Liberar mesa" distinto de "Cobrar y cerrar mesa"
+-- Fogón · migración 2: "Liberar mesa" distinto de "Cobrar y cerrar mesa"
 -- Ejecutar UNA vez en Supabase > SQL Editor (después de migracion-sesion-mesa.sql). Es seguro repetirla.
 alter table dining_tables add column if not exists released_sid uuid;
 

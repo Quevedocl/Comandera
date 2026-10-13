@@ -20,3 +20,9 @@
 - **Cuenta dividida o compartida**: toda la mesa ve la misma cuenta; se puede dividir en partes iguales, solo lo mío o por producto. El botón avisa al mesero con el monto en la nota.
 - **Vista previa**: toca un plato → foto grande, descripción, agregados y nota.
 - **Propina sugerida**: en la cuenta (0%, sugerida, +5, +10, otro %).
+
+## Cobro parcial (mesa abierta)
+1. **Supabase > SQL Editor**: ejecuta `supabase/migracion-cobro-parcial.sql` ANTES de subir los HTML.
+2. En el panel, la llamada "Quiere pagar" tiene dos botones: **Cobrar y cerrar mesa** (como antes) y **Cobrar y dejar abierta**.
+   El segundo marca como pagado lo pedido hasta ese aviso; si el cliente sigue pidiendo, su próxima cuenta solo suma lo nuevo y muestra "Ya pagado antes".
+3. Los tickets cobrados muestran la etiqueta **Pagado**; en Ingresos, "Cobrado" incluye lo pagado aunque la mesa siga abierta.

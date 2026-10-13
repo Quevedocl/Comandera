@@ -1,4 +1,4 @@
--- Comandera · migración: llamar al mesero + mesa cerrada = cliente anterior sin acceso
+-- Fogón · migración: llamar al mesero + mesa cerrada = cliente anterior sin acceso
 -- Ejecutar UNA vez en Supabase > SQL Editor (es seguro repetirla). Hazlo ANTES de subir los HTML nuevos.
 
 -- 1) Cada mesa tiene una "sesión". Al cerrar/cobrar la mesa la sesión cambia y el QR/pantalla del cliente anterior deja de servir.

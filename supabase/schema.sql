@@ -1,4 +1,4 @@
--- Comandera multi-restaurante · ejecutar UNA vez en Supabase > SQL Editor
+-- Fogón multi-restaurante · ejecutar UNA vez en Supabase > SQL Editor
 -- tabla promotions antigua (otra estructura, vacía): se renombra, no se borra
 do $$ begin
   if exists (select 1 from information_schema.columns where table_schema='public' and table_name='promotions' and column_name='product_ids') then

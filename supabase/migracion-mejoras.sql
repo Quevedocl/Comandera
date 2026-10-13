@@ -1,4 +1,4 @@
--- Comandera · migración 4: agregados con precio, vista previa, cancelar/modificar pedidos,
+-- Fogón · migración 4: agregados con precio, vista previa, cancelar/modificar pedidos,
 -- seguimiento del pedido, cuenta compartida/dividida y propina sugerida.
 -- Ejecutar UNA vez en Supabase > SQL Editor (después de las migraciones anteriores). Es seguro repetirla.
 -- Hazlo ANTES de subir los HTML nuevos.
