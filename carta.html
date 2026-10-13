@@ -97,6 +97,8 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
 #toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:20;background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;max-width:90vw;opacity:0;transform:translate(-50%,10px);pointer-events:none;transition:all .25s}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}html{scroll-behavior:auto}}
+.tag{display:inline-block;margin-top:4px;font-size:12px;font-weight:700;color:#92400e;background:#fef3c7;border-radius:6px;padding:2px 8px}
+.promos{margin:16px 0 0}.pm{padding:10px 14px;font-weight:600;border-bottom:1px solid var(--ln);background:#fffbeb}.pm:last-child{border:0}
 </style>
 </head>
 <body>
@@ -117,7 +119,7 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
   <ul id="lines"></ul>
   <div class="ft">
     <div class="tot"><span>Total</span><span id="tot"></span></div>
-    <div class="mz" id="mz" hidden><label for="mesaIn">Número de tu mesa</label><input id="mesaIn" inputmode="numeric" maxlength="3" autocomplete="off" placeholder="Ej. 5"></div>
+    <div class="mz" id="mz" hidden><label for="mesaIn">Tu mesa</label><input id="mesaIn" maxlength="30" autocomplete="off" placeholder="Ej. 5 o Terraza 2"></div>
     <p id="err" role="alert"></p>
     <button class="pri" id="send">Enviar pedido</button>
   </div>
@@ -136,7 +138,7 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
 <script>
 /* ===== CONFIGURACIÓN: mismo proyecto Supabase que la comandera ===== */
 const CFG = { url: 'https://pmctlwsqkrpesyfozmwo.supabase.co', key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtY3Rsd3Nxa3JwZXN5Zm96bXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4NDI0OTEsImV4cCI6MjEwNzQxODQ5MX0.t7M8-Whzia4odHN5_dBZar-kPcPnKLCgFXsb9D6uPz0' };
-const NOMBRE = 'Carta';            // Cambia por el nombre de tu restaurante
+let NOMBRE = 'Carta', RID = null, TID = null;
 const MAX_QTY = 20;
 
 const $ = s => document.querySelector(s);
@@ -145,12 +147,11 @@ const clp = n => '$' + Number(n).toLocaleString('es-CL');
 let tt; const toast = m => { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('on'), 2200); };
 
 const sb = window.supabase ? supabase.createClient(CFG.url, CFG.key) : null;
-const CART_KEY = 'carta-pedido-v1';
+let CART_KEY = 'carta-pedido-v1';
 
 /* mesa: viene del QR (?mesa=5); si no, se la pedimos al enviar */
-const urlMesa = (new URLSearchParams(location.search).get('mesa') || '').trim();
-let mesa = /^\d{1,3}$/.test(urlMesa) ? urlMesa : '';
-let lastMesa = '';
+const QS = new URLSearchParams(location.search), SLUG = (QS.get('r') || '').trim(), TID_Q = (QS.get('t') || '').trim();
+let mesa = '', lastMesa = '', promos = [];
 
 let products = [], cart = new Map(), spy = null;
 const find = id => products.find(p => String(p.id) === id);
@@ -159,7 +160,15 @@ const find = id => products.find(p => String(p.id) === id);
 function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify([...cart.values()])); } catch (e) {} }
 function loadCart() { try { (JSON.parse(localStorage.getItem(CART_KEY)) || []).forEach(l => cart.set(l.id, l)); } catch (e) {} }
 const count = () => [...cart.values()].reduce((a, l) => a + l.qty, 0);
-const total = () => [...cart.values()].reduce((a, l) => a + l.qty * l.price, 0);
+const live = x => x.is_active && (!x.ends_on || x.ends_on >= new Date().toISOString().slice(0, 10));
+const promoFor = id => promos.find(x => live(x) && x.type !== 'info' && String(x.product_id) === String(id));
+const disc = l => { const x = promoFor(l.id); if (!x) return 0; const g = l.qty * l.price;
+  if (x.type === 'nxm') return Math.floor(l.qty / x.buy_qty) * (x.buy_qty - x.pay_qty) * l.price;
+  if (x.type === 'percent') return Math.round(g * x.value / 100);
+  if (x.type === 'price') return Math.max(0, l.price - x.value) * l.qty; return 0; };
+const total = () => [...cart.values()].reduce((a, l) => a + l.qty * l.price - disc(l), 0);
+const badge = p => { const x = promoFor(p.id); return x ? `<span class="tag">🏷 ${esc(x.title)}</span>` : ''; };
+const promoBox = () => { const l = promos.filter(live); return l.length ? `<div class="promos"><h2 style="margin:0 4px 8px;font-size:15px;color:var(--mu)">Promociones</h2><div class="lst">${l.map(x => `<div class="pm">🏷 ${esc(x.title)}</div>`).join('')}</div></div>` : ''; };
 
 /* quita del pedido lo que ya no existe o se agotó, y actualiza precios; devuelve los nombres quitados */
 function prune() {
@@ -186,10 +195,10 @@ function render() {
   const cats = [...new Set(products.map(p => p.category))];
   if (!cats.length) { $('#menu').innerHTML = '<p class="msg">La carta aún no tiene productos.</p>'; $('#chips').innerHTML = ''; return; }
   $('#chips').innerHTML = cats.map((c, i) => `<button data-c="c${i}" class="${i === 0 ? 'on' : ''}">${esc(c)}</button>`).join('');
-  $('#menu').innerHTML = cats.map((c, i) => `<section id="c${i}"><h2>${esc(c)}</h2><div class="lst">${
+  $('#menu').innerHTML = promoBox() + cats.map((c, i) => `<section id="c${i}"><h2>${esc(c)}</h2><div class="lst">${
     products.filter(p => p.category === c).map(p => `<article class="it${p.is_available ? '' : ' off'}" data-id="${esc(p.id)}">
       <div class="ph" style="${p.image_url ? `background-image:url('${esc(p.image_url)}')` : ''}">${p.image_url ? '' : esc((p.name || '?')[0])}</div>
-      <div class="nm"><b>${esc(p.name)}</b><span class="pr">${clp(p.price)}</span></div>
+      <div class="nm"><b>${esc(p.name)}</b><span class="pr">${clp(p.price)}</span>${badge(p)}</div>
       <div class="ctl">${ctl(p)}</div></article>`).join('')}</div></section>`).join('');
   watchSections();
 }
@@ -239,7 +248,7 @@ function renderCart() {
   const lines = [...cart.values()];
   if (!lines.length) { $('#cart').close(); return; }
   $('#lines').innerHTML = lines.map(l => `<li data-id="${esc(l.id)}">
-    <div class="l1"><div class="nm"><b>${esc(l.name)}</b><small>${clp(l.price * l.qty)}</small></div>
+    <div class="l1"><div class="nm"><b>${esc(l.name)}</b><small>${clp(l.price * l.qty - disc(l))}${disc(l) ? ' · ' + esc(promoFor(l.id).title) : ''}</small></div>
     <div class="stp"><button data-a="dec" aria-label="Quitar uno de ${esc(l.name)}">−</button><b>${l.qty}</b><button data-a="inc" aria-label="Agregar uno de ${esc(l.name)}">+</button></div></div>
     <input class="note" maxlength="80" placeholder="Nota (ej. sin cebolla)" value="${esc(l.note)}" aria-label="Nota para ${esc(l.name)}"></li>`).join('');
   $('#tot').textContent = clp(total());
@@ -264,7 +273,7 @@ const fail = m => { $('#err').textContent = m; };
 $('#send').onclick = async () => {
   fail('');
   const t = mesa || $('#mesaIn').value.trim();
-  if (!/^\d{1,3}$/.test(t)) { fail('Escribe el número de tu mesa.'); $('#mesaIn').focus(); return; }
+  if (!t) { fail('Escribe tu mesa.'); $('#mesaIn').focus(); return; }
   if (!sb) { fail('Sin conexión con el restaurante. Avisa a un mesero.'); return; }
 
   await load();                                  // revisa disponibilidad justo antes de enviar
@@ -273,8 +282,8 @@ $('#send').onclick = async () => {
   if (!cart.size) { $('#cart').close(); return; }
 
   const btn = $('#send'); btn.disabled = true; btn.textContent = 'Enviando…';
-  const items = [...cart.values()].map(l => ({ id: l.id, name: l.name, qty: l.qty, price: l.price, note: l.note.trim() || undefined }));
-  const { error } = await sb.from('orders').insert({ table_number: Number(t), items, status: 'pending' });
+  const items = [...cart.values()].map(l => ({ id: l.id, name: l.name, qty: l.qty, price: l.price, note: l.note.trim() || undefined, promo: disc(l) ? promoFor(l.id).title : undefined }));
+  const { error } = await sb.from('orders').insert({ restaurant_id: RID, table_id: TID, table_name: t, items, total: total(), status: 'pending' });
   btn.disabled = false;
   if (error) { btn.textContent = 'Enviar pedido · ' + clp(total()); fail('No se pudo enviar el pedido. Revisa tu conexión e inténtalo otra vez.'); return; }
 
@@ -290,7 +299,9 @@ $('#again').onclick = () => { $('#done').hidden = true; window.scrollTo({ top: 0
 let lastGone = [];
 async function load() {
   if (!sb) { $('#menu').innerHTML = '<p class="msg">No se pudo conectar. Avisa a un mesero.</p>'; return; }
-  const { data, error } = await sb.from('products').select('*').order('category').order('name');
+  if (!RID) return;
+  const [pr, pm] = await Promise.all([sb.from('products').select('*').eq('restaurant_id', RID).order('category').order('name'), sb.from('promotions').select('*').eq('restaurant_id', RID)]);
+  const { data, error } = pr; promos = pm.data || [];
   if (error) {
     if (!products.length) $('#menu').innerHTML = '<p class="msg">No pudimos cargar la carta.<br><button class="gh" onclick="load()">Reintentar</button></p>';
     return;
@@ -301,11 +312,19 @@ async function load() {
   if (gone.length) { toast('Se agotó: ' + gone.join(', ')); if ($('#cart').open) renderCart(); }
 }
 
-$('#ttl').textContent = NOMBRE; document.title = NOMBRE + ' · Haz tu pedido';
-if (mesa) $('#mesaTag').textContent = 'Mesa ' + mesa;
-loadCart();
-load();
-if (sb) sb.channel('carta').on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => load()).subscribe();
+async function init() {
+  const bad = m => { $('#menu').innerHTML = `<p class="msg">${m}</p>`; };
+  if (!sb || !SLUG) return bad('Enlace inválido. Escanea de nuevo el QR de tu mesa.');
+  const { data: r } = await sb.from('restaurants').select('id,name').eq('slug', SLUG).maybeSingle();
+  if (!r) return bad('No encontramos este restaurante. Avisa a un mesero.');
+  RID = r.id; NOMBRE = r.name; CART_KEY += '-' + RID;
+  if (TID_Q) { const { data: t } = await sb.from('dining_tables').select('id,name').eq('id', TID_Q).eq('restaurant_id', RID).maybeSingle(); if (t) { TID = t.id; mesa = t.name; $('#mesaTag').textContent = t.name; } }
+  $('#ttl').textContent = NOMBRE; document.title = NOMBRE + ' · Haz tu pedido';
+  loadCart(); load();
+  const f = 'restaurant_id=eq.' + RID;
+  sb.channel('carta').on('postgres_changes', { event: '*', schema: 'public', table: 'products', filter: f }, () => load()).on('postgres_changes', { event: '*', schema: 'public', table: 'promotions', filter: f }, () => load()).subscribe();
+}
+init();
 document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
 </script>
 </body>
