@@ -18,7 +18,7 @@ for (const f of ['index.html', 'carta.html']) {
   if (!bad) ok(`${f}: sintaxis, elementos y archivos referenciados`);
 }
 for (const f of ['sw.js', 'config.js']) { try { new vm.Script(fs.readFileSync(path.join(root, f), 'utf8'), { filename: f }); ok(f + ': sintaxis'); } catch (e) { fail(f + ': ' + e.message); } }
-try { const m = JSON.parse(fs.readFileSync(path.join(root, 'manifest.webmanifest'), 'utf8')); m.icons.forEach(i => { if (!fs.existsSync(path.join(root, i.src))) fail('manifest: falta ' + i.src); }); ok('manifest.webmanifest'); } catch (e) { fail('manifest: ' + e.message); }
+try { const m = JSON.parse(fs.readFileSync(path.join(root, 'manifest.webmanifest'), 'utf8')); m.icons.forEach(i => { if (!fs.existsSync(path.join(root, i.src.split('?')[0]))) fail('manifest: falta ' + i.src); }); ok('manifest.webmanifest'); } catch (e) { fail('manifest: ' + e.message); }
 
 const walk = d => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.name === '.git' || e.name === 'node_modules' ? [] : e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]);
 for (const f of walk(root)) { if (/\.(png|ico)$/.test(f)) continue; const t = fs.readFileSync(f, 'utf8'); if (/service_role\s*['"]?\s*[:=]\s*['"]eyJ|sk-ant-[A-Za-z0-9_-]{20,}/.test(t)) fail('posible clave secreta en ' + path.relative(root, f)); }

@@ -9,8 +9,8 @@
 <meta property="og:type" content="website"><meta property="og:title" content="kepasa · Panel del restaurante"><meta property="og:description" content="Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="kepasa">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; font-src 'self' data:; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
-<link rel="icon" href="icons/logo-mark.svg" type="image/svg+xml"><link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/logo-mark.svg?v=2" type="image/svg+xml"><link rel="icon" href="icons/icon-192.png?v=2" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=2"><link rel="manifest" href="manifest.webmanifest">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
@@ -113,7 +113,7 @@ select,.srch{height:38px;border-radius:10px;border:1px solid var(--ln);backgroun
 .cc.pay{border-left-color:var(--grn)}.cc.help{border-left-color:var(--amb)}
 .cc .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.cc .h b{font-size:20px}.cc .h small{color:var(--mu);font-weight:600}
 .cc .why{margin:6px 0 0;font-weight:700}.cc .nt2{margin:6px 0 0;color:#b45309;font-weight:600;word-break:break-word}
-.cc .ac{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.cc .ac button{flex:1}
+.cc .ac{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.cc .ac button{flex:1 1 0;min-width:0;height:auto;min-height:42px;padding:9px 12px;line-height:1.2;text-align:center;white-space:normal;justify-content:center}.cc .ac .pri{flex-basis:100%}
 /* carta */
 .srch{display:flex;align-items:center;gap:8px;min-width:220px;color:var(--mu)}.srch input{border:0;outline:0;background:none;width:100%;color:var(--tx)}
 .stt{color:var(--mu);font-size:13.5px;font-weight:600}
@@ -348,7 +348,7 @@ dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.
 </head>
 <body>
 <header class="top">
-  <a class="al" href="./" aria-label="kepasa" title="kepasa"><img src="icons/logo-mark.svg" alt="kepasa" width="34" height="34"></a><span class="sep" aria-hidden="true"></span>
+  <a class="al" href="./" aria-label="kepasa" title="kepasa"><img src="icons/logo-mark.svg?v=2" alt="kepasa" width="34" height="34"></a><span class="sep" aria-hidden="true"></span>
   <div class="brand"><span class="mk">k</span><span class="t">kepasa</span></div>
   <nav>
     <button data-v="orders" class="on">Pedidos<i id="cnt" data-v="0"></i></button>
@@ -501,7 +501,7 @@ dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.
 <dialog id="qrd"><div style="text-align:center"><h3 id="qrt"></h3><div id="qrb"></div><div class="bt" style="justify-content:center"><button class="gh" id="qrdl">Descargar PNG</button><button class="gh" id="qrx">Cerrar</button></div></div></dialog>
 <div id="login" hidden>
   <aside class="lg-side" aria-hidden="true">
-    <img class="lg-logo" src="icons/logo-full-light.svg" alt="">
+    <img class="lg-logo" src="icons/logo-full-light.svg?v=2" alt="">
     <div>
       <h2>Pedidos <em>sin esperas</em>, mesas felices.</h2>
       <p class="lead">Tus clientes piden desde el celular con un QR y cocina lo ve al instante. Sin apps, sin errores de comanda.</p>
@@ -514,7 +514,7 @@ dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.
     <div class="lg-demo"><div class="h"><span>Mesa 5</span><small>Recién</small></div><ul><li><b>2×</b>Pisco Sour</li><li><b>1×</b>Pastel de papa</li></ul><div class="b">Marcar en preparación</div></div>
   </aside>
   <div class="lg-main"><div class="lg-card">
-    <div class="lg-top"><img src="icons/logo-full.svg" alt="kepasa"></div>
+    <div class="lg-top"><img src="icons/logo-full.svg?v=2" alt="kepasa"></div>
     <div id="coin">
       <form id="lf">
         <h1>Ingresa a tu cuenta</h1><p class="sub">Administra los pedidos de tu restaurante.</p>
