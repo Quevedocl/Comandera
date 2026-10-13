@@ -113,7 +113,7 @@ select,.srch{height:38px;border-radius:10px;border:1px solid var(--ln);backgroun
 .pg{flex:1;min-height:0;overflow-y:auto;padding:0 20px 28px;max-width:980px;width:100%}
 .pg h3{margin:20px 0 8px;font-size:14px;color:var(--mu);font-weight:700}
 .lst{background:#fff;border:1px solid var(--ln);border-radius:12px;overflow:hidden}
-.rw{display:grid;grid-template-columns:44px 1fr auto 104px 52px 36px;align-items:center;gap:14px;padding:10px 16px;border-bottom:1px solid var(--ln);transition:background .4s}
+.rw{display:grid;grid-template-columns:44px 1fr auto 104px 52px 36px 36px;align-items:center;gap:14px;padding:10px 16px;border-bottom:1px solid var(--ln);transition:background .4s}
 .rw:last-child{border:0}.rw.saved{animation:saved 1s}
 .stag .rw{animation:in .35s both;animation-delay:calc(var(--i)*25ms)}
 .ph{width:44px;height:44px;border-radius:10px;background:var(--bg) center/cover;display:grid;place-items:center;font-weight:700;color:var(--mu)}
@@ -138,12 +138,12 @@ dialog input[type=file]{height:auto;padding:9px 12px}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 #login{position:fixed;inset:0;z-index:30;background:var(--bg);display:grid;place-items:center;padding:20px}
 #login[hidden]{display:none}
-#lf{width:min(380px,100%);background:#fff;border:1px solid var(--ln);border-radius:16px;padding:28px;box-shadow:0 10px 40px rgba(16,24,40,.08);animation:pop .3s}
-#lf h2{margin:14px 0 2px;font-size:22px}#lf p{margin:0;color:var(--mu)}
-#lf label{display:block;margin:16px 0 6px;font-size:13px;font-weight:600;color:var(--mu)}
-#lf input{width:100%;height:44px;padding:0 12px;border:1px solid var(--ln);border-radius:9px;outline:0}#lf input:focus{border-color:#2563eb}
-#lf .pri{width:100%;height:46px;justify-content:center;margin-top:18px}
-#lerr{color:var(--red)!important;font-size:13.5px;font-weight:600;min-height:20px;margin-top:10px!important}
+#lf,#vf{width:min(380px,100%);background:#fff;border:1px solid var(--ln);border-radius:16px;padding:28px;box-shadow:0 10px 40px rgba(16,24,40,.08);animation:pop .3s}
+#lf h2,#vf h2{margin:14px 0 2px;font-size:22px}#lf p,#vf p{margin:0;color:var(--mu)}
+#lf label,#vf label{display:block;margin:16px 0 6px;font-size:13px;font-weight:600;color:var(--mu)}
+#lf input,#vf input{width:100%;height:44px;padding:0 12px;border:1px solid var(--ln);border-radius:9px;outline:0;transition:border-color .2s,box-shadow .2s}#lf input:focus,#vf input:focus{border-color:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,.12)}
+#lf .pri,#vf .pri{width:100%;height:46px;justify-content:center;margin-top:18px}
+#lerr,#verr{color:var(--red)!important;font-size:13.5px;font-weight:600;min-height:20px;margin-top:10px!important}
 @keyframes in{from{opacity:0;transform:translateY(12px) scale(.97)}}
 @keyframes out{to{opacity:0;transform:scale(.95)}}
 @keyframes fade{from{opacity:0}}
@@ -157,7 +157,7 @@ dialog input[type=file]{height:auto;padding:9px 12px}
  .top{gap:8px;padding:0 12px}.brand span.t,.live,#clk{display:none}.r{gap:8px}nav button{padding:0 12px}
  .tbr{padding:12px}.grid{padding:4px 12px 20px;grid-template-columns:1fr}.pg{padding:0 12px 24px}
  .sp{margin-left:0}.gh span{display:none}
- .rw{grid-template-columns:44px 1fr auto 48px 36px;gap:10px;padding:10px 12px}.st{display:none}.pi input{width:68px}
+ .rw{grid-template-columns:44px 1fr auto 48px 36px 36px;gap:10px;padding:10px 12px}.st{display:none}.pi input{width:68px}
 }
 .rw2{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--ln);flex-wrap:wrap}.rw2:last-child{border:0}.rw2 .nm{flex:1;min-width:160px}.rw2 .nm small{color:var(--mu);word-break:break-all;font-size:12px}
 .empty{text-align:center;color:var(--mu);padding:50px 0;font-weight:600}
@@ -167,6 +167,75 @@ dialog input[type=checkbox]{width:auto;height:auto}
 .tf{display:flex;gap:10px;padding:0 20px 14px;max-width:980px}.tf input{flex:1;height:38px;border:1px solid var(--ln);border-radius:10px;padding:0 12px;background:#fff}
 #qrb{display:grid;place-items:center;margin:16px 0}
 .del{width:36px;height:36px;border:1px solid var(--ln);border-radius:9px;background:#fff;color:var(--mu);display:grid;place-items:center;transition:all .2s}.del:hover{color:var(--red);border-color:var(--red)}
+
+/* ===== agregados, ingresos, edición ===== */
+.fld select,dialog textarea{width:100%;border:1px solid var(--ln);border-radius:10px;outline:0;background:#fff;font:inherit}
+.fld select{height:44px;padding:0 12px}.fld select:focus,dialog textarea:focus{border-color:#2563eb}
+dialog textarea{min-height:70px;padding:10px 12px;resize:vertical;border-radius:9px}
+.del.ed:hover{color:var(--ink);border-color:var(--ink)}
+.rw3{display:grid;grid-template-columns:1fr auto 52px 36px;align-items:center;gap:14px;padding:10px 16px;border-bottom:1px solid var(--ln);transition:background .4s}
+.rw3:last-child{border:0}.rw3.off .nm b{color:var(--mu);text-decoration:line-through}
+.rw3 .nm small{display:block}
+.vt{display:flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:99px;background:#effaf3;color:#15703e;font-weight:700;border:1px solid #bfe8cf;white-space:nowrap}
+.vt b{font-variant-numeric:tabular-nums}
+.rv{flex:1;min-height:0;overflow-y:auto;padding:0 20px 28px;max-width:1040px;width:100%}
+.rvk{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.rvk div{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:14px 16px;animation:in .5s cubic-bezier(.2,1.1,.3,1) both;animation-delay:calc(var(--i)*70ms);transition:transform .25s,box-shadow .25s}
+.rvk div:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(16,24,40,.1)}
+.rvk div.big{background:var(--ink);color:#fff;border-color:var(--ink)}.rvk div.big span{color:rgba(255,255,255,.7)}
+.rvk b{display:block;font-size:26px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.rvk span{color:var(--mu);font-size:13px;font-weight:600}
+.rvc{display:grid;grid-template-columns:2fr 1fr;gap:16px;align-items:start}
+@media (max-width:860px){.rvc{grid-template-columns:1fr}}
+.chart{display:flex;align-items:flex-end;gap:5px;padding-top:22px;overflow-x:auto}
+.chart .c{flex:1;min-width:22px;display:flex;flex-direction:column;align-items:center}
+.chart .bw{height:150px;width:100%;display:flex;align-items:flex-end}
+.chart .bar{position:relative;width:100%;height:0;border-radius:6px 6px 0 0;background:linear-gradient(to top,var(--ink),#4b5563);transition:height .9s cubic-bezier(.2,1,.3,1),filter .2s}
+.chart .c:hover .bar{filter:brightness(1.5)}
+.chart .bar em{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font:600 10px var(--f);color:var(--mu);font-style:normal;white-space:nowrap}
+.chart small{font-size:11px;color:var(--mu);margin-top:6px;font-variant-numeric:tabular-nums}
+.t5{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 0;border-bottom:1px solid var(--ln);animation:in .4s both;animation-delay:calc(var(--i)*60ms)}
+.t5:last-child{border:0}.t5 small{color:var(--mu);font-weight:600}
+.t5 .bb{grid-column:1/-1;height:6px;border-radius:99px;background:var(--bg);overflow:hidden;margin-top:4px}
+.t5 .bb i{display:block;height:100%;width:0;background:var(--grn);border-radius:99px;transition:width .9s cubic-bezier(.2,1,.3,1)}
+#rvDay{height:38px;border:1px solid var(--ln);border-radius:10px;padding:0 12px;background:#fff}
+
+/* ===== animaciones y efectos visuales ===== */
+@keyframes viewin{from{opacity:0;transform:translateY(10px)}}
+.view{animation:viewin .35s cubic-bezier(.2,.8,.3,1)}
+nav button:hover{color:var(--tx)}
+.pri,.gh,.go,.seg button{position:relative;overflow:hidden}
+.rip{position:absolute;border-radius:50%;background:currentColor;opacity:.22;transform:scale(0);pointer-events:none;animation:rip .6s ease-out forwards}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+.tk,.cc,.rw,.rw2,.rw3{transition:transform .25s,box-shadow .25s,background .3s}
+.tk:hover,.cc:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(16,24,40,.12)}
+.rw:hover,.rw2:hover,.rw3:hover{background:#fafbfc}
+.tk{position:relative}
+.tk::before{content:"";position:absolute;left:0;top:0;height:4px;width:33%;background:rgba(255,255,255,.75);z-index:1;transition:width .7s cubic-bezier(.2,1,.3,1)}
+.tk.preparing::before{width:66%}.tk.ready::before{width:100%}
+.tk.flash{animation:flash 1.4s}
+@keyframes flash{0%,100%{box-shadow:0 1px 2px rgba(16,24,40,.06)}25%{box-shadow:0 0 0 4px rgba(37,99,235,.5)}}
+.modb{display:inline-block;margin-left:8px;background:#2563eb;color:#fff;font-size:11px;font-weight:700;border-radius:6px;padding:1px 7px;animation:pop .4s}
+.nt.ad{color:#15703e}
+.late .lt{animation:latep 1.2s infinite}
+@keyframes latep{50%{background:rgba(0,0,0,.45)}}
+.grid[data-loading]::after{content:none!important}
+.sk{height:200px;border-radius:12px;background:linear-gradient(100deg,#eceef1 30%,#f7f8fa 50%,#eceef1 70%) 0 0/200% 100%;animation:shim 1.2s infinite linear}
+@keyframes shim{to{background-position:-200% 0}}
+@keyframes badge{40%{transform:scale(1.4)}}
+.bump{animation:badge .45s}
+.cf{position:fixed;width:9px;height:14px;z-index:40;pointer-events:none;border-radius:2px;animation:cf 1.3s cubic-bezier(.2,.7,.4,1) forwards}
+@keyframes cf{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
+#login{overflow:hidden}
+#login::before,#login::after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;filter:blur(70px);opacity:.55;animation:float 12s ease-in-out infinite alternate;pointer-events:none}
+#login::before{background:#bfdbfe;top:-120px;left:-100px}
+#login::after{background:#fde68a;bottom:-140px;right:-100px;animation-delay:-6s}
+@keyframes float{to{transform:translate(60px,40px) scale(1.15)}}
+#lf,#vf{position:relative;z-index:1}
+#vf input#lc{height:58px;font-size:28px;letter-spacing:.45em;text-align:center;font-weight:700;font-variant-numeric:tabular-nums;padding-left:.45em}
+#vf .gh{width:100%;margin-top:10px}
+#vf .pri{margin-top:16px}
+.vm{color:var(--mu);margin:8px 0 0!important}.vm b{color:var(--tx);word-break:break-all}
 </style>
 </head>
 <body>
@@ -175,7 +244,9 @@ dialog input[type=checkbox]{width:auto;height:auto}
   <nav>
     <button data-v="orders" class="on">Pedidos<i id="cnt" data-v="0"></i></button>
     <button data-v="menu">Carta</button>
+    <button data-v="addons">Agregados</button>
     <button data-v="promos">Promos</button>
+    <button data-v="revenue">Ingresos</button>
     <button data-v="calls">Llamadas<i id="ccnt" data-v="0"></i></button>
     <button data-v="tables">Mesas</button>
     <button data-v="admin" hidden>Admin</button>
@@ -200,8 +271,9 @@ dialog input[type=checkbox]{width:auto;height:auto}
         <button data-f="ready">Listos <b>0</b></button>
       </div>
       <select id="mesa" aria-label="Filtrar por mesa"></select>
+      <span class="vt sp" id="vt" title="Ventas de hoy (sin contar pedidos cancelados)">Ventas hoy <b id="vtv" data-v="0">$0</b></span>
     </div>
-    <div class="grid" id="grid"></div>
+    <div class="grid" id="grid" data-loading><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
   </section>
 
   <section class="view" id="menu" hidden>
@@ -217,6 +289,36 @@ dialog input[type=checkbox]{width:auto;height:auto}
   <section class="view" id="promos" hidden>
     <div class="tbr"><span class="stt">Descuentos que verán tus clientes en la carta</span><button class="pri sp" id="newpromo">Nueva promoción</button></div>
     <div class="pg" id="pl"></div>
+  </section>
+
+  <section class="view" id="addons" hidden>
+    <div class="tbr"><span class="stt">Extras con precio que tus clientes pueden sumar a un plato (queso extra, tocino, salsa…)</span><button class="pri sp" id="newad">Nuevo agregado</button></div>
+    <div class="pg" id="al"></div>
+  </section>
+
+  <section class="view" id="revenue" hidden>
+    <div class="tbr">
+      <button class="gh" id="rvPrev" aria-label="Día anterior">‹</button>
+      <input type="date" id="rvDay" aria-label="Día">
+      <button class="gh" id="rvNext" aria-label="Día siguiente">›</button>
+      <button class="gh" id="rvToday">Hoy</button>
+      <span class="stt sp" id="rvTitle"></span>
+    </div>
+    <div class="rv">
+      <div class="rvk">
+        <div class="big" style="--i:0"><span>Ventas del día</span><b id="rvSales" data-v="0">$0</b></div>
+        <div style="--i:1"><span>Cobrado (mesas cerradas)</span><b id="rvPaid" data-v="0">$0</b></div>
+        <div style="--i:2"><span>Por cobrar (mesas abiertas)</span><b id="rvOpen" data-v="0">$0</b></div>
+        <div style="--i:3"><span>Pedidos</span><b id="rvN" data-v="0">0</b></div>
+        <div style="--i:4"><span>Ticket promedio</span><b id="rvAvg" data-v="0">$0</b></div>
+        <div style="--i:5"><span>En agregados</span><b id="rvAdd" data-v="0">$0</b></div>
+      </div>
+      <div class="rvc">
+        <div class="card"><h3>Ventas por hora</h3><p class="hint">Cuánto se pidió en cada hora del día.</p><div class="chart" id="rvChart"></div></div>
+        <div class="card"><h3>Lo más vendido</h3><p class="hint">Por monto vendido.</p><div id="rvTop"></div></div>
+      </div>
+      <p class="stt" id="rvNote"></p>
+    </div>
   </section>
 
   <section class="view" id="calls" hidden>
@@ -235,6 +337,7 @@ dialog input[type=checkbox]{width:auto;height:auto}
           <input type="file" id="lgFile" accept="image/png,image/jpeg,image/webp" hidden>
         </div>
         <div class="fld"><label for="cfgName">Nombre del negocio</label><input id="cfgName" maxlength="50" autocomplete="off"></div>
+        <div class="fld" id="cfgTipBox" style="margin-top:14px"><label for="cfgTip">Propina sugerida en la cuenta</label><select id="cfgTip"><option value="0">Sin sugerencia</option><option value="5">5%</option><option value="10">10% (habitual en Chile)</option><option value="15">15%</option><option value="20">20%</option></select><p class="hint" style="margin:6px 0 0">Tus clientes la ven al revisar la cuenta de su mesa. Es voluntaria y pueden cambiarla.</p></div>
         <div class="acts"><button class="gh" id="cfgReset" type="button">Descartar</button><button class="pri" id="cfgSave" type="button">Guardar cambios</button></div>
       </div>
       <div class="card"><h3>Vista previa</h3><p class="hint">Así se ve la cabecera de tu carta en el celular del cliente.</p>
@@ -257,14 +360,24 @@ dialog input[type=checkbox]{width:auto;height:auto}
 
 <dialog id="dlg">
   <form method="dialog" id="frm">
-    <h3>Nuevo producto</h3>
+    <h3 id="f-title">Nuevo producto</h3>
     <label for="f-name">Nombre</label><input id="f-name" required>
     <label for="f-cat">Categoría</label><select id="f-cat" required></select><input id="f-cat2" placeholder="Nombre de la nueva categoría" maxlength="40" hidden>
     <label for="f-price">Precio</label><input id="f-price" type="number" min="0" step="1" inputmode="numeric" required>
-    <label for="f-img">Foto (opcional)</label><input id="f-img" type="file" accept="image/*">
+    <label for="f-desc">Descripción (opcional)</label><textarea id="f-desc" maxlength="240" placeholder="Ingredientes, tamaño, alérgenos… Se muestra en la vista previa del plato"></textarea>
+    <label for="f-img" id="f-imgl">Foto (opcional)</label><input id="f-img" type="file" accept="image/*">
     <div class="bt"><button type="button" class="gh" id="cancel">Cancelar</button><button class="pri" type="submit">Guardar producto</button></div>
   </form>
 </dialog>
+<dialog id="ad"><div>
+  <h3>Nuevo agregado</h3>
+  <label for="a-name">Nombre</label><input id="a-name" maxlength="40" placeholder="Ej. Queso extra" autocomplete="off">
+  <label for="a-price">Precio extra ($)</label><input id="a-price" type="number" min="0" step="1" inputmode="numeric" placeholder="1000">
+  <label for="a-scope">Aplica a</label><select id="a-scope"><option value="product">Un producto</option><option value="category">Todos los productos de una categoría</option></select>
+  <div id="a-prod"><label for="a-pid">Producto</label><select id="a-pid"></select></div>
+  <div id="a-cat" hidden><label for="a-cid">Categoría</label><select id="a-cid"></select></div>
+  <div class="bt"><button type="button" class="gh" id="a-cancel">Cancelar</button><button type="button" class="pri" id="a-save">Crear agregado</button></div>
+</div></dialog>
 <dialog id="pd"><div>
   <h3>Nueva promoción</h3>
   <label>Tipo</label><select id="p-type"><option value="nxm">2x1, 3x2… (lleva N, paga M)</option><option value="percent">% de descuento</option><option value="price">Precio especial</option><option value="info">Solo aviso (sin descuento)</option></select>
@@ -286,6 +399,16 @@ dialog input[type=checkbox]{width:auto;height:auto}
     <p id="lerr" role="alert"></p>
     <button class="pri" id="lsub" type="submit">Ingresar</button><button type="button" class="gh" id="sw" style="width:100%;margin-top:10px">Crear cuenta nueva</button>
   </form>
+  <form id="vf" hidden>
+    <span class="mk"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg></span>
+    <h2>Verifica tu correo</h2><p class="vm" id="vmsg"></p>
+    <label for="lc">Código de verificación</label>
+    <input id="lc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="······" required>
+    <p id="verr" role="alert"></p>
+    <button class="pri" id="vsub" type="submit">Verificar y entrar</button>
+    <button type="button" class="gh" id="vres">Reenviar código</button>
+    <button type="button" class="gh" id="vback">Usar otro correo</button>
+  </form>
 </div>
 <div id="bn" role="alert"></div><div id="toast" role="status"></div>
 
@@ -306,27 +429,37 @@ let R = null; // restaurante de la sesión
 const api = {
   async load() {
     const q = n => sb.from(n).select('*').eq('restaurant_id', R.id);
-    const [p, o, pr, t, w] = await Promise.all([q('products').order('category').order('name'), q('orders').neq('status', 'completed').order('created_at'), q('promotions').order('created_at'), q('dining_tables').order('created_at'), q('waiter_calls').eq('status', 'open').order('created_at')]);
+    const [p, o, pr, t, w, ad] = await Promise.all([q('products').order('category').order('name'), q('orders').not('status', 'in', '(completed,cancelled)').order('created_at'), q('promotions').order('created_at'), q('dining_tables').order('created_at'), q('waiter_calls').eq('status', 'open').order('created_at'), q('product_addons').order('created_at')]);
     if ([p, o, pr, t, w].some(x => x.error)) toast('No se pudieron cargar los datos');
-    return { products: p.data || [], orders: o.data || [], promos: pr.data || [], tables: t.data || [], calls: w.data || [] };
+    if (ad.error && !addonsWarned) { addonsWarned = true; toast('Falta ejecutar supabase/migracion-mejoras.sql en Supabase'); }
+    return { products: p.data || [], orders: o.data || [], promos: pr.data || [], tables: t.data || [], calls: w.data || [], addons: ad.data || [] };
   },
   async setProduct(id, patch) { await sb.from('products').update(patch).eq('id', id); },
+  async uploadImg(file) { const path = R.id + '/' + Date.now() + '-' + file.name.replace(/[^\w.]/g, '_'); const up = await sb.storage.from('products').upload(path, file); return up.error ? null : sb.storage.from('products').getPublicUrl(path).data.publicUrl; },
   async addProduct(p, file) {
-    if (file) { const path = R.id + '/' + Date.now() + '-' + file.name.replace(/[^\w.]/g, '_'); const up = await sb.storage.from('products').upload(path, file); if (!up.error) p.image_url = sb.storage.from('products').getPublicUrl(path).data.publicUrl; }
-    await sb.from('products').insert({ ...p, restaurant_id: R.id });
+    if (file) { const u = await api.uploadImg(file); if (u) p.image_url = u; }
+    const { error } = await sb.from('products').insert({ ...p, restaurant_id: R.id });
+    if (error) { toast('No se pudo guardar: ' + error.message); return false; } return true;
+  },
+  async editProduct(id, patch, file) {
+    if (file) { const u = await api.uploadImg(file); if (u) patch.image_url = u; }
+    const { error } = await sb.from('products').update(patch).eq('id', id);
+    if (error) { toast('No se pudo guardar: ' + error.message); return false; } return true;
   },
   async addMany(rows) { await sb.from('products').insert(rows.map(r => ({ ...r, restaurant_id: R.id }))); },
   async add(table, row) { const { error } = await sb.from(table).insert({ ...row, restaurant_id: R.id }); if (error) toast('No se pudo guardar: ' + error.message); },
   async upd(table, id, patch) { await sb.from(table).update(patch).eq('id', id); },
   async del(table, id) { await sb.from(table).delete().eq('id', id); },
-  async setStatus(id, status) { await sb.from('orders').update({ status }).eq('id', id); },
+  async setStatus(id, status) { await sb.from('orders').update({ status }).eq('id', id).neq('status', 'cancelled'); },
   /* cierra la mesa: completa sus pedidos, atiende sus llamadas y cambia su sesión (el cliente anterior ya no puede pedir) */
   async closeTable(tid, name, release = false) { const { error } = await sb.rpc('close_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name, p_release: release }); if (error) { toast('No se pudo cerrar la mesa: ' + error.message); return false; } return true; },
-  watch(cb) { let c = sb.channel('comandera'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, cb)); c.subscribe(); }
+  watch(cb) { let c = sb.channel('comandera'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls', 'product_addons'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, p => { try { orderEvent(p); } catch (e) {} cb(); })); c.subscribe(); }
 };
 
 /* ===== ESTADO ===== */
-let data = { products: [], orders: [], promos: [], tables: [], calls: [] }, view = 'orders', sf = '', mf = '', seen = null, soundOn = false, ctx, mq = '', mcat = '';
+let addonsWarned = false;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let data = { products: [], orders: [], promos: [], tables: [], calls: [], addons: [] }, view = 'orders', sf = '', mf = '', seen = null, soundOn = false, ctx, mq = '', mcat = '';
 const map = new Map();
 const LBL = { pending: ['Marcar en preparación', 'preparing'], preparing: ['Pedido listo', 'ready'], ready: ['Cobrar y cerrar mesa', 'completed'] };
 const tn = o => o.table_name || 'Mesa ' + o.table_number;
@@ -354,6 +487,8 @@ function tones(seq, vol = .6) {                       // seq: [[frecuencia, inic
 function beep(kind) {
   if (!soundOn) return;
   if (kind === 'call') tones([[1046, 0, .22], [1318, .25, .22], [1568, .5, .35], [1046, 1.0, .22], [1318, 1.25, .22], [1568, 1.5, .35]]);
+  else if (kind === 'cancel') tones([[659, 0, .25], [523, .28, .25], [392, .56, .4]]);
+  else if (kind === 'mod') tones([[988, 0, .16], [1319, .2, .16], [988, .45, .16], [1319, .65, .25]]);
   else tones([[880, 0, .25], [1175, .28, .25], [880, .7, .25], [1175, .98, .35]]);
   setTimeout(syncSnd, 300);
 }
@@ -362,6 +497,18 @@ try { soundOn = localStorage.getItem('cmd-sound') !== '0'; } catch (e) { soundOn
 $('#snd').onclick = () => { if (sndNeeds()) { audio(); beep(); setTimeout(syncSnd, 200); toast('Sonido activado'); return; } soundOn = !soundOn; try { localStorage.setItem('cmd-sound', soundOn ? '1' : '0'); } catch (e) {} syncSnd(); toast(soundOn ? 'Sonido activado' : 'Sonido desactivado'); if (soundOn) beep(); };
 syncSnd();
 let bt;
+function alertInfo(msg, kind) {
+  beep(kind); const b = $('#bn'); b.textContent = msg;
+  b.classList.add('on'); clearTimeout(bt); bt = setTimeout(() => b.classList.remove('on'), 4500);
+}
+/* el cliente canceló o modificó su pedido desde el celular */
+function orderEvent(p) {
+  if (!p || p.table !== 'orders' || p.eventType !== 'UPDATE') return;
+  const n = p.new || {}; if (!n.id) return;
+  if (n.status === 'cancelled') { alertInfo(`Pedido cancelado por el cliente · ${tn(n)}`, 'cancel'); return; }
+  const el = map.get(n.id);
+  if (el && n.modified_at && n.modified_at !== el._mod) alertInfo(`Pedido modificado · ${tn(n)}`, 'mod');
+}
 function alertNew(list) {
   beep(); const b = $('#bn');
   b.textContent = list.length > 1 ? `${list.length} pedidos nuevos` : `Nuevo pedido · ${tn(list[0])}`;
@@ -371,17 +518,22 @@ function alertNew(list) {
 /* ===== PEDIDOS ===== */
 function ticketHTML(o) {
   const n = (o.items || []).reduce((a, i) => a + Number(i.qty || 0), 0);
-  return `<div class="hd"><div><b class="mn">${esc(tn(o))}</b><small>${n} ${n === 1 ? 'ítem' : 'ítems'}</small></div><div class="rt"><span class="lt">Atrasado</span><span class="ago"></span></div></div>
-  <ul>${(o.items || []).map(i => `<li><b>${esc(i.qty)}×</b><span>${esc(i.name)}</span>${i.promo ? `<span class="nt">🏷 ${esc(i.promo)}</span>` : ''}${i.note ? `<span class="nt">${esc(i.note)}</span>` : ''}</li>`).join('')}</ul><button class="go"></button>`;
+  return `<div class="hd"><div><b class="mn">${esc(tn(o))}</b><small>${n} ${n === 1 ? 'ítem' : 'ítems'}${o.modified_at ? '<span class="modb">Modificado</span>' : ''}</small></div><div class="rt"><span class="lt">Atrasado</span><span class="ago"></span></div></div>
+  <ul>${(o.items || []).map(i => `<li><b>${esc(i.qty)}×</b><span>${esc(i.name)}</span>${(i.addons || []).map(a => `<span class="nt ad">+ ${esc(a.name)}</span>`).join('')}${i.promo ? `<span class="nt">🏷 ${esc(i.promo)}</span>` : ''}${i.note ? `<span class="nt">${esc(i.note)}</span>` : ''}</li>`).join('')}</ul><button class="go"></button>`;
 }
 function renderOrders() {
+  const g0 = $('#grid'); if (g0.hasAttribute('data-loading')) { g0.removeAttribute('data-loading'); g0.querySelectorAll('.sk').forEach(x => x.remove()); }
   const ids = new Set(data.orders.map(o => o.id)), fresh = [];
   [...data.orders].sort((a, b) => new Date(a.created_at) - new Date(b.created_at)).forEach((o, i) => {
     let el = map.get(o.id);
     if (!el) {
       el = document.createElement('article'); el.className = 'tk'; el.dataset.id = o.id; el.innerHTML = ticketHTML(o); map.set(o.id, el); $('#grid').appendChild(el);
+      el._sg = JSON.stringify(o.items) + '|' + (o.modified_at || ''); if (!seen) el.style.animationDelay = Math.min(i, 8) * 45 + 'ms';
       if (seen && o.status === 'pending') { fresh.push(o); el.classList.add('nuevo'); }
     } else if (el.dataset.st && el.dataset.st !== o.status) { el.classList.remove('nuevo', 'moved'); void el.offsetWidth; el.classList.add('moved'); }
+    const sg = JSON.stringify(o.items) + '|' + (o.modified_at || '');
+    if (el._sg !== sg) { el._sg = sg; el.innerHTML = ticketHTML(o); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }   // el cliente modificó el pedido
+    el._mod = o.modified_at || '';
     el.classList.remove('pending', 'preparing', 'ready'); el.classList.add(o.status);
     el.dataset.st = o.status; el._t = o.created_at;
     const g = el.querySelector('.go'); g.textContent = LBL[o.status][0]; g.dataset.to = LBL[o.status][1]; g.disabled = false;
@@ -401,7 +553,8 @@ function tick() {
 function counts() {
   const c = { '': data.orders.length, pending: 0, preparing: 0, ready: 0 }; data.orders.forEach(o => c[o.status]++);
   $$('#seg button').forEach(b => b.querySelector('b').textContent = c[b.dataset.f]);
-  const cn = $('#cnt'); cn.textContent = c.pending || ''; cn.dataset.v = c.pending;
+  const cn = $('#cnt'), pv = cn.dataset.v; cn.textContent = c.pending || ''; cn.dataset.v = c.pending;
+  if (String(pv) !== String(c.pending) && c.pending) { cn.classList.remove('bump'); void cn.offsetWidth; cn.classList.add('bump'); }
 }
 function mesas() {
   const nums = [...new Set(data.orders.map(tn))].sort((a, b) => a.localeCompare(b, 'es', { numeric: true }));
@@ -426,7 +579,7 @@ async function closeTableUI(tid, name) {
   const busy = open.filter(o => o.status !== 'ready').length;
   if (busy && !confirm(`La mesa "${name}" tiene ${busy} pedido${busy === 1 ? '' : 's'} sin terminar.\n\nSi cierras la mesa se completan todos y el cliente ya no podrá pedir. ¿Cerrar igual?`)) return false;
   if (!(await api.closeTable(tid, name))) return false;
-  toast('Mesa cerrada y cobrada'); return true;
+  toast('Mesa cerrada y cobrada'); confetti(); return true;
 }
 
 /* ===== LLAMADAS AL MESERO ===== */
@@ -464,6 +617,7 @@ function menuMeta() {
   fillCats();
   $('#chips').innerHTML = ['', ...cats].map(c => `<button data-c="${esc(c)}" class="${c === mcat ? 'on' : ''}">${c ? esc(c) : 'Todo'}</button>`).join('');
 }
+const addonCount = p => (data.addons || []).filter(a => a.product_id ? String(a.product_id) === String(p.id) : a.category === p.category).length;
 function renderMenu(stagger) {
   const pg = $('#pg'), q = mq.toLowerCase(), cats = [...new Set(data.products.map(p => p.category))];
   if (stagger) { pg.classList.add('stag'); setTimeout(() => pg.classList.remove('stag'), 1000); }
@@ -472,10 +626,10 @@ function renderMenu(stagger) {
     const rows = data.products.filter(p => p.category === c && (!q || p.name.toLowerCase().includes(q)));
     return rows.length ? `<h3>${esc(c)}</h3><div class="lst">${rows.map(p => `<div class="rw${p.is_available ? '' : ' off'}" style="--i:${i++}">
       <div class="ph" style="${p.image_url ? `background-image:url('${esc(p.image_url)}')` : ''}">${p.image_url ? '' : esc(p.name[0])}</div>
-      <div class="nm"><b>${esc(p.name)}</b><small>${esc(p.category)}</small></div>
+      <div class="nm"><b>${esc(p.name)}</b><small>${esc(p.category)}${addonCount(p) ? ' · ' + addonCount(p) + (addonCount(p) === 1 ? ' agregado' : ' agregados') : ''}</small></div>
       <label class="pi">$<input type="number" min="0" step="1" inputmode="numeric" value="${p.price}" data-id="${p.id}" aria-label="Precio de ${esc(p.name)}"></label>
       <span class="st">${p.is_available ? 'Disponible' : 'Agotado'}</span>
-      <input class="sw" type="checkbox" role="switch" ${p.is_available ? 'checked' : ''} data-id="${p.id}" aria-label="Disponible: ${esc(p.name)}"><button class="del" data-delp="${p.id}" aria-label="Borrar ${esc(p.name)}" title="Borrar"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button></div>`).join('')}</div>` : '';
+      <input class="sw" type="checkbox" role="switch" ${p.is_available ? 'checked' : ''} data-id="${p.id}" aria-label="Disponible: ${esc(p.name)}"><button class="del ed" data-editp="${p.id}" aria-label="Editar ${esc(p.name)}" title="Editar"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM13 7l4 4"/></svg></button><button class="del" data-delp="${p.id}" aria-label="Borrar ${esc(p.name)}" title="Borrar"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button></div>`).join('')}</div>` : '';
   }).join('') || `<p style="text-align:center;color:var(--mu);padding:60px 0">${data.products.length ? 'No hay productos que coincidan.' : 'Aún no hay productos. Añade el primero con el botón de arriba.'}</p>`;
 }
 $('#pg').addEventListener('change', async e => {
@@ -486,10 +640,12 @@ $('#pg').addEventListener('change', async e => {
 });
 $('#pg').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.type === 'number') e.target.blur(); });
 $('#pg').addEventListener('click', async e => {
+  const ed = e.target.closest('[data-editp]'); if (ed) { editProduct(ed.dataset.editp); return; }
   const b = e.target.closest('[data-delp]'); if (!b) return;
   const p = data.products.find(x => String(x.id) === b.dataset.delp); if (!p) return;
   if (!confirm(`¿Borrar "${p.name}" de la carta?\n\nSe elimina para siempre. Si solo se acabó por hoy, usa el interruptor de Disponible.`)) return;
   await sb.from('promotions').delete().eq('restaurant_id', R.id).eq('product_id', String(p.id));
+  await sb.from('product_addons').delete().eq('restaurant_id', R.id).eq('product_id', String(p.id));
   await api.del('products', p.id); toast('Producto borrado'); await refresh(); renderMenu();
 });
 $('#q').oninput = e => { mq = e.target.value; renderMenu(); };
@@ -502,11 +658,25 @@ function fillCats() {
   if (cur) el.value = cur;
 }
 $('#f-cat').onchange = e => { const n = e.target.value === '__new'; $('#f-cat2').hidden = !n; $('#f-cat2').required = n; if (n) $('#f-cat2').focus(); };
-$('#add').onclick = () => { $('#frm').reset(); fillCats(); $('#f-cat2').hidden = true; $('#f-cat2').required = false; $('#dlg').showModal(); };
+let editPid = null;
+$('#add').onclick = () => { editPid = null; $('#f-title').textContent = 'Nuevo producto'; $('#f-imgl').textContent = 'Foto (opcional)'; $('#frm').reset(); fillCats(); $('#f-cat2').hidden = true; $('#f-cat2').required = false; $('#dlg').showModal(); };
+function editProduct(id) {
+  const p = data.products.find(x => String(x.id) === String(id)); if (!p) return;
+  editPid = p.id; $('#f-title').textContent = 'Editar producto'; $('#f-imgl').textContent = 'Foto nueva (déjala vacía para mantener la actual)';
+  $('#frm').reset(); fillCats();
+  $('#f-name').value = p.name; $('#f-price').value = p.price; $('#f-desc').value = p.description || '';
+  const sel = $('#f-cat');
+  if ([...sel.options].some(o => o.value === p.category)) { sel.value = p.category; $('#f-cat2').hidden = true; $('#f-cat2').required = false; }
+  else { sel.value = '__new'; $('#f-cat2').hidden = false; $('#f-cat2').required = true; $('#f-cat2').value = p.category; }
+  $('#dlg').showModal();
+}
 $('#cancel').onclick = () => $('#dlg').close();
 $('#frm').addEventListener('submit', async () => {
-  await api.addProduct({ name: $('#f-name').value.trim(), category: ($('#f-cat').value === '__new' ? $('#f-cat2').value : $('#f-cat').value).trim(), price: Number($('#f-price').value), is_available: true, image_url: null }, $('#f-img').files[0]);
-  toast('Producto añadido'); await refresh(); renderMenu(true);
+  const row = { name: $('#f-name').value.trim(), category: ($('#f-cat').value === '__new' ? $('#f-cat2').value : $('#f-cat').value).trim(), price: Number($('#f-price').value), description: $('#f-desc').value.trim() || null };
+  const file = $('#f-img').files[0];
+  if (editPid != null) { if (await api.editProduct(editPid, row, file)) toast('Producto actualizado'); }
+  else if (await api.addProduct({ ...row, is_available: true, image_url: null }, file)) toast('Producto añadido');
+  await refresh(); renderMenu(true);
 });
 
 /* ===== NAVEGACIÓN Y ARRANQUE ===== */
@@ -517,6 +687,8 @@ function go(v) {
   if (v === 'menu') { menuMeta(); renderMenu(true); }
   if (v === 'settings') cfgFill();
   if (v === 'admin') loadAdmin();
+  if (v === 'addons') renderAddons();
+  if (v === 'revenue') { $('#rvDay').value = revDay; $('#rvDay').max = dayStr(new Date()); loadRevenue(); }
 }
 $$('nav button').forEach(b => b.onclick = () => go(b.dataset.v));
 $('#cfg').onclick = () => go('settings');
@@ -537,7 +709,7 @@ function cfgPrev() {
   $('#cfgAv').innerHTML = $('#pvAv').innerHTML = avatar(name, url); $('#pvName').textContent = name;
   $('#lgDel').hidden = !url;
 }
-function cfgFill() { pend = null; $('#cfgName').value = R ? R.name : ''; $('#accMail').textContent = mail; cfgPrev(); }
+function cfgFill() { pend = null; $('#cfgTipBox').hidden = !(R && 'tip_pct' in R); $('#cfgTip').value = R && R.tip_pct != null ? String(R.tip_pct) : '10'; $('#cfgName').value = R ? R.name : ''; $('#accMail').textContent = mail; cfgPrev(); }
 $('#cfgName').oninput = cfgPrev;
 $('#lgUp').onclick = () => $('#lgFile').click();
 $('#lgDel').onclick = () => { pend = 'remove'; cfgPrev(); };
@@ -571,10 +743,11 @@ $('#cfgSave').onclick = async () => {
       if (up.error) throw up.error;
       logo_url = sb.storage.from('logos').getPublicUrl(path).data.publicUrl;
     }
-    const { error } = await sb.from('restaurants').update({ name, logo_url }).eq('id', R.id);
+    const patch = { name, logo_url }; if ('tip_pct' in R) patch.tip_pct = Number($('#cfgTip').value);
+    const { error } = await sb.from('restaurants').update(patch).eq('id', R.id);
     if (error) throw error;
     if (old && old !== logo_url) { const m = old.split('/logos/')[1]; if (m) sb.storage.from('logos').remove([decodeURIComponent(m)]); }
-    R = { ...R, name, logo_url }; setBrand(); cfgFill(); toast('Cambios guardados');
+    R = { ...R, ...patch }; setBrand(); cfgFill(); toast('Cambios guardados');
   } catch (err) { toast('No se pudo guardar: ' + (err.message || err)); }
   btn.disabled = false; btn.textContent = 'Guardar cambios';
 };
@@ -610,11 +783,121 @@ $('#alist').addEventListener('click', async e => {
 setInterval(() => { if (view === 'admin' && !document.hidden) loadAdmin(); }, 60000);
 async function refresh() {
   data = await api.load(); renderOrders(); renderCalls(); menuMeta(); renderPromos(); renderTables();
+  if (!(document.activeElement && document.activeElement.closest('#al'))) renderAddons();
+  if (view === 'revenue' || revDay === dayStr(new Date())) scheduleRev();
   if (view === 'menu' && !(document.activeElement && document.activeElement.closest('#pg'))) renderMenu();
 }
 const clk = () => $('#clk').textContent = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
 clk(); setInterval(clk, 10000); setInterval(tick, 10000);
 $('#mode').textContent = sb ? 'En vivo' : 'Modo demo';
+
+/* ===== EFECTOS VISUALES ===== */
+function countTo(el, to, fmt = clp, ms = 800) {            // número que "corre" hasta su valor nuevo
+  if (!el) return; const from = Number(el.dataset.v || 0); el.dataset.v = to;
+  if (reduced || from === to) { el.textContent = fmt(to); return; }
+  cancelAnimationFrame(el._raf); const t0 = performance.now();
+  const step = t => { const k = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - k, 3); el.textContent = fmt(Math.round(from + (to - from) * e)); if (k < 1) el._raf = requestAnimationFrame(step); };
+  el._raf = requestAnimationFrame(step);
+}
+function confetti(x = innerWidth / 2, y = 90) {
+  if (reduced) return; const cols = ['#e5484d', '#f5a524', '#1f9d55', '#2563eb', '#a855f7'];
+  for (let i = 0; i < 26; i++) {
+    const c = document.createElement('i'), a = Math.random() * Math.PI * 2, d = 90 + Math.random() * 170; c.className = 'cf';
+    c.style.cssText = `left:${x}px;top:${y}px;background:${cols[i % cols.length]};--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d + 120}px;--r:${Math.random() * 720 - 360}deg`;
+    document.body.appendChild(c); setTimeout(() => c.remove(), 1400);
+  }
+}
+document.addEventListener('pointerdown', e => {            // onda al tocar un botón
+  const b = e.target.closest('.pri,.gh,.go,.seg button'); if (!b || b.disabled || reduced) return;
+  const r = b.getBoundingClientRect(), s = Math.max(r.width, r.height) * 2, i = document.createElement('span');
+  i.className = 'rip'; i.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - r.left - s / 2}px;top:${e.clientY - r.top - s / 2}px`;
+  b.appendChild(i); setTimeout(() => i.remove(), 650);
+});
+
+/* ===== AGREGADOS CON PRECIO ===== */
+const scopeOf = a => a.product_id ? 'Solo en: ' + pname(a.product_id) : 'En todos los productos de: ' + a.category;
+function renderAddons() {
+  const list = data.addons || [];
+  $('#al').innerHTML = list.length ? `<div class="lst">${list.map(a => `<div class="rw3${a.is_available ? '' : ' off'}"><div class="nm"><b>${esc(a.name)}</b><small>${esc(scopeOf(a))}</small></div><label class="pi">+$<input type="number" min="0" step="1" inputmode="numeric" value="${a.price}" data-aid="${a.id}" aria-label="Precio de ${esc(a.name)}"></label><input class="sw" type="checkbox" role="switch" ${a.is_available ? 'checked' : ''} data-aid="${a.id}" aria-label="Disponible: ${esc(a.name)}"><button class="del" data-del="product_addons" data-id="${a.id}" aria-label="Borrar ${esc(a.name)}" title="Borrar"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button></div>`).join('')}</div>` : '<p class="empty">Aún no hay agregados. Crea el primero (queso extra, tocino, salsa…).</p>';
+}
+$('#al').addEventListener('change', async e => {
+  const el = e.target, id = el.dataset.aid; if (!id) return;
+  if (el.type === 'checkbox') { el.closest('.rw3').classList.toggle('off', !el.checked); await api.upd('product_addons', id, { is_available: el.checked }); toast(el.checked ? 'Agregado disponible' : 'Agregado desactivado'); }
+  else { const v = Math.max(0, Math.round(Number(el.value) || 0)); el.value = v; await api.upd('product_addons', id, { price: v }); toast('Precio guardado · ' + clp(v)); }
+  data = await api.load();
+});
+$('#al').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.type === 'number') e.target.blur(); });
+const adForm = () => { const c = $('#a-scope').value === 'category'; $('#a-prod').hidden = c; $('#a-cat').hidden = !c; };
+$('#a-scope').onchange = adForm;
+$('#newad').onclick = () => {
+  if (!data.products.length) return toast('Primero añade productos a la carta');
+  $('#a-name').value = $('#a-price').value = ''; $('#a-scope').value = 'product'; adForm();
+  $('#a-pid').innerHTML = data.products.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
+  $('#a-cid').innerHTML = [...new Set(data.products.map(p => p.category))].map(c => `<option>${esc(c)}</option>`).join('');
+  $('#ad').showModal();
+};
+$('#a-cancel').onclick = () => $('#ad').close();
+$('#a-save').onclick = async () => {
+  const name = $('#a-name').value.trim(), raw = $('#a-price').value, price = Math.round(Number(raw)), cat = $('#a-scope').value === 'category';
+  if (!name) return toast('Escribe el nombre del agregado');
+  if (raw === '' || !(price >= 0)) return toast('Escribe el precio extra (0 si es gratis)');
+  await api.add('product_addons', { name, price, product_id: cat ? null : String($('#a-pid').value), category: cat ? $('#a-cid').value : null, is_available: true });
+  $('#ad').close(); toast('Agregado creado'); await refresh();
+};
+
+/* ===== INGRESOS DEL DÍA ===== */
+const pad2 = n => String(n).padStart(2, '0');
+const dayStr = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+let revDay = dayStr(new Date()), REV = [], revT, curToday = revDay;
+const oUnit = i => Number(i.price || 0) + (i.addons || []).reduce((a, x) => a + Number(x.price || 0), 0);
+const oGross = o => (o.items || []).reduce((a, i) => a + oUnit(i) * Number(i.qty || 0), 0);
+const oTotal = o => o.total != null ? Number(o.total) : oGross(o);
+const compact = v => v >= 1e6 ? (v / 1e6).toFixed(1).replace('.0', '') + 'M' : v >= 1e3 ? Math.round(v / 1e3) + 'k' : String(Math.round(v));
+async function loadRevenue() {
+  if (!sb || !R) return;
+  const [y, m, d] = revDay.split('-').map(Number), a = new Date(y, m - 1, d), b = new Date(y, m - 1, d + 1);
+  const { data: rows, error } = await sb.from('orders').select('id,status,total,items,created_at').eq('restaurant_id', R.id).gte('created_at', a.toISOString()).lt('created_at', b.toISOString()).order('created_at');
+  if (error) { toast('No se pudieron cargar los ingresos'); return; }
+  REV = rows || []; renderRevenue();
+}
+const scheduleRev = () => { clearTimeout(revT); revT = setTimeout(loadRevenue, 700); };
+function revStats(rows) {
+  const ok = rows.filter(o => o.status !== 'cancelled'), canc = rows.length - ok.length;
+  let sales = 0, paid = 0, addv = 0; const hours = Array(24).fill(0), prod = new Map();
+  for (const o of ok) {
+    const t = oTotal(o), g = oGross(o), f = g > 0 ? t / g : 1;      // f reparte el descuento de promociones entre los ítems
+    sales += t; if (o.status === 'completed') paid += t;
+    hours[new Date(o.created_at).getHours()] += t;
+    for (const i of o.items || []) {
+      const q = Number(i.qty || 0); addv += (i.addons || []).reduce((a, x) => a + Number(x.price || 0), 0) * q * f;
+      const m = prod.get(i.name) || { name: i.name, qty: 0, rev: 0 }; m.qty += q; m.rev += oUnit(i) * q * f; prod.set(i.name, m);
+    }
+  }
+  const n = ok.length, S = Math.round(sales), P = Math.round(paid);
+  return { sales: S, paid: P, open: S - P, n, avg: n ? Math.round(sales / n) : 0, addv: Math.round(addv), canc, hours, top: [...prod.values()].sort((a, b) => b.rev - a.rev).slice(0, 6) };
+}
+function renderRevenue() {
+  const s = revStats(REV), isToday = revDay === dayStr(new Date());
+  countTo($('#rvSales'), s.sales); countTo($('#rvPaid'), s.paid); countTo($('#rvOpen'), s.open);
+  countTo($('#rvN'), s.n, v => String(v)); countTo($('#rvAvg'), s.avg); countTo($('#rvAdd'), s.addv);
+  if (isToday) countTo($('#vtv'), s.sales);
+  $('#rvTitle').textContent = (isToday ? 'Hoy · ' : '') + new Date(revDay + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' });
+  const act = s.hours.map((v, h) => v > 0 ? h : -1).filter(h => h >= 0), lo = Math.min(10, ...act), hi = Math.max(22, ...act), mx = Math.max(1, ...s.hours);
+  let bars = ''; for (let h = lo; h <= hi; h++) { const v = s.hours[h]; bars += `<div class="c" title="${pad2(h)}:00 · ${clp(Math.round(v))}"><div class="bw"><div class="bar" data-h="${Math.round(v / mx * 100)}">${v ? `<em>${compact(v)}</em>` : ''}</div></div><small>${h}</small></div>`; }
+  $('#rvChart').innerHTML = bars;
+  const tm = Math.max(1, ...s.top.map(t => t.rev));
+  $('#rvTop').innerHTML = s.top.length ? s.top.map((t, i) => `<div class="t5" style="--i:${i}"><span><b>${esc(t.name)}</b> <small>×${t.qty}</small></span><b>${clp(Math.round(t.rev))}</b><div class="bb"><i data-w="${Math.round(t.rev / tm * 100)}"></i></div></div>`).join('') : '<p class="empty">Sin ventas este día</p>';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    $$('#rvChart .bar').forEach(b => b.style.height = b.dataset.h + '%'); $$('#rvTop .bb i').forEach(b => b.style.width = b.dataset.w + '%');
+  }));
+  $('#rvNote').textContent = (s.canc ? `${s.canc} pedido${s.canc === 1 ? '' : 's'} cancelado${s.canc === 1 ? '' : 's'} no cuenta${s.canc === 1 ? '' : 'n'} en los ingresos. ` : '') + 'Cobrado = mesas ya cerradas · Por cobrar = pedidos de mesas que siguen abiertas.';
+}
+function setDay(v) { revDay = v; $('#rvDay').value = v; loadRevenue(); }
+const shiftDay = n => { const [y, m, d] = revDay.split('-').map(Number); const t = dayStr(new Date(y, m - 1, d + n)); if (t <= dayStr(new Date())) setDay(t); };
+$('#rvDay').onchange = e => { if (e.target.value) setDay(e.target.value); };
+$('#rvPrev').onclick = () => shiftDay(-1); $('#rvNext').onclick = () => shiftDay(1); $('#rvToday').onclick = () => setDay(dayStr(new Date()));
+setInterval(() => { const t = dayStr(new Date()); if (t !== curToday) { if (revDay === curToday) revDay = t; curToday = t; if (R) loadRevenue(); } }, 30000);   // cambio de día con el panel abierto
+
 /* ===== CATEGORÍAS SUGERIDAS ===== */
 const SUGG = ['Entradas','Para compartir','Ensaladas','Sopas','Platos de fondo','Carnes','Pescados y mariscos','Pastas','Pizzas','Hamburguesas','Sándwiches','Sushi','Tacos y mexicano','Parrilla','Comida rápida','Vegetariano','Menú del día','Menú infantil','Acompañamientos','Postres','Helados','Desayunos','Cafetería','Té e infusiones','Jugos y batidos','Bebidas','Cervezas','Vinos','Cócteles','Tragos y licores'];
 
@@ -683,14 +966,62 @@ async function start() {
   started = true; api.watch(refresh); refresh();
 }
 $('#sw').onclick = () => { signup = !signup; $('#rn').hidden = !signup; $('#lr').required = signup; $('#lsub').textContent = signup ? 'Crear cuenta' : 'Ingresar'; $('#sw').textContent = signup ? 'Ya tengo cuenta' : 'Crear cuenta nueva'; $('#lerr').textContent = ''; };
+const authMsg = e => { const m = (e && e.message) || '';
+  if (/already registered|already been registered/i.test(m)) return 'Este correo ya está registrado. Ingresa con tu contraseña.';
+  if (/at least|weak/i.test(m)) return 'La contraseña debe tener al menos 6 caracteres.';
+  if (/rate limit|too many|seconds/i.test(m)) return 'Demasiados intentos. Espera un momento y vuelve a intentar.';
+  if (/invalid.*email|unable to validate/i.test(m)) return 'Revisa que el correo esté bien escrito.';
+  return m || 'No se pudo completar. Inténtalo otra vez.'; };
+let pendMail = '', resT = null;
+function cooldown(sec) {                                   // el botón "Reenviar" espera 60 s para no saturar
+  clearInterval(resT); const b = $('#vres');
+  const tick = () => { if (sec > 0) { b.disabled = true; b.textContent = `Reenviar código (${sec}s)`; sec--; } else { b.disabled = false; b.textContent = 'Reenviar código'; clearInterval(resT); } };
+  tick(); resT = setInterval(tick, 1000);
+}
+function showOtp(email, note) {
+  pendMail = email; $('#lf').hidden = true; $('#vf').hidden = false;
+  $('#vmsg').innerHTML = (note ? esc(note) + ' ' : '') + 'Te enviamos un código a <b>' + esc(email) + '</b>. Escríbelo aquí para activar tu cuenta.';
+  $('#verr').textContent = ''; $('#lc').value = ''; cooldown(60); setTimeout(() => $('#lc').focus(), 50);
+}
 $('#lf').onsubmit = async e => {
   e.preventDefault(); $('#lerr').textContent = '';
-  const email = $('#le').value.trim(), password = $('#lp').value;
-  const { data: d, error } = signup ? await sb.auth.signUp({ email, password, options: { data: { restaurant_name: $('#lr').value.trim() } } }) : await sb.auth.signInWithPassword({ email, password });
-  if (error) { $('#lerr').textContent = signup ? error.message : 'Correo o contraseña incorrectos.'; return; }
-  if (!d.session) { $('#lerr').textContent = 'Revisa tu correo para confirmar la cuenta y luego ingresa.'; return; }
-  $('#lp').value = ''; $('#login').hidden = true; start();
+  const email = $('#le').value.trim(), password = $('#lp').value, btn = $('#lsub'); btn.disabled = true;
+  try {
+    if (signup) {
+      const { data: d, error } = await sb.auth.signUp({ email, password, options: { data: { restaurant_name: $('#lr').value.trim() } } });
+      if (error) { $('#lerr').textContent = authMsg(error); return; }
+      if (d.user && Array.isArray(d.user.identities) && d.user.identities.length === 0) { $('#lerr').textContent = 'Este correo ya está registrado. Ingresa con tu contraseña.'; return; }
+      if (d.session) { $('#lp').value = ''; $('#login').hidden = true; start(); return; }   // si el proyecto no exige verificación
+      showOtp(email); return;
+    }
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      if (error.code === 'email_not_confirmed' || /not confirmed/i.test(error.message || '')) {   // se registró pero nunca verificó: se le manda un código nuevo
+        const r = await sb.auth.resend({ type: 'signup', email });
+        if (r.error) { $('#lerr').textContent = authMsg(r.error); return; }
+        showOtp(email, 'Tu correo aún no está verificado.'); return;
+      }
+      $('#lerr').textContent = 'Correo o contraseña incorrectos.'; return;
+    }
+    $('#lp').value = ''; $('#login').hidden = true; start();
+  } finally { btn.disabled = false; }
 };
+$('#vf').onsubmit = async e => {
+  e.preventDefault(); $('#verr').textContent = '';
+  const token = $('#lc').value.replace(/\D/g, '');
+  if (token.length < 6) { $('#verr').textContent = 'Escribe el código completo.'; return; }
+  const btn = $('#vsub'); btn.disabled = true; btn.textContent = 'Verificando…';
+  const { data: d, error } = await sb.auth.verifyOtp({ email: pendMail, token, type: 'signup' });
+  btn.disabled = false; btn.textContent = 'Verificar y entrar';
+  if (error || !d.session) { $('#verr').textContent = 'Código incorrecto o vencido. Revisa el correo o pide uno nuevo.'; $('#lc').select(); return; }
+  clearInterval(resT); $('#lp').value = ''; $('#login').hidden = true; $('#vf').hidden = true; $('#lf').hidden = false; confetti(); start();
+};
+$('#vres').onclick = async () => {
+  const { error } = await sb.auth.resend({ type: 'signup', email: pendMail });
+  if (error) { $('#verr').textContent = authMsg(error); return; }
+  $('#verr').textContent = ''; toast('Código reenviado'); cooldown(60);
+};
+$('#vback').onclick = () => { clearInterval(resT); $('#vf').hidden = true; $('#lf').hidden = false; $('#lerr').textContent = ''; };
 $('#logout').onclick = async () => { await sb.auth.signOut(); location.reload(); };
 start();
 </script>
