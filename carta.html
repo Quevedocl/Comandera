@@ -21,6 +21,24 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}
 .top h1{margin:0;font-size:22px;letter-spacing:-.01em}
 .mesa{font-weight:700;font-size:14px;background:var(--ink);color:#fff;border-radius:99px;padding:5px 12px}
 .mesa:empty{display:none}
+.tr{display:flex;align-items:center;gap:8px}
+.callb{display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:99px;border:1.5px solid var(--ink);background:#fff;font-weight:700;font-size:14px}
+.callb svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lockbar{margin:12px 12px 0;padding:14px 16px;border-radius:14px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:600;text-align:center}
+.lockbar[hidden]{display:none}
+body.locked #bar,body.locked .callb{display:none!important}
+.opts{display:grid;gap:8px;padding:4px 20px 0}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px;border:1.5px solid var(--ln);border-radius:14px;background:#fff;font-weight:700}
+.opt small{display:block;font-weight:500;color:var(--mu)}
+.opt .ic{font-size:22px;width:30px;text-align:center}
+.opt.on{border-color:var(--ink);background:#f6f7f8}
+#callBody{padding:12px 20px calc(18px + env(safe-area-inset-bottom,0px))}
+#callBody textarea{width:100%;min-height:70px;padding:10px 12px;border:1px solid var(--ln);border-radius:10px;outline:0;resize:vertical;font:inherit;margin-bottom:12px}
+#callBody textarea:focus{border-color:#2563eb}
+#callOk{text-align:center;padding:28px 24px calc(28px + env(safe-area-inset-bottom,0px))}
+#callOk[hidden],#callForm[hidden]{display:none}
+#callOk .ok{margin-bottom:14px}
+#callOk h3{margin:0 0 6px;font-size:22px}#callOk p{margin:0 0 18px;color:var(--mu)}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:4px 16px 12px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chips button{flex:none;height:36px;padding:0 14px;border-radius:99px;border:1px solid var(--ln);background:#fff;font-weight:600;color:var(--mu);transition:background .2s,color .2s,border-color .2s}
@@ -104,7 +122,8 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
 <body>
 <div class="sticky">
   <div class="wrap">
-    <div class="top"><h1 id="ttl">Carta</h1><span class="mesa" id="mesaTag"></span></div>
+    <div class="top"><h1 id="ttl">Carta</h1><div class="tr"><span class="mesa" id="mesaTag"></span><button class="callb" id="callBtn" hidden><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l1.5 2h-15zM10 21h4"/></svg>Mesero</button></div></div>
+    <div class="lockbar" id="lockbar" hidden role="alert"><b>Esta mesa ya fue cerrada.</b><br>Gracias por tu visita. Ya no se pueden hacer pedidos desde este teléfono.</div>
     <div class="chips" id="chips"></div>
   </div>
 </div>
@@ -125,6 +144,28 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
   </div>
 </dialog>
 
+<dialog id="call" aria-labelledby="callT">
+  <div class="sh"><h3 id="callT">¿Necesitas al mesero?</h3><button class="x" id="callClose" aria-label="Cerrar">×</button></div>
+  <div id="callForm">
+    <div class="opts" id="opts">
+      <button class="opt on" data-r="pay"><span class="ic">💳</span><span>Quiero pagar<small>Un mesero llega a cobrarte</small></span></button>
+      <button class="opt" data-r="complaint"><span class="ic">⚠️</span><span>Tengo una queja o problema<small>Un mesero viene a atenderte</small></span></button>
+      <button class="opt" data-r="help"><span class="ic">🙋</span><span>Necesito otra cosa<small>Cubiertos, la cuenta, una duda…</small></span></button>
+    </div>
+    <div id="callBody">
+      <div class="mz" id="callMz" hidden><label for="callMesa">Tu mesa</label><input id="callMesa" maxlength="30" autocomplete="off" placeholder="Ej. 5 o Terraza 2"></div>
+      <textarea id="callNote" maxlength="200" placeholder="Cuéntanos qué pasó (opcional)" aria-label="Detalle" hidden></textarea>
+      <p id="callErr" role="alert" style="color:var(--red);font-size:14px;font-weight:600;margin:0 0 10px"></p>
+      <button class="pri" id="callSend">Avisar al mesero</button>
+    </div>
+  </div>
+  <div id="callOk" hidden>
+    <div class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h3 id="callOkT">Mesero avisado</h3><p id="callOkP"></p>
+    <button class="pri dk" id="callOkB">Listo</button>
+  </div>
+</dialog>
+
 <div id="done" hidden>
   <div>
     <div class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
@@ -139,6 +180,8 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
 /* ===== CONFIGURACIÓN: mismo proyecto Supabase que la comandera ===== */
 const CFG = { url: 'https://pmctlwsqkrpesyfozmwo.supabase.co', key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtY3Rsd3Nxa3JwZXN5Zm96bXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4NDI0OTEsImV4cCI6MjEwNzQxODQ5MX0.t7M8-Whzia4odHN5_dBZar-kPcPnKLCgFXsb9D6uPz0' };
 let NOMBRE = 'Carta', RID = null, TID = null;
+let pinned = null, locked = false;            // sesión de la mesa que este teléfono tiene asignada
+const SES_TTL = 6 * 3600e3;                   // si este teléfono no visitó la mesa en 6 h, se considera una visita nueva
 const MAX_QTY = 20;
 
 const $ = s => document.querySelector(s);
@@ -184,6 +227,7 @@ function prune() {
 
 /* ===== carta ===== */
 const ctl = p => {
+  if (locked) return '';
   if (!p.is_available) return '<span class="ag">Agotado</span>';
   const l = cart.get(String(p.id));
   return l
@@ -225,6 +269,7 @@ function bar() {
 }
 
 function change(id, d) {
+  if (locked) return;
   const p = find(id); if (!p || !p.is_available) return;
   const l = cart.get(id) || { id, name: p.name, price: Number(p.price), qty: 0, note: '' };
   l.qty = Math.min(MAX_QTY, l.qty + d);
@@ -280,13 +325,19 @@ $('#send').onclick = async () => {
   const gone = lastGone; lastGone = [];
   if (gone.length) { renderCart(); fail('Se agotó: ' + gone.join(', ') + '. Lo quitamos de tu pedido.'); return; }
   if (!cart.size) { $('#cart').close(); return; }
-  if (TID) { const { data: ok } = await sb.from('dining_tables').select('id').eq('id', TID).maybeSingle(); if (!ok) { fail('Esta mesa ya no está activa. Pide a un mesero un QR actualizado.'); return; } }
+  const st = await checkSession();
+  if (st === 'locked') return;
+  if (st === 'gone') { fail('Esta mesa ya no está activa. Pide a un mesero un QR actualizado.'); return; }
 
   const btn = $('#send'); btn.disabled = true; btn.textContent = 'Enviando…';
   const items = [...cart.values()].map(l => ({ id: l.id, name: l.name, qty: l.qty, price: l.price, note: l.note.trim() || undefined, promo: disc(l) ? promoFor(l.id).title : undefined }));
-  const { error } = await sb.from('orders').insert({ restaurant_id: RID, table_id: TID, table_name: t, items, total: total(), status: 'pending' });
+  const { error } = await sb.from('orders').insert({ restaurant_id: RID, table_id: TID, table_name: t, items, total: total(), status: 'pending', session_id: pinned });
   btn.disabled = false;
-  if (error) { btn.textContent = 'Enviar pedido · ' + clp(total()); fail('No se pudo enviar el pedido. Revisa tu conexión e inténtalo otra vez.'); return; }
+  if (error) {
+    btn.textContent = 'Enviar pedido · ' + clp(total());
+    if (error.code === '42501' && await checkSession() === 'locked') return;   // la mesa se cerró justo ahora
+    fail('No se pudo enviar el pedido. Revisa tu conexión e inténtalo otra vez.'); return;
+  }
 
   lastMesa = t;
   cart.clear(); saveCart(); $('#cart').close();
@@ -295,6 +346,80 @@ $('#send').onclick = async () => {
   $('#done').hidden = false;
 };
 $('#again').onclick = () => { $('#done').hidden = true; window.scrollTo({ top: 0 }); };
+
+/* ===== sesión de la mesa: al cobrar/cerrar la mesa, este teléfono deja de poder pedir ===== */
+const sesKey = () => 'carta-sesion-' + TID;
+/* fija en este teléfono la sesión vigente de la mesa. Devuelve 'ok', 'nueva' (visita nueva) o 'cerrada' */
+function pinSession(cur) {
+  let s = null; try { s = JSON.parse(localStorage.getItem(sesKey())); } catch (e) {}
+  let r = 'nueva';
+  if (s && s.sid) {
+    if (s.sid === cur) r = 'ok';
+    else if (Date.now() - s.ts <= SES_TTL) { pinned = s.sid; return 'cerrada'; }   // tenía la sesión anterior, ya cerrada
+  }
+  pinned = cur;
+  try { localStorage.setItem(sesKey(), JSON.stringify({ sid: cur, ts: Date.now() })); } catch (e) {}
+  return r;
+}
+function lockUp() {
+  if (locked) return;
+  locked = true; document.body.classList.add('locked'); $('#lockbar').hidden = false;
+  cart.clear(); try { localStorage.removeItem(CART_KEY); } catch (e) {}
+  ['#cart', '#call'].forEach(d => { try { $(d).close(); } catch (e) {} });
+  [...document.querySelectorAll('.it')].forEach(r => refreshCtl(r.dataset.id)); bar();
+}
+/* 'ok' | 'locked' | 'gone' — consulta la sesión vigente de la mesa */
+async function checkSession() {
+  if (!TID) return 'ok';
+  if (locked) return 'locked';
+  const { data, error } = await sb.from('dining_tables').select('id,session_id').eq('id', TID).maybeSingle();
+  if (error) return 'ok';                                  // sin red: lo decide el servidor al enviar
+  if (!data) return 'gone';
+  if (data.session_id !== pinned) { lockUp(); return 'locked'; }
+  try { localStorage.setItem(sesKey(), JSON.stringify({ sid: pinned, ts: Date.now() })); } catch (e) {}
+  return 'ok';
+}
+
+/* ===== llamar al mesero (cobrar / queja / otra cosa) ===== */
+let reason = 'pay';
+const REASON = { pay: 'Quiero pagar', complaint: 'Queja o problema', help: 'Otra consulta' };
+function pickReason(r) {
+  reason = r;
+  document.querySelectorAll('#opts .opt').forEach(b => b.classList.toggle('on', b.dataset.r === r));
+  $('#callNote').hidden = r === 'pay';
+  $('#callNote').placeholder = r === 'complaint' ? 'Cuéntanos qué pasó (opcional)' : 'Dinos qué necesitas (opcional)';
+}
+$('#opts').addEventListener('click', e => { const b = e.target.closest('.opt'); if (b) pickReason(b.dataset.r); });
+$('#callBtn').onclick = () => {
+  $('#callErr').textContent = ''; $('#callNote').value = ''; pickReason('pay');
+  $('#callForm').hidden = false; $('#callOk').hidden = true;
+  $('#callMz').hidden = !!mesa; if (!mesa && !$('#callMesa').value) $('#callMesa').value = lastMesa;
+  $('#call').showModal();
+};
+$('#callClose').onclick = $('#callOkB').onclick = () => $('#call').close();
+$('#call').addEventListener('click', e => { if (e.target === $('#call')) $('#call').close(); });
+$('#callSend').onclick = async () => {
+  const err = m => { $('#callErr').textContent = m; }; err('');
+  const t = mesa || $('#callMesa').value.trim();
+  if (!t) { err('Escribe tu mesa.'); $('#callMesa').focus(); return; }
+  if (!sb || !RID) { err('Sin conexión. Levanta la mano para llamar a un mesero.'); return; }
+  const btn = $('#callSend'); btn.disabled = true; btn.textContent = 'Avisando…';
+  const st = await checkSession();
+  if (st === 'locked') { btn.disabled = false; btn.textContent = 'Avisar al mesero'; return; }
+  if (st === 'gone') { btn.disabled = false; btn.textContent = 'Avisar al mesero'; err('Esta mesa ya no está activa. Pide un QR actualizado.'); return; }
+  const note = reason === 'pay' ? null : ($('#callNote').value.trim() || null);
+  const { error } = await sb.from('waiter_calls').insert({ restaurant_id: RID, table_id: TID, table_name: t, reason, note, status: 'open', session_id: pinned });
+  btn.disabled = false; btn.textContent = 'Avisar al mesero';
+  const dup = error && error.code === '23505';              // ya había un aviso abierto igual: el mesero ya viene
+  if (error && !dup) {
+    if (error.code === '42501' && await checkSession() === 'locked') return;
+    err('No pudimos avisar. Revisa tu conexión o levanta la mano.'); return;
+  }
+  lastMesa = t;
+  $('#callOkT').textContent = dup ? 'Ya avisamos' : 'Mesero avisado';
+  $('#callOkP').textContent = dup ? 'Un mesero ya viene en camino a tu mesa.' : (reason === 'pay' ? 'Un mesero irá a tu mesa a cobrarte.' : 'Un mesero irá a tu mesa en un momento.');
+  $('#callForm').hidden = true; $('#callOk').hidden = false;
+};
 
 /* ===== datos en vivo ===== */
 let lastGone = [];
@@ -313,6 +438,7 @@ async function load() {
   if (gone.length) { toast('Se agotó: ' + gone.join(', ')); if ($('#cart').open) renderCart(); }
 }
 
+let sesState = 'ok';
 async function init() {
   const bad = m => { $('#menu').innerHTML = `<p class="msg">${m}</p>`; };
   if (!sb || !SLUG) return bad('Enlace inválido. Escanea de nuevo el QR de tu mesa.');
@@ -320,19 +446,23 @@ async function init() {
   if (!r) return bad('No encontramos este restaurante. Avisa a un mesero.');
   RID = r.id; NOMBRE = r.name; CART_KEY += '-' + RID;
   if (TID_Q) {
-    const { data: t, error: te } = await sb.from('dining_tables').select('id,name').eq('id', TID_Q).eq('restaurant_id', RID).maybeSingle();
+    const { data: t, error: te } = await sb.from('dining_tables').select('id,name,session_id').eq('id', TID_Q).eq('restaurant_id', RID).maybeSingle();
     if (te) return bad('No pudimos verificar tu mesa. Revisa tu conexión e inténtalo otra vez.');
     if (!t) return bad('Esta mesa ya no está activa. Pide a un mesero un QR actualizado.');
-    TID = t.id; mesa = t.name; $('#mesaTag').textContent = t.name;
+    TID = t.id; mesa = t.name; $('#mesaTag').textContent = t.name; CART_KEY += '-' + TID;
+    sesState = pinSession(t.session_id);
+    if (sesState === 'nueva') { try { localStorage.removeItem(CART_KEY); } catch (e) {} }   // visita nueva: sin restos de un pedido anterior
   }
+  $('#callBtn').hidden = false;
   $('#ttl').textContent = NOMBRE; document.title = NOMBRE + ' · Haz tu pedido';
-  loadCart(); load();
+  loadCart(); if (sesState === 'cerrada') lockUp(); load();
   const f = 'restaurant_id=eq.' + RID;
   sb.channel('carta').on('postgres_changes', { event: '*', schema: 'public', table: 'products', filter: f }, () => load()).on('postgres_changes', { event: '*', schema: 'public', table: 'promotions', filter: f }, () => load())
-    .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'dining_tables' }, p => { if (TID && p.old && String(p.old.id) === TID) location.reload(); }).subscribe();
+    .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'dining_tables' }, p => { if (TID && p.old && String(p.old.id) === TID) location.reload(); })
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'dining_tables' }, p => { if (TID && p.new && String(p.new.id) === TID && p.new.session_id !== pinned) lockUp(); }).subscribe();
 }
 init();
-document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { checkSession(); load(); } });
 </script>
 </body>
 </html>

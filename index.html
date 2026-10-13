@@ -24,8 +24,8 @@ nav button{position:relative;border:0;background:none;padding:0 16px;font-weight
 nav button.on{color:var(--tx)}
 nav button::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--ink);transform:scaleX(0);transition:transform .25s}
 nav button.on::after{transform:scaleX(1)}
-#cnt{background:var(--red);color:#fff;border-radius:99px;min-width:22px;height:22px;padding:0 6px;font:700 12px/22px var(--f);text-align:center;font-style:normal}
-#cnt[data-v="0"]{display:none}
+#cnt,#ccnt{background:var(--red);color:#fff;border-radius:99px;min-width:22px;height:22px;padding:0 6px;font:700 12px/22px var(--f);text-align:center;font-style:normal}
+#cnt[data-v="0"],#ccnt[data-v="0"]{display:none}
 .r{margin-left:auto;display:flex;align-items:center;gap:14px}
 .live{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--mu);font-weight:600}
 .live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--grn);animation:live 2s infinite}
@@ -65,6 +65,14 @@ select,.srch{height:38px;border-radius:10px;border:1px solid var(--ln);backgroun
 .tk.nuevo{animation:in .4s both,ping 1s .4s 3}
 .tk.moved{animation:move .5s}
 .tk.leave{animation:out .3s forwards;pointer-events:none}
+/* llamadas al mesero */
+.cl{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;padding:4px 20px 24px;align-content:start;align-items:start;flex:1;min-height:0;overflow-y:auto}
+.cl:empty::after{content:"Nadie está llamando al mesero";grid-column:1/-1;text-align:center;color:var(--mu);padding:80px 0;font-weight:600}
+.cc{background:var(--card);border:1px solid var(--ln);border-left:6px solid var(--red);border-radius:12px;padding:14px 16px;box-shadow:0 1px 2px rgba(16,24,40,.06);animation:in .4s both}
+.cc.pay{border-left-color:var(--grn)}.cc.help{border-left-color:var(--amb)}
+.cc .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.cc .h b{font-size:20px}.cc .h small{color:var(--mu);font-weight:600}
+.cc .why{margin:6px 0 0;font-weight:700}.cc .nt2{margin:6px 0 0;color:#b45309;font-weight:600;word-break:break-word}
+.cc .ac{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.cc .ac button{flex:1}
 /* carta */
 .srch{display:flex;align-items:center;gap:8px;min-width:220px;color:var(--mu)}.srch input{border:0;outline:0;background:none;width:100%;color:var(--tx)}
 .stt{color:var(--mu);font-size:13.5px;font-weight:600}
@@ -134,6 +142,7 @@ dialog input[type=checkbox]{width:auto;height:auto}
     <button data-v="orders" class="on">Pedidos<i id="cnt" data-v="0"></i></button>
     <button data-v="menu">Carta</button>
     <button data-v="promos">Promos</button>
+    <button data-v="calls">Llamadas<i id="ccnt" data-v="0"></i></button>
     <button data-v="tables">Mesas</button>
   </nav>
   <div class="r">
@@ -171,6 +180,11 @@ dialog input[type=checkbox]{width:auto;height:auto}
   <section class="view" id="promos" hidden>
     <div class="tbr"><span class="stt">Descuentos que verán tus clientes en la carta</span><button class="pri sp" id="newpromo">Nueva promoción</button></div>
     <div class="pg" id="pl"></div>
+  </section>
+
+  <section class="view" id="calls" hidden>
+    <div class="tbr"><span class="stt">Clientes que piden un mesero (cobrar, quejas u otras consultas)</span></div>
+    <div class="cl" id="cl"></div>
   </section>
 
   <section class="view" id="tables" hidden>
@@ -231,9 +245,9 @@ let R = null; // restaurante de la sesión
 const api = {
   async load() {
     const q = n => sb.from(n).select('*').eq('restaurant_id', R.id);
-    const [p, o, pr, t] = await Promise.all([q('products').order('category').order('name'), q('orders').neq('status', 'completed').order('created_at'), q('promotions').order('created_at'), q('dining_tables').order('created_at')]);
-    if ([p, o, pr, t].some(x => x.error)) toast('No se pudieron cargar los datos');
-    return { products: p.data || [], orders: o.data || [], promos: pr.data || [], tables: t.data || [] };
+    const [p, o, pr, t, w] = await Promise.all([q('products').order('category').order('name'), q('orders').neq('status', 'completed').order('created_at'), q('promotions').order('created_at'), q('dining_tables').order('created_at'), q('waiter_calls').eq('status', 'open').order('created_at')]);
+    if ([p, o, pr, t, w].some(x => x.error)) toast('No se pudieron cargar los datos');
+    return { products: p.data || [], orders: o.data || [], promos: pr.data || [], tables: t.data || [], calls: w.data || [] };
   },
   async setProduct(id, patch) { await sb.from('products').update(patch).eq('id', id); },
   async addProduct(p, file) {
@@ -245,13 +259,15 @@ const api = {
   async upd(table, id, patch) { await sb.from(table).update(patch).eq('id', id); },
   async del(table, id) { await sb.from(table).delete().eq('id', id); },
   async setStatus(id, status) { await sb.from('orders').update({ status }).eq('id', id); },
-  watch(cb) { let c = sb.channel('comandera'); ['orders', 'products', 'promotions', 'dining_tables'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, cb)); c.subscribe(); }
+  /* cierra la mesa: completa sus pedidos, atiende sus llamadas y cambia su sesión (el cliente anterior ya no puede pedir) */
+  async closeTable(tid, name) { const { error } = await sb.rpc('close_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name }); if (error) { toast('No se pudo cerrar la mesa: ' + error.message); return false; } return true; },
+  watch(cb) { let c = sb.channel('comandera'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, cb)); c.subscribe(); }
 };
 
 /* ===== ESTADO ===== */
-let data = { products: [], orders: [], promos: [], tables: [] }, view = 'orders', sf = '', mf = '', seen = null, soundOn = false, ctx, mq = '', mcat = '';
+let data = { products: [], orders: [], promos: [], tables: [], calls: [] }, view = 'orders', sf = '', mf = '', seen = null, soundOn = false, ctx, mq = '', mcat = '';
 const map = new Map();
-const LBL = { pending: ['Marcar en preparación', 'preparing'], preparing: ['Pedido listo', 'ready'], ready: ['Cerrar / Cobrar mesa', 'completed'] };
+const LBL = { pending: ['Marcar en preparación', 'preparing'], preparing: ['Pedido listo', 'ready'], ready: ['Cobrar y cerrar mesa', 'completed'] };
 const tn = o => o.table_name || 'Mesa ' + o.table_number;
 const mins = iso => Math.floor((Date.now() - new Date(iso)) / 6e4);
 
@@ -313,10 +329,49 @@ $('#mesa').onchange = e => { mf = e.target.value; renderOrders(); };
 $('#seg').onclick = e => { const b = e.target.closest('button'); if (!b) return; sf = b.dataset.f; $$('#seg button').forEach(x => x.classList.toggle('on', x === b)); renderOrders(); };
 $('#grid').addEventListener('click', async e => {
   const b = e.target.closest('.go'); if (!b) return; b.disabled = true;
-  await api.setStatus(pid(b.closest('.tk').dataset.id), b.dataset.to);
-  if (b.dataset.to === 'completed') toast('Mesa cerrada y cobrada');
+  const id = b.closest('.tk').dataset.id;
+  if (b.dataset.to === 'completed') {
+    const o = data.orders.find(x => String(x.id) === id); if (!o) { b.disabled = false; return; }
+    if (!(await closeTableUI(o.table_id, tn(o)))) { b.disabled = false; return; }
+  } else await api.setStatus(pid(id), b.dataset.to);
   await refresh();
 });
+
+/* ===== CERRAR MESA (cobrada): completa todos sus pedidos y deja el QR listo para el próximo cliente ===== */
+async function closeTableUI(tid, name) {
+  const open = data.orders.filter(o => (tid ? o.table_id === tid : false) || (!o.table_id && tn(o) === name));
+  const busy = open.filter(o => o.status !== 'ready').length;
+  if (busy && !confirm(`La mesa "${name}" tiene ${busy} pedido${busy === 1 ? '' : 's'} sin terminar.\n\nSi cierras la mesa se completan todos y el cliente ya no podrá pedir. ¿Cerrar igual?`)) return false;
+  if (!(await api.closeTable(tid, name))) return false;
+  toast('Mesa cerrada y cobrada'); return true;
+}
+
+/* ===== LLAMADAS AL MESERO ===== */
+const WHY = { pay: ['💳 Quiere pagar', 'pay'], complaint: ['⚠️ Queja o problema', 'complaint'], help: ['🙋 Necesita algo', 'help'] };
+let seenCalls = null;
+function renderCalls() {
+  const calls = data.calls || [], ids = new Set(calls.map(c => c.id));
+  const cn = $('#ccnt'); cn.textContent = calls.length || ''; cn.dataset.v = calls.length;
+  $('#cl').innerHTML = calls.map(c => { const w = WHY[c.reason] || WHY.help, m = mins(c.created_at);
+    return `<article class="cc ${esc(c.reason)}"><div class="h"><b>${esc(c.table_name)}</b><small>${m < 1 ? 'Recién' : m + ' min'}</small></div><p class="why">${w[0]}</p>${c.note ? `<p class="nt2">“${esc(c.note)}”</p>` : ''}
+    <div class="ac">${c.reason === 'pay' ? `<button class="pri" data-cclose="${c.id}">Cobrar y cerrar mesa</button>` : ''}<button class="gh" data-cdone="${c.id}">Atendido</button></div></article>`; }).join('');
+  if (seenCalls) { const fresh = calls.filter(c => !seenCalls.has(c.id)); if (fresh.length) alertCall(fresh); }
+  seenCalls = ids;
+}
+function alertCall(list) {
+  beep(); const b = $('#bn'), c = list[0];
+  b.textContent = list.length > 1 ? `${list.length} llamadas al mesero` : `${c.table_name} · ${(WHY[c.reason] || WHY.help)[0].replace(/^\S+\s/, '')}`;
+  b.classList.add('on'); clearTimeout(bt); bt = setTimeout(() => b.classList.remove('on'), 4500);
+}
+$('#cl').addEventListener('click', async e => {
+  const d = e.target.closest('[data-cdone]'), x = e.target.closest('[data-cclose]'); if (!d && !x) return;
+  const c = data.calls.find(k => String(k.id) === (d || x).dataset[d ? 'cdone' : 'cclose']); if (!c) return;
+  (d || x).disabled = true;
+  if (d) await api.upd('waiter_calls', c.id, { status: 'done' });
+  else if (!(await closeTableUI(c.table_id, c.table_name))) { x.disabled = false; return; }
+  await refresh();
+});
+setInterval(() => { if (data.calls && data.calls.length) renderCalls(); }, 30000);
 
 /* ===== CARTA ===== */
 function menuMeta() {
@@ -374,11 +429,11 @@ $('#frm').addEventListener('submit', async () => {
 /* ===== NAVEGACIÓN Y ARRANQUE ===== */
 $$('nav button').forEach(b => b.onclick = () => {
   view = b.dataset.v; $$('nav button').forEach(x => x.classList.toggle('on', x === b));
-  ['orders', 'menu', 'promos', 'tables'].forEach(v => $('#' + v).hidden = view !== v);
+  ['orders', 'menu', 'promos', 'calls', 'tables'].forEach(v => $('#' + v).hidden = view !== v);
   if (view === 'menu') { menuMeta(); renderMenu(true); }
 });
 async function refresh() {
-  data = await api.load(); renderOrders(); menuMeta(); renderPromos(); renderTables();
+  data = await api.load(); renderOrders(); renderCalls(); menuMeta(); renderPromos(); renderTables();
   if (view === 'menu' && !(document.activeElement && document.activeElement.closest('#pg'))) renderMenu();
 }
 const clk = () => $('#clk').textContent = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
@@ -413,10 +468,12 @@ $('#pl').addEventListener('change', async e => { await api.upd('promotions', e.t
 /* ===== MESAS (enlace directo para QR / NFC) ===== */
 const linkOf = t => new URL('carta.html?r=' + R.slug + '&t=' + t.id, location.href).href;
 function renderTables() {
-  $('#tl').innerHTML = data.tables.length ? `<div class="lst">${data.tables.map(t => `<div class="rw2"><div class="nm"><b>${esc(t.name)}</b><small>${esc(linkOf(t))}</small></div><button class="gh" data-cp="${t.id}">Copiar enlace</button><button class="gh" data-qr="${t.id}">QR</button><button class="gh" data-del="dining_tables" data-id="${t.id}">Borrar</button></div>`).join('')}</div>` : '<p class="empty">Crea tu primera mesa. Cada una genera un enlace único para grabar en NFC o imprimir como QR.</p>';
+  $('#tl').innerHTML = data.tables.length ? `<div class="lst">${data.tables.map(t => `<div class="rw2"><div class="nm"><b>${esc(t.name)}</b><small>${esc(linkOf(t))}</small></div><button class="gh" data-cp="${t.id}">Copiar enlace</button><button class="gh" data-qr="${t.id}">QR</button><button class="gh" data-free="${t.id}" title="Cierra los pedidos abiertos y cambia la sesión: el cliente anterior ya no podrá pedir">Liberar mesa</button><button class="gh" data-del="dining_tables" data-id="${t.id}">Borrar</button></div>`).join('')}</div>` : '<p class="empty">Crea tu primera mesa. Cada una genera un enlace único para grabar en NFC o imprimir como QR.</p>';
 }
 $('#tf').onsubmit = async e => { e.preventDefault(); const n = $('#tn').value.trim(); if (!n) return; await api.add('dining_tables', { name: n }); $('#tn').value = ''; toast('Mesa creada'); await refresh(); };
 $('#tl').addEventListener('click', async e => {
+  const f = e.target.closest('[data-free]');
+  if (f) { const t = data.tables.find(x => String(x.id) === f.dataset.free); if (t && confirm(`¿Liberar "${t.name}"?\n\nSe cierran sus pedidos abiertos y quien estaba en la mesa ya no podrá pedir. El próximo cliente que escanee el QR empieza de cero.`) && await api.closeTable(t.id, t.name)) { toast('Mesa liberada'); await refresh(); } return; }
   const b = e.target.closest('[data-cp],[data-qr]'); if (!b) return;
   const t = data.tables.find(x => String(x.id) === (b.dataset.cp || b.dataset.qr));
   if (b.dataset.cp) { try { await navigator.clipboard.writeText(linkOf(t)); toast('Enlace copiado'); } catch (_) { prompt('Copia el enlace:', linkOf(t)); } }
