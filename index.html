@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
-<title>Comandera · Panel del restaurante</title>
+<title>Fogón · Panel del restaurante</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
@@ -207,6 +207,7 @@ nav button:hover{color:var(--tx)}
 .tk.preparing::before{width:66%}.tk.ready::before{width:100%}
 .tk.flash{animation:flash 1.4s}
 @keyframes flash{0%,100%{box-shadow:0 1px 2px rgba(16,24,40,.06)}25%{box-shadow:0 0 0 4px rgba(37,99,235,.5)}}
+.paidb{display:inline-block;margin-left:8px;background:#16a34a;color:#fff;font-size:11px;font-weight:700;border-radius:6px;padding:1px 7px;animation:pop .4s}
 .modb{display:inline-block;margin-left:8px;background:#2563eb;color:#fff;font-size:11px;font-weight:700;border-radius:6px;padding:1px 7px;animation:pop .4s}
 .nt.ad{color:#15703e}
 .late .lt{animation:latep 1.2s infinite}
@@ -261,7 +262,7 @@ nav button:hover{color:var(--tx)}
 </head>
 <body>
 <header class="top">
-  <div class="brand"><span class="mk"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span><span class="t">Comandera</span></div>
+  <div class="brand"><span class="mk"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span><span class="t">Fogón</span></div>
   <nav>
     <button data-v="orders" class="on">Pedidos<i id="cnt" data-v="0"></i></button>
     <button data-v="menu">Carta</button>
@@ -328,8 +329,8 @@ nav button:hover{color:var(--tx)}
     <div class="rv">
       <div class="rvk">
         <div class="big" style="--i:0"><span>Ventas del día</span><b id="rvSales" data-v="0">$0</b></div>
-        <div style="--i:1"><span>Cobrado (mesas cerradas)</span><b id="rvPaid" data-v="0">$0</b></div>
-        <div style="--i:2"><span>Por cobrar (mesas abiertas)</span><b id="rvOpen" data-v="0">$0</b></div>
+        <div style="--i:1"><span>Cobrado</span><b id="rvPaid" data-v="0">$0</b></div>
+        <div style="--i:2"><span>Por cobrar</span><b id="rvOpen" data-v="0">$0</b></div>
         <div style="--i:3"><span>Pedidos</span><b id="rvN" data-v="0">0</b></div>
         <div style="--i:4"><span>Ticket promedio</span><b id="rvAvg" data-v="0">$0</b></div>
         <div style="--i:5"><span>En agregados</span><b id="rvAdd" data-v="0">$0</b></div>
@@ -474,8 +475,9 @@ const api = {
   async del(table, id) { await sb.from(table).delete().eq('id', id); },
   async setStatus(id, status) { await sb.from('orders').update({ status }).eq('id', id).neq('status', 'cancelled'); },
   /* cierra la mesa: completa sus pedidos, atiende sus llamadas y cambia su sesión (el cliente anterior ya no puede pedir) */
+  async chargeTable(tid, name, upto, callId) { const { error } = await sb.rpc('charge_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name, p_upto: upto, p_call: callId || null }); if (error) { toast('No se pudo registrar el cobro: ' + error.message); return false; } return true; },
   async closeTable(tid, name, release = false) { const { error } = await sb.rpc('close_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name, p_release: release }); if (error) { toast('No se pudo cerrar la mesa: ' + error.message); return false; } return true; },
-  watch(cb) { let c = sb.channel('comandera'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls', 'product_addons'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, p => { try { orderEvent(p); } catch (e) {} cb(); })); c.subscribe(); }
+  watch(cb) { let c = sb.channel('fogon'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls', 'product_addons'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, p => { try { orderEvent(p); } catch (e) {} cb(); })); c.subscribe(); }
 };
 
 /* ===== ESTADO ===== */
@@ -540,7 +542,7 @@ function alertNew(list) {
 /* ===== PEDIDOS ===== */
 function ticketHTML(o) {
   const n = (o.items || []).reduce((a, i) => a + Number(i.qty || 0), 0);
-  return `<div class="hd"><div><b class="mn">${esc(tn(o))}</b><small>${n} ${n === 1 ? 'ítem' : 'ítems'}${o.modified_at ? '<span class="modb">Modificado</span>' : ''}</small></div><div class="rt"><span class="lt">Atrasado</span><span class="ago"></span></div></div>
+  return `<div class="hd"><div><b class="mn">${esc(tn(o))}</b><small>${n} ${n === 1 ? 'ítem' : 'ítems'}${o.modified_at ? '<span class="modb">Modificado</span>' : ''}${o.paid_at ? '<span class="paidb">Pagado</span>' : ''}</small></div><div class="rt"><span class="lt">Atrasado</span><span class="ago"></span></div></div>
   <ul>${(o.items || []).map(i => `<li><b>${esc(i.qty)}×</b><span>${esc(i.name)}</span>${(i.addons || []).map(a => `<span class="nt ad">+ ${esc(a.name)}</span>`).join('')}${i.promo ? `<span class="nt">🏷 ${esc(i.promo)}</span>` : ''}${i.note ? `<span class="nt">${esc(i.note)}</span>` : ''}</li>`).join('')}</ul><button class="go"></button>`;
 }
 function renderOrders() {
@@ -550,15 +552,15 @@ function renderOrders() {
     let el = map.get(o.id);
     if (!el) {
       el = document.createElement('article'); el.className = 'tk'; el.dataset.id = o.id; el.innerHTML = ticketHTML(o); map.set(o.id, el); $('#grid').appendChild(el);
-      el._sg = JSON.stringify(o.items) + '|' + (o.modified_at || ''); if (!seen) el.style.animationDelay = Math.min(i, 8) * 45 + 'ms';
+      el._sg = JSON.stringify(o.items) + '|' + (o.modified_at || '') + '|' + (o.paid_at || ''); if (!seen) el.style.animationDelay = Math.min(i, 8) * 45 + 'ms';
       if (seen && o.status === 'pending') { fresh.push(o); el.classList.add('nuevo'); }
     } else if (el.dataset.st && el.dataset.st !== o.status) { el.classList.remove('nuevo', 'moved'); void el.offsetWidth; el.classList.add('moved'); }
-    const sg = JSON.stringify(o.items) + '|' + (o.modified_at || '');
+    const sg = JSON.stringify(o.items) + '|' + (o.modified_at || '') + '|' + (o.paid_at || '');
     if (el._sg !== sg) { el._sg = sg; el.innerHTML = ticketHTML(o); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }   // el cliente modificó el pedido
     el._mod = o.modified_at || '';
     el.classList.remove('pending', 'preparing', 'ready'); el.classList.add(o.status);
     el.dataset.st = o.status; el._t = o.created_at;
-    const g = el.querySelector('.go'); g.textContent = LBL[o.status][0]; g.dataset.to = LBL[o.status][1]; g.disabled = false;
+    const g = el.querySelector('.go'); g.textContent = o.status === 'ready' && o.paid_at ? 'Cerrar mesa' : LBL[o.status][0]; g.dataset.to = LBL[o.status][1]; g.disabled = false;
     el.style.order = i; el.hidden = (sf && o.status !== sf) || (mf && tn(o) !== mf);
   });
   for (const [id, el] of map) if (!ids.has(id)) { el.classList.add('leave'); setTimeout(() => el.remove(), 300); map.delete(id); }
@@ -604,6 +606,15 @@ async function closeTableUI(tid, name) {
   toast('Mesa cerrada y cobrada'); confetti(); return true;
 }
 
+/* ===== COBRAR SIN CERRAR: marca como pagado lo pedido hasta el aviso del cliente; la mesa sigue abierta y la próxima cuenta solo suma lo nuevo ===== */
+async function chargeUI(c) {
+  const upto = new Date(c.created_at).getTime();
+  const due = data.orders.filter(o => !o.paid_at && o.status !== 'cancelled' && new Date(o.created_at).getTime() <= upto && ((c.table_id && o.table_id === c.table_id) || (!o.table_id && tn(o) === c.table_name)));
+  const amt = due.reduce((a, o) => a + oTotal(o), 0);
+  if (!(await api.chargeTable(c.table_id, c.table_name, c.created_at, c.id))) return false;
+  toast(due.length ? `Cobrado ${clp(Math.round(amt))} · la mesa sigue abierta` : 'Nada pendiente de cobro en esa mesa'); return true;
+}
+
 /* ===== LLAMADAS AL MESERO ===== */
 const WHY = { pay: ['💳 Quiere pagar', 'pay'], complaint: ['⚠️ Queja o problema', 'complaint'], help: ['🙋 Necesita algo', 'help'] };
 let seenCalls = null;
@@ -612,7 +623,7 @@ function renderCalls() {
   const cn = $('#ccnt'); cn.textContent = calls.length || ''; cn.dataset.v = calls.length;
   $('#cl').innerHTML = calls.map(c => { const w = WHY[c.reason] || WHY.help, m = mins(c.created_at);
     return `<article class="cc ${esc(c.reason)}"><div class="h"><b>${esc(c.table_name)}</b><small>${m < 1 ? 'Recién' : m + ' min'}</small></div><p class="why">${w[0]}</p>${c.note ? `<p class="nt2">“${esc(c.note)}”</p>` : ''}
-    <div class="ac">${c.reason === 'pay' ? `<button class="pri" data-cclose="${c.id}">Cobrar y cerrar mesa</button>` : ''}<button class="gh" data-cdone="${c.id}">Atendido</button></div></article>`; }).join('');
+    <div class="ac">${c.reason === 'pay' ? `<button class="pri" data-cclose="${c.id}">Cobrar y cerrar mesa</button><button class="gh" data-cpay="${c.id}">Cobrar y dejar abierta</button>` : ''}<button class="gh" data-cdone="${c.id}">Atendido</button></div></article>`; }).join('');
   if (seenCalls) { const fresh = calls.filter(c => !seenCalls.has(c.id)); if (fresh.length) alertCall(fresh); }
   seenCalls = ids;
 }
@@ -622,10 +633,11 @@ function alertCall(list) {
   b.classList.add('on'); clearTimeout(bt); bt = setTimeout(() => b.classList.remove('on'), 4500);
 }
 $('#cl').addEventListener('click', async e => {
-  const d = e.target.closest('[data-cdone]'), x = e.target.closest('[data-cclose]'); if (!d && !x) return;
-  const c = data.calls.find(k => String(k.id) === (d || x).dataset[d ? 'cdone' : 'cclose']); if (!c) return;
-  (d || x).disabled = true;
+  const d = e.target.closest('[data-cdone]'), x = e.target.closest('[data-cclose]'), p = e.target.closest('[data-cpay]'); if (!d && !x && !p) return;
+  const c = data.calls.find(k => String(k.id) === (d || x || p).dataset[d ? 'cdone' : x ? 'cclose' : 'cpay']); if (!c) return;
+  (d || x || p).disabled = true;
   if (d) await api.upd('waiter_calls', c.id, { status: 'done' });
+  else if (p) { if (!(await chargeUI(c))) { p.disabled = false; return; } }
   else if (!(await closeTableUI(c.table_id, c.table_name))) { x.disabled = false; return; }
   await refresh();
 });
@@ -723,7 +735,7 @@ function setBrand() {
   const mk = $('.brand .mk');
   if (R && R.logo_url) { mk.innerHTML = `<img src="${esc(R.logo_url)}" alt="">`; mk.classList.add('has'); }
   else { mk.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>'; mk.classList.remove('has'); }
-  $('.brand .t').textContent = R ? R.name : 'Comandera';
+  $('.brand .t').textContent = R ? R.name : 'Fogón';
   $('#susp').hidden = !(R && R.active === false);
 }
 function cfgPrev() {
@@ -878,7 +890,7 @@ const compact = v => v >= 1e6 ? (v / 1e6).toFixed(1).replace('.0', '') + 'M' : v
 async function loadRevenue() {
   if (!sb || !R) return;
   const [y, m, d] = revDay.split('-').map(Number), a = new Date(y, m - 1, d), b = new Date(y, m - 1, d + 1);
-  const { data: rows, error } = await sb.from('orders').select('id,status,total,items,created_at').eq('restaurant_id', R.id).gte('created_at', a.toISOString()).lt('created_at', b.toISOString()).order('created_at');
+  const { data: rows, error } = await sb.from('orders').select('id,status,total,items,created_at,paid_at').eq('restaurant_id', R.id).gte('created_at', a.toISOString()).lt('created_at', b.toISOString()).order('created_at');
   if (error) { toast('No se pudieron cargar los ingresos'); return; }
   REV = rows || []; renderRevenue();
 }
@@ -888,7 +900,7 @@ function revStats(rows) {
   let sales = 0, paid = 0, addv = 0; const hours = Array(24).fill(0), prod = new Map();
   for (const o of ok) {
     const t = oTotal(o), g = oGross(o), f = g > 0 ? t / g : 1;      // f reparte el descuento de promociones entre los ítems
-    sales += t; if (o.status === 'completed') paid += t;
+    sales += t; if (o.status === 'completed' || o.paid_at) paid += t;
     hours[new Date(o.created_at).getHours()] += t;
     for (const i of o.items || []) {
       const q = Number(i.qty || 0); addv += (i.addons || []).reduce((a, x) => a + Number(x.price || 0), 0) * q * f;
@@ -912,7 +924,7 @@ function renderRevenue() {
   requestAnimationFrame(() => requestAnimationFrame(() => {
     $$('#rvChart .bar').forEach(b => b.style.height = b.dataset.h + '%'); $$('#rvTop .bb i').forEach(b => b.style.width = b.dataset.w + '%');
   }));
-  $('#rvNote').textContent = (s.canc ? `${s.canc} pedido${s.canc === 1 ? '' : 's'} cancelado${s.canc === 1 ? '' : 's'} no cuenta${s.canc === 1 ? '' : 'n'} en los ingresos. ` : '') + 'Cobrado = mesas ya cerradas · Por cobrar = pedidos de mesas que siguen abiertas.';
+  $('#rvNote').textContent = (s.canc ? `${s.canc} pedido${s.canc === 1 ? '' : 's'} cancelado${s.canc === 1 ? '' : 's'} no cuenta${s.canc === 1 ? '' : 'n'} en los ingresos. ` : '') + 'Cobrado = pedidos ya pagados (aunque la mesa siga abierta) · Por cobrar = pedidos aún sin pagar.';
 }
 function setDay(v) { revDay = v; $('#rvDay').value = v; loadRevenue(); }
 const shiftDay = n => { const [y, m, d] = revDay.split('-').map(Number); const t = dayStr(new Date(y, m - 1, d + n)); if (t <= dayStr(new Date())) setDay(t); };

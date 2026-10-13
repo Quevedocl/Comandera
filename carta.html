@@ -162,7 +162,7 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
 .oh{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .oh b{font-size:16px}.oh small{color:var(--mu);font-weight:600}
 .chip{display:inline-block;font-size:12px;font-weight:700;border-radius:99px;padding:2px 10px;background:#f3f4f6;color:var(--mu);margin-left:6px;vertical-align:middle}
-.chip.me{background:var(--ink);color:#fff}.chip.md{background:#dbeafe;color:#1e40af}.chip.cx{background:#fee2e2;color:#991b1b}
+.chip.me{background:var(--ink);color:#fff}.chip.md{background:#dbeafe;color:#1e40af}.chip.cx{background:#fee2e2;color:#991b1b}.chip.pd{background:#dcfce7;color:#166534}
 .steps{display:flex;margin:14px 0 6px}
 .steps div{flex:1;text-align:center;font-size:12px;font-weight:600;color:var(--mu);position:relative}
 .steps i{display:block;width:22px;height:22px;border-radius:50%;background:#e3e5e8;margin:0 auto 6px;position:relative;z-index:1;transition:background .4s;color:#fff;font-style:normal;font-size:13px;line-height:22px}
@@ -307,7 +307,7 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
 <div id="toast" role="status"></div>
 
 <script>
-/* ===== CONFIGURACIÓN: mismo proyecto Supabase que la comandera ===== */
+/* ===== CONFIGURACIÓN: mismo proyecto Supabase que el panel ===== */
 const CFG = { url: 'https://pmctlwsqkrpesyfozmwo.supabase.co', key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtY3Rsd3Nxa3JwZXN5Zm96bXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4NDI0OTEsImV4cCI6MjEwNzQxODQ5MX0.t7M8-Whzia4odHN5_dBZar-kPcPnKLCgFXsb9D6uPz0' };
 let NOMBRE = 'Carta', RID = null, TID = null, TIP_PCT = 10;
 let pinned = null, locked = false;            // sesión de la mesa que este teléfono tiene asignada
@@ -525,7 +525,7 @@ $('#lines').addEventListener('input', e => {
   const l = cart.get(e.target.closest('li').dataset.k); if (l) { l.note = e.target.value; saveCart(); }
 });
 
-/* ===== enviar pedido a la comandera (o guardar los cambios de un pedido) ===== */
+/* ===== enviar pedido al panel (o guardar los cambios de un pedido) ===== */
 const fail = m => { $('#err').textContent = m; };
 $('#send').onclick = async () => {
   fail('');
@@ -593,7 +593,7 @@ async function refreshAccount(force) {
   const list = data || [];
   for (const o of list) { const was = prevSt.get(o.public_id); if (was && was !== o.status && mine.has(o.public_id)) notifyStatus(o); }
   prevSt = new Map(list.map(o => [o.public_id, o.status]));
-  const sig = JSON.stringify(list.map(o => [o.public_id, o.status, o.total, o.modified_at]));
+  const sig = JSON.stringify(list.map(o => [o.public_id, o.status, o.total, o.modified_at, o.paid_at]));
   const changed = sig !== acctSig; acct = list; acctSig = sig;
   if (changed || force) { renderTrack(); if ($('#ord').open) renderOrd(); if ($('#bill').open) renderBill(); }
 }
@@ -623,14 +623,14 @@ function orderCard(o, n) {
   const items = (o.items || []).map(i => `<li><b>${esc(i.qty)}×</b><span>${esc(i.name)}${adsTxt(i)}${i.note ? `<small class="nn">“${esc(i.note)}”</small>` : ''}</span></li>`).join('');
   const steps = !cx && step ? `<div class="steps" role="img" aria-label="Estado: ${esc((TXT[st] || [])[1] || '')}">${['Recibido', 'Preparando', 'Listo'].map((l, i) => `<div class="${i < step ? 'done' : ''}${i === step - 1 && step < 3 ? ' cur' : ''}"><i>${i < step ? '✓' : ''}</i>${l}</div>`).join('')}</div>` : '';
   let acts = '';
-  if (isMine && st === 'pending') {
+  if (isMine && st === 'pending' && !o.paid_at) {
     acts = cancelAsk === o.public_id
       ? `<div class="oa"><div class="cfm"><span>¿Seguro que quieres cancelar este pedido?</span><button class="y" data-cyes="${o.public_id}">Sí, cancelar</button><button class="n" data-cno>No</button></div></div>`
       : `<div class="oa"><button class="go2" data-edit="${o.public_id}">Modificar</button><button class="dg" data-cancel="${o.public_id}">Cancelar pedido</button></div>`;
   } else if (isMine && (st === 'preparing' || st === 'ready')) {
     acts = `<p class="hint">Cocina ya lo está preparando, por eso no se puede cancelar ni modificar. Si necesitas un cambio, <button data-call>avisa a un mesero</button>.</p>`;
   }
-  return `<div class="oc${isMine ? ' mine' : ''}${cx ? ' cx' : ''}"><div class="oh"><b>Pedido ${n}${isMine ? '<span class="chip me">Tuyo</span>' : '<span class="chip">De tu mesa</span>'}${o.modified_at && !cx ? '<span class="chip md">Modificado</span>' : ''}${cx ? '<span class="chip cx">Cancelado</span>' : ''}</b><small>${hhmm(o.created_at)}</small></div>
+  return `<div class="oc${isMine ? ' mine' : ''}${cx ? ' cx' : ''}"><div class="oh"><b>Pedido ${n}${isMine ? '<span class="chip me">Tuyo</span>' : '<span class="chip">De tu mesa</span>'}${o.modified_at && !cx ? '<span class="chip md">Modificado</span>' : ''}${cx ? '<span class="chip cx">Cancelado</span>' : ''}${o.paid_at && !cx ? '<span class="chip pd">Pagado</span>' : ''}</b><small>${hhmm(o.created_at)}</small></div>
     ${steps}<ul class="oi">${items}</ul><div class="ot"><span>Total del pedido</span><span>${clp(o.total || 0)}</span></div>${acts}</div>`;
 }
 function renderOrd() {
@@ -703,13 +703,14 @@ async function saveEdit(items, tot, btn) {
 const uPrice = i => Number(i.price || 0) + (i.addons || []).reduce((a, x) => a + Number(x.price || 0), 0);
 let bill = { mode: 'all', n: 2, claim: new Map(), tip: 10, custom: false };
 function billData() {
-  const orders = acct.filter(o => o.status !== 'cancelled'), lines = []; let total = 0, gross = 0, mineTotal = 0;
+  const all = acct.filter(o => o.status !== 'cancelled'), orders = all.filter(o => !o.paid_at), lines = []; let total = 0, gross = 0, mineTotal = 0, paidTotal = 0;
+  all.filter(o => o.paid_at).forEach(o => { paidTotal += o.total != null ? Number(o.total) : (o.items || []).reduce((a, i) => a + uPrice(i) * Number(i.qty || 0), 0); });   // lo ya cobrado no entra en la cuenta
   orders.forEach(o => {
     const items = o.items || [], g = items.reduce((a, i) => a + uPrice(i) * Number(i.qty || 0), 0), t = o.total != null ? Number(o.total) : g, f = g > 0 ? t / g : 1, mn = mine.has(o.public_id);
     total += t; gross += g; if (mn) mineTotal += t;
     items.forEach((i, ix) => lines.push({ k: o.public_id + ':' + ix, name: i.name, ads: i.addons || [], qty: Number(i.qty || 0), gross: uPrice(i), net: uPrice(i) * f }));
   });
-  return { orders, lines, total: Math.round(total), gross: Math.round(gross), mineTotal: Math.round(mineTotal) };
+  return { orders, lines, total: Math.round(total), gross: Math.round(gross), mineTotal: Math.round(mineTotal), paidTotal: Math.round(paidTotal), nPaid: all.length - orders.length };
 }
 function calcBill(d) {
   let base;
@@ -732,7 +733,7 @@ function updateRes(d) {
 }
 function renderBill() {
   const d = billData(), body = $('#billBody');
-  if (!d.orders.length) { body.innerHTML = '<p class="empt">Aún no hay pedidos en tu mesa.</p>'; $('#billFoot').hidden = true; return; }
+  if (!d.orders.length) { body.innerHTML = d.nPaid ? `<div class="bl"><div class="tt"><span>Ya pagado ✓</span><span>${clp(d.paidTotal)}</span></div></div><p class="empt">No tienes nada pendiente por pagar. Si piden algo más, aparecerá aquí.</p>` : '<p class="empt">Aún no hay pedidos en tu mesa.</p>'; $('#billFoot').hidden = true; return; }
   $('#billFoot').hidden = false;
   const grp = new Map();
   d.lines.forEach(l => { const k = l.name + '|' + l.ads.map(a => a.name).join(',') + '|' + l.gross, g = grp.get(k) || { ...l, qty: 0 }; g.qty += l.qty; grp.set(k, g); });
@@ -745,7 +746,7 @@ function renderBill() {
   else if (bill.mode === 'items') pnl = `<div class="pnl"><p style="margin-bottom:6px">Marca lo que consumiste tú. Cada persona elige lo suyo desde su celular y todos ven la misma cuenta.</p>${d.lines.map(l => { const n = Math.min(bill.claim.get(l.k) || 0, l.qty); return `<div class="clr"><div class="nm"><b>${esc(l.name)}</b><small>${l.ads.length ? '+ ' + l.ads.map(a => esc(a.name)).join(', + ') + ' · ' : ''}${clp(Math.round(l.net))} c/u</small></div><div class="stp"><button data-cd="${esc(l.k)}" aria-label="Quitar uno">−</button><b>${n}/${l.qty}</b><button data-ci="${esc(l.k)}" aria-label="Agregar uno">+</button></div></div>`; }).join('')}</div>`;
   const vals = [...new Set([0, TIP_PCT, TIP_PCT + 5, TIP_PCT + 10])];
   const tips = TIP_PCT > 0 ? `<h4>Propina sugerida</h4><div class="tips">${vals.map(v => `<button data-tip="${v}" class="${!bill.custom && bill.tip === v ? 'on' : ''}">${v ? v + '%' : 'Sin propina'}${v === TIP_PCT ? '<small>sugerida</small>' : ''}</button>`).join('')}<button data-tip="custom" class="${bill.custom ? 'on' : ''}">Otro</button></div><div id="tipRow" ${bill.custom ? '' : 'hidden'}><input id="tipIn" type="number" min="0" max="100" inputmode="numeric" value="${bill.tip}" aria-label="Porcentaje de propina"> <span>%</span></div>` : '';
-  body.innerHTML = `<div class="bl">${list}${disc ? `<div class="ds2"><span>Descuentos y promociones</span><span>−${clp(disc)}</span></div>` : ''}<div class="tt"><span>Consumo de la mesa</span><span>${clp(d.total)}</span></div></div>
+  body.innerHTML = `<div class="bl">${list}${disc ? `<div class="ds2"><span>Descuentos y promociones</span><span>−${clp(disc)}</span></div>` : ''}<div class="tt"><span>${d.nPaid ? 'Saldo por pagar' : 'Consumo de la mesa'}</span><span>${clp(d.total)}</span></div></div>${d.nPaid ? `<p style="margin:8px 2px 0;color:var(--mu);font-size:13px">✓ Ya pagado antes: ${clp(d.paidTotal)} · no se vuelve a cobrar</p>` : ''}
     <h4>¿Cómo quieren pagar?</h4><div class="seg2" id="bmode">${modes.map(([m, l]) => `<button data-m="${m}" class="${bill.mode === m ? 'on' : ''}">${l}</button>`).join('')}</div>${pnl}${tips}<div class="res" id="billRes"></div>`;
   $('#billErr').hidden = true; updateRes(d);
 }
