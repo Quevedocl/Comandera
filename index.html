@@ -122,7 +122,6 @@ dialog input[type=file]{height:auto;padding:9px 12px}
 dialog select{width:100%;height:42px;padding:0 10px;border:1px solid var(--ln);border-radius:9px;background:#fff}
 dialog input[type=checkbox]{width:auto;height:auto}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}[hidden]{display:none!important}
-#scd{width:min(700px,94vw)}#scl{max-height:44vh;overflow:auto;margin-top:10px}.sr{display:grid;grid-template-columns:24px 1fr 140px 84px;gap:6px;margin-bottom:6px;align-items:center}.sr input{height:36px}
 .tf{display:flex;gap:10px;padding:0 20px 14px;max-width:980px}.tf input{flex:1;height:38px;border:1px solid var(--ln);border-radius:10px;padding:0 12px;background:#fff}
 #qrb{display:grid;place-items:center;margin:16px 0}
 </style>
@@ -163,7 +162,7 @@ dialog input[type=checkbox]{width:auto;height:auto}
       <label class="srch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Buscar producto"></label>
       <div class="seg" id="chips"></div>
       <span class="stt sp" id="stt"></span>
-      <button class="gh" id="scan">Escanear carta</button><button class="pri" id="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Añadir producto</button>
+      <button class="pri" id="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Añadir producto</button>
     </div>
     <div class="pg" id="pg"></div>
   </section>
@@ -199,12 +198,6 @@ dialog input[type=checkbox]{width:auto;height:auto}
   <label>Título (opcional)</label><input id="p-title" maxlength="60" placeholder="Ej. 2x1 en pizzas los martes">
   <label>Válida hasta (opcional)</label><input id="p-end" type="date">
   <div class="bt"><button type="button" class="gh" id="p-cancel">Cancelar</button><button type="button" class="pri" id="p-save">Crear promoción</button></div>
-</div></dialog>
-<dialog id="scd"><div>
-  <h3>Escanear carta</h3><p class="stt" style="margin:4px 0 0">Sube una o varias fotos de tu carta (máx. 6). Revisarás todo antes de guardar.</p>
-  <label for="scf">Fotos de la carta</label><input id="scf" type="file" accept="image/*" multiple>
-  <p class="stt" id="scm"></p><div id="scl"></div>
-  <div class="bt"><button type="button" class="gh" id="sc-x">Cerrar</button><button type="button" class="gh" id="scgo">Leer carta</button><button type="button" class="pri" id="scs" hidden>Guardar seleccionados</button></div>
 </div></dialog>
 <dialog id="qrd"><div style="text-align:center"><h3 id="qrt"></h3><div id="qrb"></div><div class="bt" style="justify-content:center"><button class="gh" id="qrdl">Descargar PNG</button><button class="gh" id="qrx">Cerrar</button></div></div></dialog>
 <div id="login" hidden>
@@ -247,7 +240,7 @@ const api = {
     await sb.from('products').insert({ ...p, restaurant_id: R.id });
   },
   async addMany(rows) { await sb.from('products').insert(rows.map(r => ({ ...r, restaurant_id: R.id }))); },
-  async add(table, row) { const { error } = await sb.from(table).insert({ ...row, restaurant_id: R.id }); if (error) toast('No se pudo guardar'); },
+  async add(table, row) { const { error } = await sb.from(table).insert({ ...row, restaurant_id: R.id }); if (error) toast('No se pudo guardar: ' + error.message); },
   async upd(table, id, patch) { await sb.from(table).update(patch).eq('id', id); },
   async del(table, id) { await sb.from(table).delete().eq('id', id); },
   async setStatus(id, status) { await sb.from('orders').update({ status }).eq('id', id); },
@@ -377,26 +370,6 @@ clk(); setInterval(clk, 10000); setInterval(tick, 10000);
 $('#mode').textContent = sb ? 'En vivo' : 'Modo demo';
 /* ===== CATEGORÍAS SUGERIDAS ===== */
 const SUGG = ['Entradas','Para compartir','Ensaladas','Sopas','Platos de fondo','Carnes','Pescados y mariscos','Pastas','Pizzas','Hamburguesas','Sándwiches','Sushi','Tacos y mexicano','Parrilla','Comida rápida','Vegetariano','Menú del día','Menú infantil','Acompañamientos','Postres','Helados','Desayunos','Cafetería','Té e infusiones','Jugos y batidos','Bebidas','Cervezas','Vinos','Cócteles','Tragos y licores'];
-
-/* ===== ESCANEAR CARTA ===== */
-const shrink = f => new Promise(res => { const im = new Image(); im.onload = () => { const k = Math.min(1, 1600 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = im.width * k; c.height = im.height * k; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', .82).split(',')[1]); URL.revokeObjectURL(im.src); }; im.src = URL.createObjectURL(f); });
-$('#scan').onclick = () => { $('#scf').value = ''; $('#scl').innerHTML = ''; $('#scm').textContent = ''; $('#scs').hidden = true; $('#scgo').disabled = false; $('#scd').showModal(); };
-$('#sc-x').onclick = () => $('#scd').close();
-$('#scgo').onclick = async () => {
-  const fs = [...$('#scf').files]; if (!fs.length) return toast('Elige una foto de la carta');
-  $('#scgo').disabled = true; $('#scm').textContent = 'Leyendo la carta… puede tardar unos segundos';
-  const images = await Promise.all(fs.slice(0, 6).map(shrink));
-  const { data: d, error } = await sb.functions.invoke('scan-menu', { body: { images } });
-  $('#scgo').disabled = false;
-  if (error || !d?.items?.length) { $('#scm').textContent = 'No se pudo leer la carta. Prueba con una foto más nítida y bien iluminada.'; return; }
-  $('#scm').textContent = `Encontré ${d.items.length} productos. Corrige lo que haga falta antes de guardar.`;
-  $('#scl').innerHTML = d.items.map(x => `<div class="sr"><input type="checkbox" checked aria-label="Incluir"><input data-k="name" value="${esc(x.name)}" aria-label="Nombre"><input data-k="category" list="cats" value="${esc(x.category)}" aria-label="Categoría"><input data-k="price" type="number" min="0" value="${esc(x.price)}" aria-label="Precio"></div>`).join('');
-  $('#scs').hidden = false;
-};
-$('#scs').onclick = async () => {
-  const rows = $$('#scl .sr').filter(r => r.querySelector('[type=checkbox]').checked).map(r => { const g = k => r.querySelector(`[data-k=${k}]`).value.trim(); return { name: g('name'), category: g('category') || 'Otros', price: Math.max(0, Math.round(Number(g('price')) || 0)), is_available: true }; }).filter(r => r.name);
-  if (!rows.length) return; await api.addMany(rows); $('#scd').close(); toast(rows.length + ' productos añadidos'); await refresh(); renderMenu(true);
-};
 
 /* ===== PROMOCIONES ===== */
 const live = x => x.is_active && (!x.ends_on || x.ends_on >= new Date().toISOString().slice(0, 10));

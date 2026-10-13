@@ -1,4 +1,11 @@
 -- Comandera multi-restaurante · ejecutar UNA vez en Supabase > SQL Editor
+-- tabla promotions antigua (otra estructura, vacía): se renombra, no se borra
+do $$ begin
+  if exists (select 1 from information_schema.columns where table_schema='public' and table_name='promotions' and column_name='product_ids') then
+    alter table promotions rename to promotions_old;
+    alter index if exists promotions_pkey rename to promotions_old_pkey;
+  end if;
+end $$;
 create table if not exists restaurants (id uuid primary key default gen_random_uuid(), owner_id uuid not null unique references auth.users on delete cascade, name text not null, slug text not null unique, created_at timestamptz default now());
 create table if not exists dining_tables (id uuid primary key default gen_random_uuid(), restaurant_id uuid not null references restaurants on delete cascade, name text not null, created_at timestamptz default now());
 create table if not exists promotions (id uuid primary key default gen_random_uuid(), restaurant_id uuid not null references restaurants on delete cascade, title text not null, type text not null check (type in ('nxm','percent','price','info')), product_id text, buy_qty int, pay_qty int, value numeric, ends_on date, is_active boolean not null default true, created_at timestamptz default now());
