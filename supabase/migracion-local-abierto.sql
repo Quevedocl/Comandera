@@ -3,6 +3,7 @@
 -- Hazlo ANTES de subir los HTML nuevos.
 
 alter table restaurants add column if not exists open_now boolean not null default true;
+grant update (open_now) on restaurants to authenticated;   -- sin esto el botón del panel falla con "permission denied"
 
 -- Con el local cerrado nadie puede crear pedidos nuevos (las mesas abiertas siguen pudiendo llamar al mesero y pedir la cuenta)
 drop policy if exists o_ins on orders;

@@ -1,0 +1,12 @@
+# Configuración para el CLI de Supabase (opcional: solo si trabajas en local con `supabase start`).
+# En el panel de Supabase se configura igual en Authentication > Sign In / Providers > Email.
+project_id = "fogon"
+
+[auth]
+enable_signup = true
+# 6 dígitos, vence en 1 hora
+[auth.email]
+enable_confirmations = true
+otp_length = 6
+otp_expiry = 3600
+max_frequency = "60s"

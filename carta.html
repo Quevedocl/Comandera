@@ -5,7 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Carta · Haz tu pedido</title>
+<meta name="description" content="Mira la carta y pide desde tu mesa.">
+<meta property="og:type" content="website"><meta property="og:title" content="Carta · Haz tu pedido"><meta property="og:description" content="Mira la carta y pide desde tu mesa.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml"><link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <style>
 :root{color-scheme:light;--bg:#f2f3f5;--card:#fff;--ln:#e3e5e8;--tx:#1f2328;--mu:#6b7280;--red:#e5484d;--grn:#1f9d55;--ink:#1f2328;--f:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -360,8 +366,8 @@ body.closed .add,body.closed .it .stp,body.closed #bar,body.closed #prodFoot{dis
 <div id="toast" role="status"></div>
 
 <script>
-/* ===== CONFIGURACIÓN: mismo proyecto Supabase que el panel ===== */
-const CFG = { url: 'https://pmctlwsqkrpesyfozmwo.supabase.co', key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtY3Rsd3Nxa3JwZXN5Zm96bXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4NDI0OTEsImV4cCI6MjEwNzQxODQ5MX0.t7M8-Whzia4odHN5_dBZar-kPcPnKLCgFXsb9D6uPz0' };
+/* ===== CONFIGURACIÓN: mismo proyecto Supabase que el panel (se edita en config.js) ===== */
+const CFG = window.FOGON || { url: '', key: '' };
 let NOMBRE = 'Carta', RID = null, TID = null, TIP_PCT = 10;
 let pinned = null, locked = false;            // sesión de la mesa que este teléfono tiene asignada
 const SES_TTL = 6 * 3600e3;                   // si este teléfono no visitó la mesa en 6 h, se considera una visita nueva
@@ -384,7 +390,7 @@ function uuid() {
 }
 ['#cart', '#prod', '#ord', '#bill', '#call'].forEach(d => $(d).addEventListener('click', e => { if (e.target === $(d)) $(d).close(); }));
 
-const sb = window.supabase ? supabase.createClient(CFG.url, CFG.key) : null;
+const sb = window.supabase && CFG.url ? supabase.createClient(CFG.url, CFG.key) : null;
 let CART_KEY = 'carta-pedido-v1';
 
 /* mesa: viene del QR (?mesa=5); si no, se la pedimos al enviar */
@@ -606,6 +612,8 @@ $('#send').onclick = async () => {
     btn.textContent = 'Enviar pedido · ' + clp(total());
     if (error.code === '42501' && await checkSession() === 'locked') return;   // la mesa se cerró justo ahora
     if (error.code === '42501') { await checkOpen(); if (CLOSED) { fail('El local acaba de cerrar y ya no recibe pedidos nuevos.'); return; } }
+    if (/demasiados_pedidos/.test(error.message || '')) { fail('Enviaste muchos pedidos seguidos. Espera unos minutos o avisa a un mesero.'); return; }
+    if (/pedido_invalido/.test(error.message || '')) { await load(); lastGone = []; renderCart(); fail('Algo de tu pedido cambió (precio o disponibilidad). Revísalo y vuelve a enviar.'); return; }
     fail('No se pudo enviar el pedido. Revisa tu conexión e inténtalo otra vez.'); return;
   }
 
@@ -708,7 +716,7 @@ $('#ordBody').addEventListener('click', async e => {
 });
 const ORD_MSG = {
   not_pending: 'Cocina ya empezó a prepararlo: no se puede cambiar. Avisa a un mesero si necesitas algo.',
-  cancelled: 'Este pedido ya estaba cancelado.', not_found: 'No encontramos ese pedido.', invalid: 'El pedido no es válido.',
+  cancelled: 'Este pedido ya estaba cancelado.', not_found: 'No encontramos ese pedido.', invalid: 'Algo de tu pedido cambió (precio o disponibilidad). Revísalo y vuelve a intentar.',
 };
 async function cancelOrder(pid) {
   const { data: r, error } = await sb.rpc('cancel_order', { p_public: pid, p_session: pinned });

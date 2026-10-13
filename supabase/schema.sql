@@ -1,111 +1,315 @@
--- Fogón multi-restaurante · ejecutar UNA vez en Supabase > SQL Editor
--- tabla promotions antigua (otra estructura, vacía): se renombra, no se borra
-do $$ begin
-  if exists (select 1 from information_schema.columns where table_schema='public' and table_name='promotions' and column_name='product_ids') then
-    alter table promotions rename to promotions_old;
-    alter index if exists promotions_pkey rename to promotions_old_pkey;
-  end if;
-end $$;
-create table if not exists restaurants (id uuid primary key default gen_random_uuid(), owner_id uuid not null unique references auth.users on delete cascade, name text not null, slug text not null unique, created_at timestamptz default now());
-create table if not exists dining_tables (id uuid primary key default gen_random_uuid(), restaurant_id uuid not null references restaurants on delete cascade, name text not null, created_at timestamptz default now());
-create table if not exists promotions (id uuid primary key default gen_random_uuid(), restaurant_id uuid not null references restaurants on delete cascade, title text not null, type text not null check (type in ('nxm','percent','price','info')), product_id text, buy_qty int, pay_qty int, value numeric, ends_on date, is_active boolean not null default true, created_at timestamptz default now());
-alter table products add column if not exists restaurant_id uuid references restaurants on delete cascade;
-alter table orders add column if not exists restaurant_id uuid references restaurants on delete cascade, add column if not exists table_id uuid, add column if not exists table_name text, add column if not exists total numeric;
-alter table orders alter column table_number drop not null;
+-- Fogón · esquema COMPLETO para una instalación nueva (incluye las migraciones 1 a 7)
+-- Ejecutar UNA vez en Supabase > SQL Editor sobre un proyecto vacío.
+-- Si ya tienes un proyecto funcionando, NO uses este archivo: ejecuta solo las migraciones que te falten (ver README.md).
 
+-- ===== Tablas =====
+create table if not exists restaurants (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid not null unique references auth.users on delete cascade,
+  name text not null,
+  slug text not null unique,
+  logo_url text,
+  active boolean not null default true,        -- lo maneja el administrador de la plataforma (suspender un local)
+  open_now boolean not null default true,      -- lo maneja el dueño ("Abierto ahora" / "Local cerrado")
+  tip_pct int not null default 10 check (tip_pct between 0 and 30),
+  created_at timestamptz default now()
+);
+create table if not exists dining_tables (
+  id uuid primary key default gen_random_uuid(),
+  restaurant_id uuid not null references restaurants on delete cascade,
+  name text not null,
+  session_id uuid not null default gen_random_uuid(),   -- cambia al cerrar la mesa: el cliente anterior queda sin acceso
+  released_sid uuid,
+  created_at timestamptz default now()
+);
+create table if not exists products (
+  id uuid primary key default gen_random_uuid(),
+  restaurant_id uuid not null references restaurants on delete cascade,
+  name text not null,
+  category text not null,
+  price numeric not null default 0 check (price >= 0),
+  description text,
+  image_url text,
+  is_available boolean not null default true,
+  created_at timestamptz default now()
+);
+create table if not exists product_addons (
+  id uuid primary key default gen_random_uuid(),
+  restaurant_id uuid not null references restaurants on delete cascade,
+  name text not null,
+  price numeric not null default 0 check (price >= 0),
+  product_id text,
+  category text,
+  is_available boolean not null default true,
+  created_at timestamptz default now(),
+  check (product_id is not null or category is not null)
+);
+create table if not exists promotions (
+  id uuid primary key default gen_random_uuid(),
+  restaurant_id uuid not null references restaurants on delete cascade,
+  title text not null,
+  type text not null check (type in ('nxm','percent','price','info')),
+  product_id text, buy_qty int, pay_qty int, value numeric, ends_on date,
+  is_active boolean not null default true,
+  created_at timestamptz default now()
+);
+create table if not exists orders (
+  id uuid primary key default gen_random_uuid(),
+  public_id uuid unique,
+  restaurant_id uuid not null references restaurants on delete cascade,
+  table_id uuid,
+  table_name text check (table_name is null or char_length(table_name) <= 60),
+  table_number int,
+  session_id uuid,
+  items jsonb not null default '[]'::jsonb,
+  total numeric,
+  status text not null default 'pending' check (status in ('pending','preparing','ready','completed','cancelled')),
+  paid_at timestamptz,
+  modified_at timestamptz,
+  cancelled_at timestamptz,
+  history jsonb not null default '[]'::jsonb,
+  created_at timestamptz default now()
+);
+create table if not exists waiter_calls (
+  id uuid primary key default gen_random_uuid(),
+  restaurant_id uuid not null references restaurants on delete cascade,
+  table_id uuid,
+  table_name text not null,
+  session_id uuid,
+  reason text not null check (reason in ('pay','complaint','help')),
+  note text check (note is null or char_length(note) <= 200),
+  status text not null default 'open' check (status in ('open','done')),
+  created_at timestamptz default now()
+);
+-- una sola llamada abierta por mesa y motivo (evita spam; el anónimo no puede leer la tabla, por eso lo garantiza un índice)
+create unique index if not exists waiter_calls_open_key on waiter_calls (restaurant_id, table_name, reason) where status = 'open';
+create table if not exists admins (email text primary key);
+
+-- ===== Índices =====
+create index if not exists orders_rest_status_idx on orders (restaurant_id, status, created_at);
+create index if not exists orders_rest_created_idx on orders (restaurant_id, created_at desc);
+create index if not exists orders_table_session_idx on orders (table_id, session_id);
+create index if not exists products_rest_idx on products (restaurant_id, category);
+create index if not exists promotions_rest_idx on promotions (restaurant_id);
+create index if not exists dining_tables_rest_idx on dining_tables (restaurant_id);
+create index if not exists product_addons_rest_idx on product_addons (restaurant_id);
+create index if not exists waiter_calls_rest_idx on waiter_calls (restaurant_id, status);
+
+-- ===== Permisos de columnas =====
+-- el dueño solo puede crear su restaurante con nombre/slug/dueño y cambiar nombre, logo, propina y estado abierto/cerrado
+revoke insert, update on restaurants from anon, authenticated;
+grant insert (owner_id, name, slug) on restaurants to authenticated;
+grant update (name, logo_url, tip_pct, open_now) on restaurants to authenticated;
+
+-- ===== Seguridad (RLS) =====
 create or replace function is_owner(rid uuid) returns boolean language sql security definer stable set search_path = public as
 $$ select exists (select 1 from restaurants where id = rid and owner_id = auth.uid()) $$;
 
--- reemplaza las políticas antiguas
-do $$ declare p record; begin
-  for p in select policyname, tablename from pg_policies where schemaname='public' and tablename in ('products','orders') loop
-    execute format('drop policy %I on %I', p.policyname, p.tablename); end loop; end $$;
 alter table restaurants enable row level security; alter table dining_tables enable row level security;
-alter table promotions enable row level security; alter table products enable row level security; alter table orders enable row level security;
+alter table promotions enable row level security; alter table products enable row level security;
+alter table product_addons enable row level security; alter table orders enable row level security;
+alter table waiter_calls enable row level security; alter table admins enable row level security;   -- admins: sin políticas, nadie la lee desde la web
 
+drop policy if exists r_read on restaurants; drop policy if exists r_ins on restaurants; drop policy if exists r_upd on restaurants;
 create policy r_read on restaurants for select using (true);
 create policy r_ins on restaurants for insert to authenticated with check (owner_id = auth.uid());
 create policy r_upd on restaurants for update to authenticated using (owner_id = auth.uid());
-do $$ declare t text; begin foreach t in array array['products','dining_tables','promotions'] loop
+
+do $$ declare t text; begin foreach t in array array['products','dining_tables','promotions','product_addons'] loop
+  execute format('drop policy if exists %1$s_read on %1$I', t);
+  execute format('drop policy if exists %1$s_write on %1$I', t);
   execute format('create policy %1$s_read on %1$I for select using (true)', t);
   execute format('create policy %1$s_write on %1$I for all to authenticated using (is_owner(restaurant_id)) with check (is_owner(restaurant_id))', t);
 end loop; end $$;
-create policy o_ins on orders for insert to anon, authenticated with check (restaurant_id is not null and exists (select 1 from restaurants where id = restaurant_id) and (table_id is null or exists (select 1 from dining_tables d where d.id = table_id and d.restaurant_id = orders.restaurant_id)));
+
+-- el cliente (anónimo) solo puede crear pedidos nuevos y "pendientes", de un local activo y abierto, con la sesión vigente de su mesa
+drop policy if exists o_ins on orders; drop policy if exists o_own on orders;
+create policy o_ins on orders for insert to anon, authenticated with check (
+  status = 'pending' and paid_at is null and restaurant_id is not null
+  and exists (select 1 from restaurants r where r.id = restaurant_id and r.active and r.open_now)
+  and (table_id is null or exists (select 1 from dining_tables d where d.id = table_id and d.restaurant_id = orders.restaurant_id and d.session_id = orders.session_id)));
 create policy o_own on orders for all to authenticated using (is_owner(restaurant_id)) with check (is_owner(restaurant_id));
 
-do $$ declare t text; begin foreach t in array array['orders','products','promotions','dining_tables'] loop
-  begin execute format('alter publication supabase_realtime add table %I', t); exception when others then null; end;
-end loop; end $$;
+drop policy if exists wc_ins on waiter_calls; drop policy if exists wc_own on waiter_calls;
+create policy wc_ins on waiter_calls for insert to anon, authenticated with check (
+  status = 'open'
+  and exists (select 1 from restaurants r where r.id = waiter_calls.restaurant_id and r.active)
+  and (table_id is null or exists (select 1 from dining_tables d where d.id = waiter_calls.table_id and d.restaurant_id = waiter_calls.restaurant_id and d.session_id = waiter_calls.session_id)));
+create policy wc_own on waiter_calls for all to authenticated using (is_owner(restaurant_id)) with check (is_owner(restaurant_id));
 
-insert into storage.buckets (id, name, public) values ('products','products',true) on conflict (id) do nothing;
-create policy products_upload on storage.objects for insert to authenticated with check (bucket_id='products' and exists (select 1 from restaurants where owner_id = auth.uid() and id::text = (storage.foldername(name))[1]));
+-- ===== Precios calculados en el servidor =====
+create or replace function fogon_price_items(p_rid uuid, p_items jsonb, out o_items jsonb, out o_total numeric)
+language plpgsql security definer stable set search_path = public as $$
+declare
+  it jsonb; ad jsonb; prod record; adr record; grp record; promo record;
+  qty int; unit numeric; sub numeric := 0; disc numeric := 0; d numeric;
+  lines jsonb := '[]'::jsonb; ads jsonb; ad_ids text[]; note text; titles jsonb := '{}'::jsonb;
+  today date := (now() at time zone 'America/Santiago')::date;
+begin
+  if p_rid is null or p_items is null or jsonb_typeof(p_items) <> 'array'
+     or jsonb_array_length(p_items) = 0 or jsonb_array_length(p_items) > 60 then
+    raise exception 'pedido_invalido';
+  end if;
 
--- Productos que ya tenías (sin restaurante): crea tu cuenta en la app y luego corre:
--- update products set restaurant_id = (select id from restaurants where name = 'TU RESTAURANTE') where restaurant_id is null;
+  for it in select value from jsonb_array_elements(p_items) loop
+    if jsonb_typeof(it) <> 'object' or coalesce(it->>'qty', '') !~ '^[0-9]{1,3}$' or coalesce(it->>'id', '') = '' then
+      raise exception 'pedido_invalido';
+    end if;
+    qty := (it->>'qty')::int;
+    if qty < 1 or qty > 20 then raise exception 'pedido_invalido'; end if;
 
--- ===== seguimiento de pedido y llamada al mesero =====
-alter table orders add column if not exists public_id uuid;
-create unique index if not exists orders_public_id_key on orders (public_id);
+    select p.* into prod from products p where p.restaurant_id = p_rid and p.id::text = it->>'id';
+    if not found or prod.is_available is not true then raise exception 'pedido_invalido'; end if;
+
+    unit := prod.price; ads := '[]'::jsonb; ad_ids := '{}';
+    if jsonb_typeof(it->'addons') = 'array' then
+      if jsonb_array_length(it->'addons') > 10 then raise exception 'pedido_invalido'; end if;
+      for ad in select value from jsonb_array_elements(it->'addons') loop
+        select a.* into adr from product_addons a
+          where a.restaurant_id = p_rid and a.id::text = ad->>'id' and a.is_available
+            and ((a.product_id is not null and a.product_id = prod.id::text) or (a.product_id is null and a.category = prod.category));
+        if not found or adr.id::text = any (ad_ids) then raise exception 'pedido_invalido'; end if;
+        ad_ids := ad_ids || adr.id::text;
+        unit := unit + adr.price;
+        ads := ads || jsonb_build_array(jsonb_build_object('id', adr.id, 'name', adr.name, 'price', adr.price));
+      end loop;
+    end if;
+
+    note := nullif(left(btrim(coalesce(it->>'note', '')), 80), '');
+    sub := sub + unit * qty;
+    lines := lines || jsonb_build_array(jsonb_strip_nulls(jsonb_build_object(
+      'id', prod.id::text, 'name', prod.name, 'qty', qty, 'price', prod.price,
+      'note', note, 'addons', case when jsonb_array_length(ads) > 0 then ads end)));
+  end loop;
+
+  for grp in
+    select l.id, sum(l.qty)::int as q, max(l.price) as pr
+    from jsonb_to_recordset(lines) as l(id text, qty int, price numeric) group by l.id
+  loop
+    select x.* into promo from promotions x
+      where x.restaurant_id = p_rid and x.is_active and x.type <> 'info' and x.product_id = grp.id
+        and (x.ends_on is null or x.ends_on >= today)
+      order by x.created_at limit 1;
+    if not found then continue; end if;
+    d := 0;
+    if promo.type = 'nxm' and coalesce(promo.buy_qty, 0) > 0 and coalesce(promo.pay_qty, 0) >= 0 then
+      d := floor(grp.q::numeric / promo.buy_qty) * greatest(promo.buy_qty - promo.pay_qty, 0) * grp.pr;
+    elsif promo.type = 'percent' then
+      d := round(grp.q * grp.pr * least(greatest(coalesce(promo.value, 0), 0), 100) / 100);
+    elsif promo.type = 'price' then
+      d := greatest(0, grp.pr - coalesce(promo.value, grp.pr)) * grp.q;
+    end if;
+    if d > 0 then disc := disc + d; titles := titles || jsonb_build_object(grp.id, promo.title); end if;
+  end loop;
+
+  if titles <> '{}'::jsonb then
+    select jsonb_agg(case when titles ? (l.v->>'id') then l.v || jsonb_build_object('promo', titles->>(l.v->>'id')) else l.v end order by l.ord)
+      into lines from jsonb_array_elements(lines) with ordinality as l(v, ord);
+  end if;
+
+  o_items := lines;
+  o_total := greatest(sub - disc, 0);
+end $$;
+revoke all on function fogon_price_items(uuid, jsonb) from public, anon, authenticated;
+
+create or replace function orders_before_insert() returns trigger language plpgsql security definer set search_path = public as $$
+declare r record;
+begin
+  if (select count(*) from orders o
+        where o.restaurant_id = new.restaurant_id and o.created_at > now() - interval '10 minutes'
+          and ((new.table_id is not null and o.table_id = new.table_id) or (new.table_id is null and o.table_name is not distinct from new.table_name))) >= 40 then
+    raise exception 'demasiados_pedidos';
+  end if;
+  select * into r from fogon_price_items(new.restaurant_id, new.items::jsonb);
+  new.items := r.o_items;
+  new.total := r.o_total;
+  new.paid_at := null; new.modified_at := null; new.cancelled_at := null;
+  new.history := '[]'::jsonb;
+  if new.public_id is null then new.public_id := gen_random_uuid(); end if;
+  return new;
+end $$;
+drop trigger if exists orders_before_insert on orders;
+create trigger orders_before_insert before insert on orders for each row execute function orders_before_insert();
+
+-- ===== Cuenta de la mesa y seguimiento (lo ve cualquier teléfono con la sesión vigente de la mesa) =====
 create or replace function order_status(refs uuid[]) returns table (public_id uuid, status text) language sql security definer stable set search_path = public as
-$$ select o.public_id, o.status from orders o where o.public_id = any(refs) $$;
+$$ select o.public_id, o.status::text from orders o where o.public_id = any(refs) $$;
 grant execute on function order_status(uuid[]) to anon, authenticated;
-create table if not exists waiter_calls (id uuid primary key default gen_random_uuid(), restaurant_id uuid not null references restaurants on delete cascade, table_id uuid, table_name text not null, reason text not null check (reason in ('pay','complaint','help')), note text, status text not null default 'open' check (status in ('open','done')), created_at timestamptz default now());
-alter table waiter_calls enable row level security;
-create policy wc_ins on waiter_calls for insert to anon, authenticated with check (exists (select 1 from restaurants r where r.id = waiter_calls.restaurant_id) and (table_id is null or exists (select 1 from dining_tables d where d.id = waiter_calls.table_id and d.restaurant_id = waiter_calls.restaurant_id)) and not exists (select 1 from waiter_calls w where w.restaurant_id = waiter_calls.restaurant_id and w.table_name = waiter_calls.table_name and w.reason = waiter_calls.reason and w.status = 'open'));
-create policy wc_own on waiter_calls for all to authenticated using (is_owner(restaurant_id)) with check (is_owner(restaurant_id));
-do $$ begin alter publication supabase_realtime add table waiter_calls; exception when others then null; end $$;
 
--- ===== sesión de mesa + cierre seguro (ver supabase/migracion-sesion-mesa.sql; ejecútala también en instalaciones nuevas) =====
+create or replace function table_account(p_table uuid, p_session uuid)
+returns table (public_id uuid, status text, items jsonb, total numeric, created_at timestamptz, modified_at timestamptz, paid_at timestamptz)
+language sql security definer stable set search_path = public as $$
+  select o.public_id, o.status::text, o.items::jsonb, o.total, o.created_at, o.modified_at, o.paid_at
+  from orders o join dining_tables d on d.id = o.table_id
+  where o.table_id = p_table and d.session_id = p_session and o.session_id = p_session and o.public_id is not null
+  order by o.created_at
+$$;
+revoke all on function table_account(uuid, uuid) from public;
+grant execute on function table_account(uuid, uuid) to anon, authenticated;
 
--- 1) Cada mesa tiene una "sesión". Al cerrar/cobrar la mesa la sesión cambia y el QR/pantalla del cliente anterior deja de servir.
-alter table dining_tables add column if not exists session_id uuid not null default gen_random_uuid();
-alter table orders add column if not exists session_id uuid;
+-- ===== Cancelar / modificar pedido (solo mientras está "pending", sin cobrar y con la sesión vigente de la mesa) =====
+create or replace function cancel_order(p_public uuid, p_session uuid) returns text
+language plpgsql security definer set search_path = public as $$
+declare o record;
+begin
+  select * into o from orders where public_id = p_public for update;
+  if not found then return 'not_found'; end if;
+  if o.session_id is distinct from p_session
+     or not exists (select 1 from dining_tables d where d.id = o.table_id and d.session_id = p_session) then return 'locked'; end if;
+  if o.status::text = 'cancelled' then return 'cancelled'; end if;
+  if o.status::text <> 'pending' or o.paid_at is not null then return 'not_pending'; end if;
+  update orders set status = 'cancelled', cancelled_at = now() where id = o.id;
+  return 'ok';
+end $$;
+revoke all on function cancel_order(uuid, uuid) from public;
+grant execute on function cancel_order(uuid, uuid) to anon, authenticated;
 
--- 2) Llamadas al mesero (se crea si no existía)
-create table if not exists waiter_calls (id uuid primary key default gen_random_uuid(), restaurant_id uuid not null references restaurants on delete cascade, table_id uuid, table_name text not null, reason text not null check (reason in ('pay','complaint','help')), note text, status text not null default 'open' check (status in ('open','done')), created_at timestamptz default now());
-alter table waiter_calls add column if not exists session_id uuid;
-alter table waiter_calls enable row level security;
+create or replace function modify_order(p_public uuid, p_session uuid, p_items jsonb, p_total numeric) returns text
+language plpgsql security definer set search_path = public as $$
+declare o record; r record;
+begin
+  select * into o from orders where public_id = p_public for update;
+  if not found then return 'not_found'; end if;
+  if o.session_id is distinct from p_session
+     or not exists (select 1 from dining_tables d where d.id = o.table_id and d.session_id = p_session) then return 'locked'; end if;
+  if o.status::text = 'cancelled' then return 'cancelled'; end if;
+  if o.status::text <> 'pending' or o.paid_at is not null then return 'not_pending'; end if;
+  begin
+    select * into r from fogon_price_items(o.restaurant_id, p_items);
+  exception when raise_exception then
+    return 'invalid';
+  end;
+  update orders
+    set history = history || jsonb_build_array(jsonb_build_object('at', now(), 'items', o.items::jsonb, 'total', o.total)),
+        items = r.o_items, total = r.o_total, modified_at = now()
+    where id = o.id;
+  return 'ok';
+end $$;
+revoke all on function modify_order(uuid, uuid, jsonb, numeric) from public;
+grant execute on function modify_order(uuid, uuid, jsonb, numeric) to anon, authenticated;
 
--- una sola llamada abierta por mesa y motivo (evita spam; el anónimo no puede leer la tabla, por eso lo garantiza un índice)
-update waiter_calls set status = 'done' where status = 'open' and id not in (select distinct on (restaurant_id, table_name, reason) id from waiter_calls where status = 'open' order by restaurant_id, table_name, reason, created_at);
-create unique index if not exists waiter_calls_open_key on waiter_calls (restaurant_id, table_name, reason) where status = 'open';
-
--- 3) Políticas: el cliente solo puede pedir/llamar con la sesión vigente de su mesa
-drop policy if exists o_ins on orders;
-create policy o_ins on orders for insert to anon, authenticated with check (status = 'pending' and restaurant_id is not null and exists (select 1 from restaurants where id = restaurant_id) and (table_id is null or exists (select 1 from dining_tables d where d.id = table_id and d.restaurant_id = orders.restaurant_id and d.session_id = orders.session_id)));
-drop policy if exists wc_ins on waiter_calls;
-create policy wc_ins on waiter_calls for insert to anon, authenticated with check (status = 'open' and exists (select 1 from restaurants r where r.id = waiter_calls.restaurant_id) and (table_id is null or exists (select 1 from dining_tables d where d.id = waiter_calls.table_id and d.restaurant_id = waiter_calls.restaurant_id and d.session_id = waiter_calls.session_id)));
-drop policy if exists wc_own on waiter_calls;
-create policy wc_own on waiter_calls for all to authenticated using (is_owner(restaurant_id)) with check (is_owner(restaurant_id));
-do $$ begin alter publication supabase_realtime add table waiter_calls; exception when others then null; end $$;
-
--- 4) Cerrar mesa: completa todos sus pedidos, atiende sus llamadas y cambia la sesión (atómico)
-create or replace function close_table(p_restaurant uuid, p_table uuid, p_table_name text) returns void language plpgsql security definer set search_path = public as $$
+-- ===== Mesero: registrar el cobro (sin cerrar la mesa) y cerrar / liberar mesa =====
+create or replace function charge_table(p_restaurant uuid, p_table uuid, p_table_name text, p_upto timestamptz default now(), p_call uuid default null) returns void language plpgsql security definer set search_path = public as $$
 begin
   if not is_owner(p_restaurant) then raise exception 'no autorizado'; end if;
-  update orders set status = 'completed'
-    where restaurant_id = p_restaurant and status <> 'completed'
+  update orders set paid_at = now()
+    where restaurant_id = p_restaurant and paid_at is null and status::text <> 'cancelled' and created_at <= p_upto
       and ((p_table is not null and table_id = p_table) or (table_id is null and coalesce(table_name, 'Mesa ' || table_number) = p_table_name));
-  if p_table is not null then
-    update dining_tables set session_id = gen_random_uuid() where id = p_table and restaurant_id = p_restaurant;
+  if p_call is not null then
+    update waiter_calls set status = 'done' where id = p_call and restaurant_id = p_restaurant;
   end if;
-  update waiter_calls set status = 'done'
-    where restaurant_id = p_restaurant and status = 'open' and (table_id = p_table or table_name = p_table_name);
 end $$;
-revoke all on function close_table(uuid, uuid, text) from public, anon;
-grant execute on function close_table(uuid, uuid, text) to authenticated;
-alter table dining_tables add column if not exists released_sid uuid;
+revoke all on function charge_table(uuid, uuid, text, timestamptz, uuid) from public, anon;
+grant execute on function charge_table(uuid, uuid, text, timestamptz, uuid) to authenticated;
 
-drop function if exists close_table(uuid, uuid, text);
 create or replace function close_table(p_restaurant uuid, p_table uuid, p_table_name text, p_release boolean default false) returns void language plpgsql security definer set search_path = public as $$
 declare ns uuid := gen_random_uuid();
 begin
   if not is_owner(p_restaurant) then raise exception 'no autorizado'; end if;
-  update orders set status = 'completed'
-    where restaurant_id = p_restaurant and status <> 'completed'
+  update orders set status = 'completed', paid_at = coalesce(paid_at, now())
+    where restaurant_id = p_restaurant and status::text not in ('completed', 'cancelled')
       and ((p_table is not null and table_id = p_table) or (table_id is null and coalesce(table_name, 'Mesa ' || table_number) = p_table_name));
   if p_table is not null then
-    -- cerrar: sesión nueva (el teléfono anterior queda bloqueado). liberar: además la marca como "reabierta por el mesero"
     update dining_tables set session_id = ns, released_sid = case when p_release then ns else released_sid end
       where id = p_table and restaurant_id = p_restaurant;
   end if;
@@ -115,19 +319,9 @@ end $$;
 revoke all on function close_table(uuid, uuid, text, boolean) from public, anon;
 grant execute on function close_table(uuid, uuid, text, boolean) to authenticated;
 
--- 1) Marca del negocio y estado
-alter table restaurants add column if not exists logo_url text;
-alter table restaurants add column if not exists active boolean not null default true;
-
--- el dueño solo puede cambiar nombre y logo (no el estado, el slug ni el dueño)
-revoke update on restaurants from anon, authenticated;
-grant update (name, logo_url) on restaurants to authenticated;
-
--- 2) Administradores
-create table if not exists admins (email text primary key);
-alter table admins enable row level security;            -- sin políticas: nadie la lee desde la web
-insert into admins (email) values ('quevedotroncoso@icloud.com') on conflict do nothing;
-
+-- ===== Administrador de la plataforma =====
+-- Después de crear tu cuenta en la app, agrégate como administrador (cambia el correo):
+--   insert into admins (email) values ('tu-correo@ejemplo.com') on conflict do nothing;
 create or replace function is_admin() returns boolean language sql security definer stable set search_path = public as $$
   select exists (select 1 from auth.users u join admins a on lower(a.email) = lower(u.email) where u.id = auth.uid() and u.email_confirmed_at is not null)
 $$;
@@ -142,8 +336,8 @@ begin
     select r.id, r.name, r.slug, u.email::text, r.created_at, r.active, r.logo_url,
       (select count(*) from dining_tables d where d.restaurant_id = r.id),
       (select count(*) from products p where p.restaurant_id = r.id),
-      (select count(*) from orders o where o.restaurant_id = r.id),
-      (select count(*) from orders o where o.restaurant_id = r.id and (o.created_at at time zone 'America/Santiago')::date = (now() at time zone 'America/Santiago')::date),
+      (select count(*) from orders o where o.restaurant_id = r.id and o.status::text <> 'cancelled'),
+      (select count(*) from orders o where o.restaurant_id = r.id and o.status::text <> 'cancelled' and (o.created_at at time zone 'America/Santiago')::date = (now() at time zone 'America/Santiago')::date),
       (select max(o.created_at) from orders o where o.restaurant_id = r.id),
       (select count(*) from waiter_calls w where w.restaurant_id = r.id and w.status = 'open')
     from restaurants r left join auth.users u on u.id = r.owner_id
@@ -160,18 +354,23 @@ end $$;
 revoke all on function admin_set_active(uuid, boolean) from public, anon;
 grant execute on function admin_set_active(uuid, boolean) to authenticated;
 
--- 3) Un local suspendido no recibe pedidos ni llamadas
-drop policy if exists o_ins on orders;
-create policy o_ins on orders for insert to anon, authenticated with check (status = 'pending' and restaurant_id is not null and exists (select 1 from restaurants r where r.id = restaurant_id and r.active) and (table_id is null or exists (select 1 from dining_tables d where d.id = table_id and d.restaurant_id = orders.restaurant_id and d.session_id = orders.session_id)));
-drop policy if exists wc_ins on waiter_calls;
-create policy wc_ins on waiter_calls for insert to anon, authenticated with check (status = 'open' and exists (select 1 from restaurants r where r.id = waiter_calls.restaurant_id and r.active) and (table_id is null or exists (select 1 from dining_tables d where d.id = waiter_calls.table_id and d.restaurant_id = waiter_calls.restaurant_id and d.session_id = waiter_calls.session_id)));
+-- ===== Tiempo real =====
+do $$ declare t text; begin foreach t in array array['orders','products','promotions','dining_tables','waiter_calls','product_addons'] loop
+  begin execute format('alter publication supabase_realtime add table %I', t); exception when others then null; end;
+end loop; end $$;
 
--- 4) Almacenamiento de logos (público para mostrarlos; cada dueño solo escribe en su carpeta)
-insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types) values ('logos', 'logos', true, 2097152, array['image/png','image/jpeg','image/webp'])
+-- ===== Almacenamiento: fotos de productos y logos (públicos para mostrarse; cada dueño solo escribe en su carpeta) =====
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+  values ('products', 'products', true, 5242880, array['image/png','image/jpeg','image/webp'])
+  on conflict (id) do update set file_size_limit = 5242880, allowed_mime_types = array['image/png','image/jpeg','image/webp'];
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+  values ('logos', 'logos', true, 2097152, array['image/png','image/jpeg','image/webp'])
   on conflict (id) do update set file_size_limit = 2097152, allowed_mime_types = array['image/png','image/jpeg','image/webp'];
-drop policy if exists logos_ins on storage.objects;
-create policy logos_ins on storage.objects for insert to authenticated with check (bucket_id = 'logos' and exists (select 1 from restaurants where owner_id = auth.uid() and id::text = (storage.foldername(name))[1]));
-drop policy if exists logos_del on storage.objects;
-create policy logos_del on storage.objects for delete to authenticated using (bucket_id = 'logos' and exists (select 1 from restaurants where owner_id = auth.uid() and id::text = (storage.foldername(name))[1]));
 
--- ===== Mejoras (agregados, cancelar/modificar, cuenta dividida, propina): ejecuta también supabase/migracion-mejoras.sql =====
+drop policy if exists products_upload on storage.objects;   -- nombre antiguo de la política de subida
+do $$ declare b text; begin foreach b in array array['products','logos'] loop
+  execute format('drop policy if exists %1$s_ins on storage.objects', b);
+  execute format('drop policy if exists %1$s_del on storage.objects', b);
+  execute format($f$create policy %1$s_ins on storage.objects for insert to authenticated with check (bucket_id = %1$L and exists (select 1 from restaurants where owner_id = auth.uid() and id::text = (storage.foldername(name))[1]))$f$, b);
+  execute format($f$create policy %1$s_del on storage.objects for delete to authenticated using (bucket_id = %1$L and exists (select 1 from restaurants where owner_id = auth.uid() and id::text = (storage.foldername(name))[1]))$f$, b);
+end loop; end $$;

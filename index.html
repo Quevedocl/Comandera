@@ -5,8 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Fogón · Panel del restaurante</title>
+<meta name="description" content="Fogón: pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
+<meta property="og:type" content="website"><meta property="og:title" content="Fogón · Panel del restaurante"><meta property="og:description" content="Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Fogón">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; font-src 'self' data:; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml"><link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <style>
 :root{color-scheme:light;--bg:#f2f3f5;--card:#fff;--ln:#e3e5e8;--tx:#1f2328;--mu:#6b7280;--red:#e5484d;--amb:#f5a524;--grn:#1f9d55;--ink:#1f2328;--f:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -253,8 +260,8 @@ nav button:hover{color:var(--tx)}
 .tg2{appearance:none;flex:none;width:40px;height:22px;margin:0;border-radius:99px;background:var(--nm-bg);position:relative;cursor:pointer;box-shadow:inset 3px 3px 6px var(--nm-dk),inset -3px -3px 6px var(--nm-lt);transition:background .25s}
 .tg2::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--nm-bg);box-shadow:2px 2px 4px var(--nm-dk),-1px -1px 3px var(--nm-lt);transition:transform .25s cubic-bezier(.3,1.5,.5,1),background .25s}
 .tg2:checked::after{transform:translateX(18px);background:var(--nm-ac)}
-#lerr,#serr{color:var(--nm-ac);font-size:13px;font-weight:700;margin:0 0 8px}
-#lerr:empty,#serr:empty{display:none}
+#lerr,#serr,#verr{color:var(--nm-ac);font-size:13px;font-weight:700;margin:0 0 8px}
+#lerr:empty,#serr:empty,#verr:empty{display:none}
 .vm{color:#7b808a;font-weight:600;font-size:13.5px;margin:6px 0 16px!important}.vm b{color:#33363b;word-break:break-all}
 .row2{display:flex;justify-content:space-between;gap:10px;margin-top:16px;font-size:13px}
 @media (max-width:520px){.coin{width:100%;max-width:440px}.nc{width:auto;height:auto;border-radius:36px;padding:34px 26px}.nc::before{inset:10px;border-radius:28px}}
@@ -318,6 +325,25 @@ dialog{border-radius:26px;background:var(--bg);box-shadow:0 30px 80px rgba(0,0,0
 .opn.off{color:var(--acc)}.opn.off::before{background:var(--red)}
 .opn:not(:disabled):active{box-shadow:var(--press)}
 .opn:disabled{cursor:default}.opn[hidden]{display:none}
+
+/* verificación de correo / nueva contraseña */
+.coin[hidden],#vf[hidden]{display:none}
+#vf{margin:auto;animation:pop .45s cubic-bezier(.2,1.2,.3,1)}
+#vf .sub{word-break:break-word}
+.vrow{display:flex;justify-content:space-between;align-items:flex-start;gap:4px 10px;flex-wrap:wrap}
+#vsub:disabled,#lsub:disabled{opacity:.6}
+/* impresión de comandas (ticket de cocina de 80 mm) */
+.prn{flex:none;border:0;background:rgba(0,0,0,.18);color:inherit;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;transition:background .2s}.prn:hover{background:rgba(0,0,0,.3)}
+.prn svg{width:18px;height:18px}.hd .rt{margin-left:auto}
+#printArea{display:none}
+@media print{
+  @page{size:80mm auto;margin:4mm}
+  html,body{height:auto!important;overflow:visible!important;display:block!important;background:#fff!important}
+  body>*{display:none!important}
+  body>#printArea{display:block!important;color:#000;font:13px/1.35 ui-monospace,Menlo,Consolas,monospace}
+  #printArea h1{margin:0 0 2px;font-size:24px}#printArea p{margin:0 0 6px}#printArea hr{border:0;border-top:1px dashed #000;margin:6px 0}
+  #printArea ul{list-style:none;margin:0;padding:0}#printArea li{margin:0 0 6px;font-size:15px}#printArea li small{display:block;font-size:12px;padding-left:22px}
+}
 </style>
 </head>
 <body>
@@ -384,7 +410,7 @@ dialog{border-radius:26px;background:var(--bg);box-shadow:0 30px 80px rgba(0,0,0
       <button class="gh" id="rvPrev" aria-label="Día anterior">‹</button>
       <input type="date" id="rvDay" aria-label="Día">
       <button class="gh" id="rvNext" aria-label="Día siguiente">›</button>
-      <button class="gh" id="rvToday">Hoy</button>
+      <button class="gh" id="rvToday">Hoy</button><button class="gh" id="rvCsv" title="Descargar los pedidos de este día para Excel">Exportar CSV</button>
       <span class="stt sp" id="rvTitle"></span>
     </div>
     <div class="rv">
@@ -478,7 +504,7 @@ dialog{border-radius:26px;background:var(--bg);box-shadow:0 30px 80px rgba(0,0,0
       <h2>Ingresar</h2><p class="sub">Entra a la cuenta de tu restaurante</p>
       <div class="nf"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 011 1v.4l-10 6.6L2 6.4V6a1 1 0 011-1zM2 9v9a1 1 0 001 1h18a1 1 0 001-1V9l-10 6.6z"/></svg><input id="le" type="email" required placeholder="Correo" aria-label="Correo" autocomplete="username"></div>
       <div class="nf"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3" fill="none" stroke="#8b1a1a" stroke-width="2.2" stroke-linecap="round"/></svg><input id="lp" type="password" required placeholder="Contraseña" aria-label="Contraseña" autocomplete="current-password"></div>
-      <label class="rem"><input type="checkbox" class="tg2" id="remMail"><span>Recordar mi correo</span></label>
+      <div class="vrow"><label class="rem"><input type="checkbox" class="tg2" id="remMail"><span>Recordar mi correo</span></label><button type="button" class="lnk" id="goForgot" style="font-size:12.5px;margin:0 0 12px">¿Olvidaste tu contraseña?</button></div>
       <p id="lerr" role="alert"></p>
       <button class="nbtn" id="lsub" type="submit">Ingresar</button>
       <p class="alt">¿No tienes cuenta? <button type="button" class="lnk" id="goSignup">Regístrate</button></p>
@@ -493,13 +519,20 @@ dialog{border-radius:26px;background:var(--bg);box-shadow:0 30px 80px rgba(0,0,0
       <p class="alt">¿Ya tienes cuenta? <button type="button" class="lnk" id="goLogin">Inicia sesión</button></p>
     </form>
   </div>
+  <form id="vf" class="nc" hidden autocomplete="off">
+    <h2 id="vh">Verifica tu correo</h2><p class="sub" id="vs"></p>
+    <div class="nf code"><input id="vc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="••••••" aria-label="Código de verificación"></div>
+    <div class="nf" id="vpBox" hidden><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3" fill="none" stroke="#8b1a1a" stroke-width="2.2" stroke-linecap="round"/></svg><input id="vp" type="password" minlength="6" placeholder="Nueva contraseña (mínimo 6)" aria-label="Nueva contraseña" autocomplete="new-password"></div>
+    <p id="verr" role="alert"></p>
+    <button class="nbtn" id="vsub" type="submit">Verificar</button>
+    <p class="alt"><button type="button" class="lnk" id="vre">Reenviar código</button> · <button type="button" class="lnk" id="vback">Volver</button></p>
+  </form>
 </div>
-<div id="bn" role="alert"></div><div id="toast" role="status"></div>
+<div id="bn" role="alert"></div><div id="toast" role="status"></div><div id="printArea" aria-hidden="true"></div>
 
 <script>
-/* ===== CONFIGURACIÓN: proyecto Supabase "Comandera". La clave es la pública (anon); la seguridad
-   la dan las políticas RLS y el login del personal. Vacío = modo demostración local. ===== */
-const CFG = { url: 'https://pmctlwsqkrpesyfozmwo.supabase.co', key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtY3Rsd3Nxa3JwZXN5Zm96bXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4NDI0OTEsImV4cCI6MjEwNzQxODQ5MX0.t7M8-Whzia4odHN5_dBZar-kPcPnKLCgFXsb9D6uPz0' };
+/* ===== CONFIGURACIÓN: la URL y la clave pública de Supabase se editan en config.js (la seguridad la dan las políticas RLS y el login del personal) ===== */
+const CFG = window.FOGON || { url: '', key: '' };
 
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -519,18 +552,30 @@ const api = {
     return { products: p.data || [], orders: o.data || [], promos: pr.data || [], tables: t.data || [], calls: w.data || [], addons: ad.data || [] };
   },
   async setProduct(id, patch) { await sb.from('products').update(patch).eq('id', id); },
-  async uploadImg(file) { const path = R.id + '/' + Date.now() + '-' + file.name.replace(/[^\w.]/g, '_'); const up = await sb.storage.from('products').upload(path, file); return up.error ? null : sb.storage.from('products').getPublicUrl(path).data.publicUrl; },
+  async uploadImg(file) {
+    let blob; try { blob = await prepPhoto(file); } catch (e) { toast(e.message || 'No se pudo leer la foto'); return null; }
+    const path = R.id + '/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.webp';
+    const up = await sb.storage.from('products').upload(path, blob, { contentType: 'image/webp', cacheControl: '31536000' });
+    if (up.error) { toast('No se pudo subir la foto: ' + up.error.message); return null; }
+    return sb.storage.from('products').getPublicUrl(path).data.publicUrl;
+  },
+  async dropImg(url) {                                           // borra la foto del almacenamiento (solo de la carpeta de este restaurante)
+    const m = String(url || '').split('/products/')[1], path = m && decodeURIComponent(m);
+    if (path && path.startsWith(R.id + '/')) await sb.storage.from('products').remove([path]);
+  },
   async addProduct(p, file) {
     if (file) { const u = await api.uploadImg(file); if (u) p.image_url = u; }
     const { error } = await sb.from('products').insert({ ...p, restaurant_id: R.id });
     if (error) { toast('No se pudo guardar: ' + error.message); return false; } return true;
   },
   async editProduct(id, patch, file) {
+    const old = (data.products.find(x => String(x.id) === String(id)) || {}).image_url;
     if (file) { const u = await api.uploadImg(file); if (u) patch.image_url = u; }
     const { error } = await sb.from('products').update(patch).eq('id', id);
-    if (error) { toast('No se pudo guardar: ' + error.message); return false; } return true;
+    if (error) { toast('No se pudo guardar: ' + error.message); return false; }
+    if (patch.image_url && old && old !== patch.image_url) api.dropImg(old);
+    return true;
   },
-  async addMany(rows) { await sb.from('products').insert(rows.map(r => ({ ...r, restaurant_id: R.id }))); },
   async add(table, row) { const { error } = await sb.from(table).insert({ ...row, restaurant_id: R.id }); if (error) toast('No se pudo guardar: ' + error.message); },
   async upd(table, id, patch) { await sb.from(table).update(patch).eq('id', id); },
   async del(table, id) { await sb.from(table).delete().eq('id', id); },
@@ -603,7 +648,7 @@ function alertNew(list) {
 /* ===== PEDIDOS ===== */
 function ticketHTML(o) {
   const n = (o.items || []).reduce((a, i) => a + Number(i.qty || 0), 0);
-  return `<div class="hd"><div><b class="mn">${esc(tn(o))}</b><small>${n} ${n === 1 ? 'ítem' : 'ítems'}${o.modified_at ? '<span class="modb">Modificado</span>' : ''}${o.paid_at ? '<span class="paidb">Pagado</span>' : ''}</small></div><div class="rt"><span class="lt">Atrasado</span><span class="ago"></span></div></div>
+  return `<div class="hd"><div><b class="mn">${esc(tn(o))}</b><small>${n} ${n === 1 ? 'ítem' : 'ítems'}${o.modified_at ? '<span class="modb">Modificado</span>' : ''}${o.paid_at ? '<span class="paidb">Pagado</span>' : ''}</small></div><div class="rt"><span class="lt">Atrasado</span><span class="ago"></span></div><button class="prn" type="button" data-print title="Imprimir comanda" aria-label="Imprimir comanda"><svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a1 1 0 01-1-1v-6a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1h-2M7 14h10v7H7z"/></svg></button></div>
   <ul>${(o.items || []).map(i => `<li><b>${esc(i.qty)}×</b><span>${esc(i.name)}</span>${(i.addons || []).map(a => `<span class="nt ad">+ ${esc(a.name)}</span>`).join('')}${i.promo ? `<span class="nt">🏷 ${esc(i.promo)}</span>` : ''}${i.note ? `<span class="nt">${esc(i.note)}</span>` : ''}</li>`).join('')}</ul><button class="go"></button>`;
 }
 function renderOrders() {
@@ -648,7 +693,14 @@ function mesas() {
 }
 $('#mesa').onchange = e => { mf = e.target.value; renderOrders(); };
 $('#seg').onclick = e => { const b = e.target.closest('button'); if (!b) return; sf = b.dataset.f; $$('#seg button').forEach(x => x.classList.toggle('on', x === b)); renderOrders(); };
+function printTicket(o) {                         // comanda para cocina: solo lo que hay que preparar (sin precios)
+  const hora = new Date(o.created_at).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+  $('#printArea').innerHTML = `<h1>${esc(tn(o))}</h1><p>${esc(R ? R.name : '')} · ${esc(hora)}${o.modified_at ? ' · MODIFICADO' : ''}</p><hr><ul>${(o.items || []).map(i => `<li><b>${esc(i.qty)}×</b> ${esc(i.name)}${(i.addons || []).map(a => `<small>+ ${esc(a.name)}</small>`).join('')}${i.promo ? `<small>🏷 ${esc(i.promo)}</small>` : ''}${i.note ? `<small>» ${esc(i.note)}</small>` : ''}</li>`).join('')}</ul><hr>`;
+  window.print();
+}
 $('#grid').addEventListener('click', async e => {
+  const pb = e.target.closest('[data-print]');
+  if (pb) { const o = data.orders.find(x => String(x.id) === pb.closest('.tk').dataset.id); if (o) printTicket(o); return; }
   const b = e.target.closest('.go'); if (!b) return; b.disabled = true;
   const id = b.closest('.tk').dataset.id;
   if (b.dataset.to === 'completed') {
@@ -741,7 +793,7 @@ $('#pg').addEventListener('click', async e => {
   if (!confirm(`¿Borrar "${p.name}" de la carta?\n\nSe elimina para siempre. Si solo se acabó por hoy, usa el interruptor de Disponible.`)) return;
   await sb.from('promotions').delete().eq('restaurant_id', R.id).eq('product_id', String(p.id));
   await sb.from('product_addons').delete().eq('restaurant_id', R.id).eq('product_id', String(p.id));
-  await api.del('products', p.id); toast('Producto borrado'); await refresh(); renderMenu();
+  await api.del('products', p.id); if (p.image_url) api.dropImg(p.image_url); toast('Producto borrado'); await refresh(); renderMenu();
 });
 $('#q').oninput = e => { mq = e.target.value; renderMenu(); };
 $('#chips').onclick = e => { const b = e.target.closest('button'); if (!b) return; mcat = b.dataset.c; menuMeta(); renderMenu(true); };
@@ -810,6 +862,16 @@ $('#lgUp').onclick = () => $('#lgFile').click();
 $('#lgDel').onclick = () => { pend = 'remove'; cfgPrev(); };
 $('#cfgReset').onclick = cfgFill;
 $('#logout2').onclick = () => $('#logout').click();
+async function prepPhoto(file) {                   // la foto del plato se reduce a máx. 1280 px y se guarda como WebP liviano
+  if (!/^image\//.test(file.type)) throw new Error('Elige una imagen (JPG, PNG o WebP).');
+  if (file.size > 25 * 1024 * 1024) throw new Error('La foto es demasiado pesada.');
+  const bmp = await createImageBitmap(file), k = Math.min(1, 1280 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(bmp.width * k)); c.height = Math.max(1, Math.round(bmp.height * k));
+  c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+  const blob = await new Promise(r => c.toBlob(r, 'image/webp', .85));
+  if (!blob || blob.size > 5 * 1024 * 1024) throw new Error('No se pudo procesar la foto.');
+  return blob;
+}
 async function prepLogo(file) {                    // reduce a máx. 512 px para que cargue rápido en el celular del cliente
   if (!/^image\/(png|jpe?g|webp)$/.test(file.type)) throw new Error('Usa una imagen PNG, JPG o WebP.');
   if (file.size > 12 * 1024 * 1024) throw new Error('La imagen es demasiado pesada.');
@@ -972,7 +1034,7 @@ const compact = v => v >= 1e6 ? (v / 1e6).toFixed(1).replace('.0', '') + 'M' : v
 async function loadRevenue() {
   if (!sb || !R) return;
   const [y, m, d] = revDay.split('-').map(Number), a = new Date(y, m - 1, d), b = new Date(y, m - 1, d + 1);
-  const { data: rows, error } = await sb.from('orders').select('id,status,total,items,created_at,paid_at').eq('restaurant_id', R.id).gte('created_at', a.toISOString()).lt('created_at', b.toISOString()).order('created_at');
+  const { data: rows, error } = await sb.from('orders').select('id,status,total,items,created_at,paid_at,table_name,table_number').eq('restaurant_id', R.id).gte('created_at', a.toISOString()).lt('created_at', b.toISOString()).order('created_at');
   if (error) { toast('No se pudieron cargar los ingresos'); return; }
   REV = rows || []; renderRevenue();
 }
@@ -1008,6 +1070,15 @@ function renderRevenue() {
   }));
   $('#rvNote').textContent = (s.canc ? `${s.canc} pedido${s.canc === 1 ? '' : 's'} cancelado${s.canc === 1 ? '' : 's'} no cuenta${s.canc === 1 ? '' : 'n'} en los ingresos. ` : '') + 'Cobrado = pedidos ya pagados (aunque la mesa siga abierta) · Por cobrar = pedidos aún sin pagar.';
 }
+const csvCell = v => { let t = String(v ?? ''); if (/^[=+\-@\t\r]/.test(t)) t = "'" + t; return '"' + t.replace(/"/g, '""') + '"'; };   // evita fórmulas inyectadas desde notas de clientes
+$('#rvCsv').onclick = () => {
+  if (!REV.length) { toast('No hay pedidos este día'); return; }
+  const head = ['Fecha', 'Hora', 'Mesa', 'Estado', 'Pagado', 'Total', 'Detalle'];
+  const rows = REV.map(o => { const d = new Date(o.created_at); return [dayStr(d), pad2(d.getHours()) + ':' + pad2(d.getMinutes()), o.table_name || ('Mesa ' + o.table_number), { pending: 'Recibido', preparing: 'Preparando', ready: 'Listo', completed: 'Completado', cancelled: 'Cancelado' }[o.status] || o.status, o.status === 'cancelled' ? '' : (o.status === 'completed' || o.paid_at ? 'Sí' : 'No'), Math.round(oTotal(o)),
+    (o.items || []).map(i => `${i.qty}x ${i.name}${(i.addons || []).length ? ' (+' + i.addons.map(a => a.name).join(', +') + ')' : ''}${i.note ? ' [' + i.note + ']' : ''}`).join(' | ')]; });
+  const csv = '\uFEFF' + [head, ...rows].map(r => r.map(csvCell).join(';')).join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = `pedidos-${revDay}.csv`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
 function setDay(v) { revDay = v; $('#rvDay').value = v; loadRevenue(); }
 const shiftDay = n => { const [y, m, d] = revDay.split('-').map(Number); const t = dayStr(new Date(y, m - 1, d + n)); if (t <= dayStr(new Date())) setDay(t); };
 $('#rvDay').onchange = e => { if (e.target.value) setDay(e.target.value); };
@@ -1111,7 +1182,14 @@ $('#lf').onsubmit = async e => {
   const email = $('#le').value.trim(), password = $('#lp').value, btn = $('#lsub'); btn.disabled = true;
   try {
     const { error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) { err.textContent = (error.code === 'email_not_confirmed' || /not confirmed/i.test(error.message || '')) ? 'Esta cuenta quedó sin confirmar. Desactiva "Confirm email" en Supabase (Authentication > Sign In / Providers > Email).' : 'Correo o contraseña incorrectos.'; return; }
+    if (error) {
+      if (error.code === 'email_not_confirmed' || /not confirmed/i.test(error.message || '')) {   // se registró pero nunca verificó: se le envía un código nuevo
+        const r = await sb.auth.resend({ type: 'signup', email });
+        if (r.error) { err.textContent = authMsg(r.error); return; }
+        $('#lp').value = ''; showVerify('signup', email); return;
+      }
+      err.textContent = 'Correo o contraseña incorrectos.'; return;
+    }
     try { if ($('#remMail').checked) localStorage.setItem('cmd-mail', email); else localStorage.removeItem('cmd-mail'); } catch (e) {}
     $('#lp').value = ''; $('#login').hidden = true; start();
   } finally { btn.disabled = false; }
@@ -1124,14 +1202,66 @@ $('#sf').onsubmit = async e => {
     const { data: d, error } = await sb.auth.signUp({ email, password, options: { data: { restaurant_name: name } } });
     if (error) { err.textContent = authMsg(error); return; }
     if (d.user && Array.isArray(d.user.identities) && d.user.identities.length === 0) { err.textContent = 'Este correo ya está registrado. Inicia sesión.'; return; }
-    if (!d.session) {                                       // si el proyecto aún exige confirmar el correo, se intenta entrar igual
-      const r = await sb.auth.signInWithPassword({ email, password });
-      if (r.error) { err.textContent = 'Cuenta creada, pero Supabase exige confirmar el correo. Desactiva "Confirm email" en Authentication > Sign In / Providers > Email.'; return; }
-    }
+    if (!d.session) { $('#sp').value = ''; showVerify('signup', email); return; }   // el proyecto exige verificar el correo: se pide el código
     $('#sp').value = ''; $('#login').hidden = true; confetti(); start();
   } finally { btn.disabled = false; btn.textContent = 'Crear cuenta'; }
 };
+/* ===== código de 6 dígitos: verificar correo al registrarse y recuperar contraseña ===== */
+let vmode = 'signup', vmail = '', vtimer = null, vleft = 0;
+function cooldown(sec) {
+  clearInterval(vtimer); vleft = sec; const b = $('#vre');
+  const draw = () => { b.disabled = vleft > 0; b.textContent = vleft > 0 ? `Reenviar código (${vleft}s)` : 'Reenviar código'; };
+  draw(); vtimer = setInterval(() => { vleft--; draw(); if (vleft <= 0) clearInterval(vtimer); }, 1000);
+}
+function showVerify(mode, email) {
+  vmode = mode; vmail = email;
+  $('#coin').hidden = true; $('#vf').hidden = false;
+  $('#vh').textContent = mode === 'recovery' ? 'Nueva contraseña' : 'Verifica tu correo';
+  $('#vs').textContent = 'Escribe el código que enviamos a ' + email;
+  $('#vpBox').hidden = mode !== 'recovery'; $('#vp').required = mode === 'recovery';
+  $('#vsub').textContent = mode === 'recovery' ? 'Cambiar contraseña' : 'Verificar';
+  $('#vc').value = ''; $('#vp').value = ''; $('#verr').textContent = '';
+  cooldown(60); $('#vc').focus();
+}
+function hideVerify() { clearInterval(vtimer); $('#vf').hidden = true; $('#coin').hidden = false; }
+$('#vc').oninput = e => { e.target.value = e.target.value.replace(/\D/g, ''); };
+$('#vback').onclick = hideVerify;
+$('#vre').onclick = async () => {
+  const err = $('#verr'); err.textContent = '';
+  const { error } = vmode === 'recovery' ? await sb.auth.resetPasswordForEmail(vmail) : await sb.auth.resend({ type: 'signup', email: vmail });
+  if (error) { err.textContent = authMsg(error); return; }
+  toast('Te enviamos un código nuevo'); cooldown(60);
+};
+$('#goForgot').onclick = async () => {
+  const err = $('#lerr'), email = $('#le').value.trim(); err.textContent = '';
+  if (!email) { err.textContent = 'Escribe tu correo arriba y vuelve a tocar "¿Olvidaste tu contraseña?".'; $('#le').focus(); return; }
+  const b = $('#goForgot'); b.disabled = true;
+  try {
+    const { error } = await sb.auth.resetPasswordForEmail(email);
+    if (error) { err.textContent = authMsg(error); return; }
+    showVerify('recovery', email);
+  } finally { b.disabled = false; }
+};
+$('#vf').onsubmit = async e => {
+  e.preventDefault(); const err = $('#verr'); err.textContent = '';
+  const token = $('#vc').value.trim(), pw = $('#vp').value, btn = $('#vsub');
+  if (token.length < 6) { err.textContent = 'Escribe el código completo.'; $('#vc').focus(); return; }
+  if (vmode === 'recovery' && pw.length < 6) { err.textContent = 'La contraseña debe tener al menos 6 caracteres.'; $('#vp').focus(); return; }
+  btn.disabled = true;
+  try {
+    const { error } = await sb.auth.verifyOtp({ email: vmail, token, type: vmode === 'recovery' ? 'recovery' : 'signup' });
+    if (error) { err.textContent = 'Código incorrecto o vencido. Pide uno nuevo con "Reenviar código".'; return; }
+    if (vmode === 'recovery') {
+      const u = await sb.auth.updateUser({ password: pw });
+      if (u.error) { err.textContent = authMsg(u.error); return; }
+      toast('Contraseña actualizada');
+    } else confetti();
+    hideVerify(); $('#login').hidden = true; start();
+  } finally { btn.disabled = false; }
+};
+
 $('#logout').onclick = async () => { await sb.auth.signOut(); location.reload(); };
+if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
 start();
 </script>
 </body>

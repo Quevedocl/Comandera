@@ -12,7 +12,8 @@ grant update (name, logo_url) on restaurants to authenticated;
 -- 2) Administradores
 create table if not exists admins (email text primary key);
 alter table admins enable row level security;            -- sin políticas: nadie la lee desde la web
-insert into admins (email) values ('quevedotroncoso@icloud.com') on conflict do nothing;
+-- Agrega tu correo como administrador (cambia el correo y ejecuta esta línea una vez):
+-- insert into admins (email) values ('tu-correo@ejemplo.com') on conflict do nothing;
 
 create or replace function is_admin() returns boolean language sql security definer stable set search_path = public as $$
   select exists (select 1 from auth.users u join admins a on lower(a.email) = lower(u.email) where u.id = auth.uid() and u.email_confirmed_at is not null)
