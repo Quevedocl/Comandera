@@ -260,7 +260,7 @@ const api = {
   async del(table, id) { await sb.from(table).delete().eq('id', id); },
   async setStatus(id, status) { await sb.from('orders').update({ status }).eq('id', id); },
   /* cierra la mesa: completa sus pedidos, atiende sus llamadas y cambia su sesión (el cliente anterior ya no puede pedir) */
-  async closeTable(tid, name) { const { error } = await sb.rpc('close_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name }); if (error) { toast('No se pudo cerrar la mesa: ' + error.message); return false; } return true; },
+  async closeTable(tid, name, release = false) { const { error } = await sb.rpc('close_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name, p_release: release }); if (error) { toast('No se pudo cerrar la mesa: ' + error.message); return false; } return true; },
   watch(cb) { let c = sb.channel('comandera'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, cb)); c.subscribe(); }
 };
 
@@ -468,12 +468,12 @@ $('#pl').addEventListener('change', async e => { await api.upd('promotions', e.t
 /* ===== MESAS (enlace directo para QR / NFC) ===== */
 const linkOf = t => new URL('carta.html?r=' + R.slug + '&t=' + t.id, location.href).href;
 function renderTables() {
-  $('#tl').innerHTML = data.tables.length ? `<div class="lst">${data.tables.map(t => `<div class="rw2"><div class="nm"><b>${esc(t.name)}</b><small>${esc(linkOf(t))}</small></div><button class="gh" data-cp="${t.id}">Copiar enlace</button><button class="gh" data-qr="${t.id}">QR</button><button class="gh" data-free="${t.id}" title="Cierra los pedidos abiertos y cambia la sesión: el cliente anterior ya no podrá pedir">Liberar mesa</button><button class="gh" data-del="dining_tables" data-id="${t.id}">Borrar</button></div>`).join('')}</div>` : '<p class="empty">Crea tu primera mesa. Cada una genera un enlace único para grabar en NFC o imprimir como QR.</p>';
+  $('#tl').innerHTML = data.tables.length ? `<div class="lst">${data.tables.map(t => `<div class="rw2"><div class="nm"><b>${esc(t.name)}</b><small>${esc(linkOf(t))}</small></div><button class="gh" data-cp="${t.id}">Copiar enlace</button><button class="gh" data-qr="${t.id}">QR</button><button class="gh" data-free="${t.id}" title="Deja la mesa lista para un cliente nuevo: al escanear el QR podrá pedir">Liberar mesa</button><button class="gh" data-del="dining_tables" data-id="${t.id}">Borrar</button></div>`).join('')}</div>` : '<p class="empty">Crea tu primera mesa. Cada una genera un enlace único para grabar en NFC o imprimir como QR.</p>';
 }
 $('#tf').onsubmit = async e => { e.preventDefault(); const n = $('#tn').value.trim(); if (!n) return; await api.add('dining_tables', { name: n }); $('#tn').value = ''; toast('Mesa creada'); await refresh(); };
 $('#tl').addEventListener('click', async e => {
   const f = e.target.closest('[data-free]');
-  if (f) { const t = data.tables.find(x => String(x.id) === f.dataset.free); if (t && confirm(`¿Liberar "${t.name}"?\n\nSe cierran sus pedidos abiertos y quien estaba en la mesa ya no podrá pedir. El próximo cliente que escanee el QR empieza de cero.`) && await api.closeTable(t.id, t.name)) { toast('Mesa liberada'); await refresh(); } return; }
+  if (f) { const t = data.tables.find(x => String(x.id) === f.dataset.free); if (t && confirm(`¿Liberar "${t.name}"?\n\nSe cierran sus pedidos abiertos y la mesa queda lista para un cliente nuevo: al escanear el QR (o recargar la página) podrá pedir, incluso desde un teléfono que ya estuvo en esta mesa.`) && await api.closeTable(t.id, t.name, true)) { toast('Mesa liberada: el próximo que escanee el QR puede pedir'); await refresh(); } return; }
   const b = e.target.closest('[data-cp],[data-qr]'); if (!b) return;
   const t = data.tables.find(x => String(x.id) === (b.dataset.cp || b.dataset.qr));
   if (b.dataset.cp) { try { await navigator.clipboard.writeText(linkOf(t)); toast('Enlace copiado'); } catch (_) { prompt('Copia el enlace:', linkOf(t)); } }
