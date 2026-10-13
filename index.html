@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>kepasa · Panel del restaurante</title>
 <meta name="description" content="kepasa: pedidos desde la mesa. Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
@@ -15,6 +15,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 <style>
+/* sin zoom por doble toque y sin selección de texto (los campos de escritura sí se pueden seleccionar) */
+html{touch-action:manipulation;-webkit-text-size-adjust:100%}
+*{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:text}
 :root{color-scheme:light;--bg:#f2f3f5;--card:#fff;--ln:#e3e5e8;--tx:#1f2328;--mu:#6b7280;--red:#e5484d;--amb:#f5a524;--grn:#1f9d55;--ink:#1f2328;--f:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
@@ -345,6 +349,11 @@ dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.
   #printArea ul{list-style:none;margin:0;padding:0}#printArea li{margin:0 0 6px;font-size:15px}#printArea li small{display:block;font-size:12px;padding-left:22px}
 }
 </style>
+<script>
+/* evita el zoom por doble toque en iOS/Android (el touch-action ya lo cubre; esto es un respaldo) */
+(function(){var t=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-t<350&&!(e.target.closest&&e.target.closest('input,textarea,select')))e.preventDefault();t=n;},{passive:false});
+document.addEventListener('gesturestart',function(e){e.preventDefault();});})();
+</script>
 </head>
 <body>
 <header class="top">

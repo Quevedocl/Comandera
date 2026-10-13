@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Carta · Haz tu pedido</title>
 <meta name="description" content="Mira la carta y pide desde tu mesa.">
@@ -13,6 +13,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 <style>
+/* sin zoom por doble toque y sin selección de texto (los campos de escritura sí se pueden seleccionar) */
+html{touch-action:manipulation;-webkit-text-size-adjust:100%}
+*{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:text}
 :root{color-scheme:light;--bg:#f2f3f5;--card:#fff;--ln:#e3e5e8;--tx:#1f2328;--mu:#6b7280;--red:#e5484d;--grn:#1f9d55;--ink:#1f2328;--f:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
@@ -273,6 +277,11 @@ dialog{background:#fff;border-radius:22px 22px 0 0}
 .pw a{display:inline-flex;align-items:center;gap:6px;color:inherit;text-decoration:none;font-weight:600}.pw img{width:16px;height:16px;border-radius:4px}.pw b{color:#475569}
 body.closed .add,body.closed .it .stp,body.closed #bar,body.closed #prodFoot{display:none!important}
 </style>
+<script>
+/* evita el zoom por doble toque en iOS/Android (el touch-action ya lo cubre; esto es un respaldo) */
+(function(){var t=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-t<350&&!(e.target.closest&&e.target.closest('input,textarea,select')))e.preventDefault();t=n;},{passive:false});
+document.addEventListener('gesturestart',function(e){e.preventDefault();});})();
+</script>
 </head>
 <body>
 <div class="sticky">
