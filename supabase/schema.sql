@@ -371,6 +371,6 @@ drop policy if exists products_upload on storage.objects;   -- nombre antiguo de
 do $$ declare b text; begin foreach b in array array['products','logos'] loop
   execute format('drop policy if exists %1$s_ins on storage.objects', b);
   execute format('drop policy if exists %1$s_del on storage.objects', b);
-  execute format($f$create policy %1$s_ins on storage.objects for insert to authenticated with check (bucket_id = %1$L and exists (select 1 from restaurants where owner_id = auth.uid() and id::text = (storage.foldername(name))[1]))$f$, b);
-  execute format($f$create policy %1$s_del on storage.objects for delete to authenticated using (bucket_id = %1$L and exists (select 1 from restaurants where owner_id = auth.uid() and id::text = (storage.foldername(name))[1]))$f$, b);
+  execute format($f$create policy %1$s_ins on storage.objects for insert to authenticated with check (bucket_id = %1$L and exists (select 1 from public.restaurants r where r.owner_id = auth.uid() and r.id::text = (storage.foldername(objects.name))[1]))$f$, b);
+  execute format($f$create policy %1$s_del on storage.objects for delete to authenticated using (bucket_id = %1$L and exists (select 1 from public.restaurants r where r.owner_id = auth.uid() and r.id::text = (storage.foldername(objects.name))[1]))$f$, b);
 end loop; end $$;

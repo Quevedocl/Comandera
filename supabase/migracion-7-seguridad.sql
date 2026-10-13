@@ -170,7 +170,7 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
   on conflict (id) do update set file_size_limit = 5242880, allowed_mime_types = array['image/png','image/jpeg','image/webp'];
 drop policy if exists products_upload on storage.objects;
 create policy products_upload on storage.objects for insert to authenticated
-  with check (bucket_id = 'products' and exists (select 1 from restaurants where owner_id = auth.uid() and id::text = (storage.foldername(name))[1]));
+  with check (bucket_id = 'products' and exists (select 1 from public.restaurants r where r.owner_id = auth.uid() and r.id::text = (storage.foldername(objects.name))[1]));
 drop policy if exists products_del on storage.objects;
 create policy products_del on storage.objects for delete to authenticated
-  using (bucket_id = 'products' and exists (select 1 from restaurants where owner_id = auth.uid() and id::text = (storage.foldername(name))[1]));
+  using (bucket_id = 'products' and exists (select 1 from public.restaurants r where r.owner_id = auth.uid() and r.id::text = (storage.foldername(objects.name))[1]));

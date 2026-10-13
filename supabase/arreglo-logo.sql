@@ -10,10 +10,10 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
 -- 2) Políticas: cada dueño sube/borra solo dentro de la carpeta de su restaurante
 drop policy if exists logos_ins on storage.objects;
 create policy logos_ins on storage.objects for insert to authenticated
-  with check (bucket_id = 'logos' and exists (select 1 from restaurants where owner_id = auth.uid() and id::text = (storage.foldername(name))[1]));
+  with check (bucket_id = 'logos' and exists (select 1 from public.restaurants r where r.owner_id = auth.uid() and r.id::text = (storage.foldername(objects.name))[1]));
 drop policy if exists logos_del on storage.objects;
 create policy logos_del on storage.objects for delete to authenticated
-  using (bucket_id = 'logos' and exists (select 1 from restaurants where owner_id = auth.uid() and id::text = (storage.foldername(name))[1]));
+  using (bucket_id = 'logos' and exists (select 1 from public.restaurants r where r.owner_id = auth.uid() and r.id::text = (storage.foldername(objects.name))[1]));
 
 -- 3) Que el dueño pueda actualizar nombre, logo, propina y estado del local
 grant update (name, logo_url, tip_pct, open_now) on restaurants to authenticated;
