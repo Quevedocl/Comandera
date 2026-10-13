@@ -1,4 +1,4 @@
--- Fogón · esquema COMPLETO para una instalación nueva (incluye las migraciones 1 a 7)
+-- ALTiro · esquema COMPLETO para una instalación nueva (incluye las migraciones 1 a 7)
 -- Ejecutar UNA vez en Supabase > SQL Editor sobre un proyecto vacío.
 -- Si ya tienes un proyecto funcionando, NO uses este archivo: ejecuta solo las migraciones que te falten (ver README.md).
 

@@ -1,8 +1,8 @@
-/* Service worker de Fogón: deja instalar el panel como app y abrirlo aunque se cortó el internet.
+/* Service worker de ALTiro: deja instalar el panel como app y abrirlo aunque se cortó el internet.
    Estrategia "red primero": siempre intenta traer lo último; si no hay conexión, usa la copia guardada.
    Nunca guarda llamadas a Supabase (pedidos, cuentas, etc.): esas siempre van a la red. */
-const CACHE = 'fogon-shell-v1';
-const SHELL = ['./', 'index.html', 'carta.html', 'config.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/favicon.svg'];
+const CACHE = 'altiro-shell-v1';
+const SHELL = ['./', 'index.html', 'carta.html', 'config.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/logo-mark.svg'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.allSettled(SHELL.map(u => c.add(u)))).then(() => self.skipWaiting()));

@@ -1,4 +1,6 @@
-# Fogón
+# ALTiro
+
+> Pedidos **al tiro** desde la mesa.
 
 Pedidos desde la mesa por QR para restaurantes, vendido como **suscripción mensual**. El cliente escanea el QR, ve la carta y pide; el restaurante ve los pedidos en vivo, llama al mesero y administra su carta. **No procesa pagos ni boletas: el cobro lo hace el mesero** (la app solo deja registrado qué mesa ya pagó).
 
@@ -6,7 +8,8 @@ Pedidos desde la mesa por QR para restaurantes, vendido como **suscripción mens
 - `carta.html` — carta que ve el cliente (`carta.html?r=<slug>&t=<id de mesa>`).
 - `config.js` — URL y clave pública de Supabase (único lugar donde se cambian).
 - `supabase/` — base de datos (`schema.sql`, migraciones) y plantillas de correo.
-- `manifest.webmanifest`, `sw.js`, `icons/` — el panel se puede instalar como app y abre aunque se corte el internet (los pedidos igual requieren conexión).
+- `icons/` — logo (`logo-mark.svg`, `logo-full.svg` para fondo claro y `logo-full-light.svg` para fondo oscuro) e íconos de la app.
+- `manifest.webmanifest`, `sw.js` — el panel se puede instalar como app y abre aunque se corte el internet (los pedidos igual requieren conexión).
 
 ## Instalación desde cero
 
@@ -50,3 +53,9 @@ Ejecuta en **SQL Editor**, en este orden, solo las que te falten (todas son repe
 
 - `node tests/check.js` — sintaxis de los HTML/JS, elementos y archivos referenciados, y que no haya claves secretas (también corre en GitHub Actions).
 - `supabase/tests/` — pruebas de seguridad del SQL para una base PostgreSQL de prueba (ver cabecera del archivo).
+
+## Identidad visual
+
+- Paleta: azul noche `#0F172A` (texto y fondos oscuros), naranja `#F2530F` (acento y botones principales), fondo `#F5F6F8`. En los tickets: azul = nuevo, ámbar = en preparación, verde = listo.
+- Para cambiar el color de acento, edita `--acc` y `--acc2` en el bloque `ALTiro · identidad visual` de `index.html` y en el de `carta.html`.
+- Cada restaurante ve su propio nombre y logo en el panel y en la carta; ALTiro aparece como marca de la plataforma (logo en la barra superior y "Pedidos con ALTiro" al pie de la carta).

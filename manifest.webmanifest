@@ -1,17 +1,30 @@
 {
-  "name": "Fogón · Panel del restaurante",
-  "short_name": "Fogón",
-  "description": "Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.",
+  "name": "ALTiro · Panel del restaurante",
+  "short_name": "ALTiro",
+  "description": "Pedidos al tiro desde la mesa: pedidos, mesas y llamadas al mesero en tiempo real.",
   "start_url": "index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#f2f3f5",
+  "background_color": "#F5F6F8",
   "theme_color": "#ffffff",
   "lang": "es",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

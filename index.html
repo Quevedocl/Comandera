@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
-<title>Fogón · Panel del restaurante</title>
-<meta name="description" content="Fogón: pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
-<meta property="og:type" content="website"><meta property="og:title" content="Fogón · Panel del restaurante"><meta property="og:description" content="Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Fogón">
+<title>ALTiro · Panel del restaurante</title>
+<meta name="description" content="ALTiro: pedidos al tiro desde la mesa. Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
+<meta property="og:type" content="website"><meta property="og:title" content="ALTiro · Panel del restaurante"><meta property="og:description" content="Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ALTiro">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; font-src 'self' data:; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
-<link rel="icon" href="icons/favicon.svg" type="image/svg+xml"><link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="icon" href="icons/logo-mark.svg" type="image/svg+xml"><link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -227,111 +227,111 @@ nav button:hover{color:var(--tx)}
 .cf{position:fixed;width:9px;height:14px;z-index:40;pointer-events:none;border-radius:2px;animation:cf 1.3s cubic-bezier(.2,.7,.4,1) forwards}
 @keyframes cf{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
 
-/* ===== inicio de sesión / registro (estilo neumórfico) ===== */
-:root{--nm-bg:#e4e5e8;--nm-lt:#fff;--nm-dk:#c3c6cc;--nm-ac:#8b1a1a}
-#login{position:fixed;inset:0;z-index:30;display:flex;padding:16px;overflow:auto;background:var(--nm-bg)}
-#login[hidden]{display:none}
-#login{--d:min(86vw,84vh,540px);perspective:1600px}
-.coin{display:grid;margin:auto;transform-style:preserve-3d;animation:pop .45s cubic-bezier(.2,1.2,.3,1)}
-.face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.face.back{transform:rotateY(180deg)}
-.nc{position:relative;width:var(--d);height:var(--d);border-radius:50%;background:var(--nm-bg);display:flex;flex-direction:column;justify-content:center;align-items:stretch;padding:0 calc(var(--d)*.17);text-align:center;box-shadow:18px 18px 40px var(--nm-dk),-18px -18px 40px var(--nm-lt)}
-.nc::before{content:"";position:absolute;inset:4.5%;border-radius:50%;pointer-events:none;box-shadow:inset 8px 8px 18px var(--nm-dk),inset -8px -8px 18px var(--nm-lt)}
-.nc>*{position:relative}
-.nc h2{margin:0;font-size:clamp(26px,6.4vw,34px);letter-spacing:-.01em;color:#33363b;text-shadow:2px 2px 3px rgba(0,0,0,.12),-1px -1px 2px #fff}
-.nc p{margin:0}
-.nc .sub{margin:4px 0 18px;color:#7b808a;font-weight:600;font-size:14px}
-.nf{position:relative;margin-bottom:14px}
-.nf svg{position:absolute;left:16px;top:50%;margin-top:-9px;width:18px;height:18px;fill:var(--nm-ac);stroke:none;pointer-events:none}
-.nf input{width:100%;height:48px;padding:0 14px 0 46px;border:0;border-radius:14px;outline:0;background:var(--nm-bg);color:#33363b;font-size:15px;font-weight:600;box-shadow:inset 5px 5px 10px var(--nm-dk),inset -5px -5px 10px var(--nm-lt);transition:box-shadow .25s}
-.nf input::placeholder{color:#8c919b;font-weight:600}
-.nf input:focus{box-shadow:inset 5px 5px 10px var(--nm-dk),inset -5px -5px 10px var(--nm-lt),0 0 0 2px rgba(139,26,26,.35)}
-.nf.code input{padding:0;text-align:center;font-size:26px;letter-spacing:.4em;height:56px;font-variant-numeric:tabular-nums}
-.nf.code input{padding-left:.4em}
-.nbtn{display:block;width:100%;height:50px;margin-top:4px;border:0;border-radius:14px;background:var(--nm-bg);color:#4a4e55;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:14px;box-shadow:7px 7px 16px var(--nm-dk),-7px -7px 16px var(--nm-lt);transition:box-shadow .2s,transform .15s,color .2s}
-.nbtn:hover{color:var(--nm-ac)}
-.nbtn:active{box-shadow:inset 4px 4px 9px var(--nm-dk),inset -4px -4px 9px var(--nm-lt);transform:scale(.99)}
-.nbtn:disabled{opacity:.6}
-.alt{margin-top:16px!important;font-size:13.5px;color:#7b808a;font-weight:600}
-.lnk{border:0;background:none;padding:0;color:var(--nm-ac);font-weight:800;font-size:inherit;cursor:pointer}
-.lnk:hover{text-decoration:underline}.lnk:disabled{opacity:.5;cursor:default;text-decoration:none}
-.rem{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:13px;font-weight:600;color:#7b808a;text-align:left;cursor:pointer}
-.rem[hidden]{display:none}
-.tg2{appearance:none;flex:none;width:40px;height:22px;margin:0;border-radius:99px;background:var(--nm-bg);position:relative;cursor:pointer;box-shadow:inset 3px 3px 6px var(--nm-dk),inset -3px -3px 6px var(--nm-lt);transition:background .25s}
-.tg2::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--nm-bg);box-shadow:2px 2px 4px var(--nm-dk),-1px -1px 3px var(--nm-lt);transition:transform .25s cubic-bezier(.3,1.5,.5,1),background .25s}
-.tg2:checked::after{transform:translateX(18px);background:var(--nm-ac)}
-#lerr,#serr,#verr{color:var(--nm-ac);font-size:13px;font-weight:700;margin:0 0 8px}
-#lerr:empty,#serr:empty,#verr:empty{display:none}
-.vm{color:#7b808a;font-weight:600;font-size:13.5px;margin:6px 0 16px!important}.vm b{color:#33363b;word-break:break-all}
-.row2{display:flex;justify-content:space-between;gap:10px;margin-top:16px;font-size:13px}
-@media (max-width:520px){.coin{width:100%;max-width:440px}.nc{width:auto;height:auto;border-radius:36px;padding:34px 26px}.nc::before{inset:10px;border-radius:28px}}
-
-/* ===== identidad Fogón: la moneda y las sombras suaves del login, en todo el panel ===== */
-:root{--bg:#e6e7ea;--ln:#d6d9de;--acc:#8b1a1a;--acc2:#a82222;--sd:#c3c6cc;--sl:#fff;--raise:8px 8px 20px var(--sd),-8px -8px 20px var(--sl);--raise-s:4px 4px 10px var(--sd),-4px -4px 10px var(--sl);--press:inset 3px 3px 7px var(--sd),inset -3px -3px 7px var(--sl);--surf:linear-gradient(145deg,#f6f7f9,#e8e9ec)}
-body{background:radial-gradient(900px 420px at 92% -8%,rgba(139,26,26,.09),transparent 65%),radial-gradient(700px 400px at -5% 110%,rgba(139,26,26,.05),transparent 60%),var(--bg)}
-.top{background:rgba(246,247,249,.8);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:0;box-shadow:0 8px 26px rgba(16,24,40,.07)}
-.brand{font-weight:800;letter-spacing:-.02em}
-.brand .mk{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#c9382c,#8b1a1a 58%,#5a0f0f);box-shadow:3px 3px 8px var(--sd),-2px -2px 6px var(--sl),inset 0 0 0 3px rgba(255,255,255,.2);animation:coinSpin 8s ease-in-out infinite}
-.brand .mk.has{background:#fff;box-shadow:var(--raise-s);animation:none}
-@keyframes coinSpin{0%,84%{transform:perspective(260px) rotateY(0)}100%{transform:perspective(260px) rotateY(360deg)}}
-nav{align-items:center;gap:4px}
-nav button{height:40px;border-radius:99px;padding:0 16px;transition:color .2s,background .25s,box-shadow .25s}
-nav button::after{display:none}
-nav button:hover{color:var(--acc)}
-nav button.on{color:#fff;background:linear-gradient(145deg,var(--acc2),var(--acc));box-shadow:0 6px 14px rgba(139,26,26,.35),inset 0 1px 0 rgba(255,255,255,.2)}
-nav button.on #cnt,nav button.on #ccnt{background:#fff;color:var(--acc)}
-.ib{border:0;background:var(--surf);box-shadow:var(--raise-s);border-radius:12px}
-.ib:active{box-shadow:var(--press)}
-.ib.on{background:linear-gradient(145deg,var(--acc2),var(--acc));color:#fff}
-.seg{padding:6px 4px}
-.seg button{border:0;background:var(--surf);box-shadow:var(--raise-s)}
-.seg button:hover{color:var(--acc)}
-.seg button.on{background:linear-gradient(145deg,var(--acc2),var(--acc));color:#fff;box-shadow:inset 2px 2px 6px rgba(0,0,0,.3),0 4px 12px rgba(139,26,26,.25)}
-select,.srch,.fld input,dialog input{border:0;background:var(--bg);box-shadow:var(--press)}
-.pi{border:0;background:var(--bg);box-shadow:var(--press)}
-.gh{border:0;background:var(--surf);box-shadow:var(--raise-s)}.gh:hover{background:var(--surf);color:var(--acc)}.gh:active{box-shadow:var(--press)}
-.pri{background:linear-gradient(145deg,var(--acc2),var(--acc));box-shadow:0 6px 16px rgba(139,26,26,.3)}.pri:hover{background:linear-gradient(145deg,#b52626,#8b1a1a)}
-.card,.lst,.kp div,.cc,.pv{border:0;border-radius:20px;background:var(--surf);box-shadow:var(--raise)}
-.pvh{border:0;box-shadow:var(--raise-s);background:var(--surf)}
-.rw:hover{background:rgba(255,255,255,.55)}
-.tk{border:0;border-radius:22px;background:var(--surf);box-shadow:var(--raise);transition:box-shadow .3s}
-.tk:hover{box-shadow:12px 14px 28px var(--sd),-8px -8px 20px var(--sl)}
-.hd{background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 68%,#000));padding:14px 18px}
-.mn{font-weight:800;letter-spacing:-.02em}
-.tk li{border-bottom:1px dashed var(--ln)}
-.go{border-top:0;font-weight:800;letter-spacing:.02em}
-.pending .go{background:linear-gradient(145deg,#ffb938,var(--amb))}.preparing .go{background:linear-gradient(145deg,#2bb56a,var(--grn))}.ready .go{background:linear-gradient(145deg,#3a3d44,#23252a)}
-.cc{border-left:0;position:relative;overflow:hidden}
-.cc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--red)}.cc.pay::before{background:var(--grn)}.cc.help::before{background:var(--amb)}
-.grid:not(:has(.tk:not([hidden]):not(.leave)))::after{content:"🍽️\A No hay pedidos en esta vista";white-space:pre;line-height:2.2;font-size:15px}
-.cl:empty::after{content:"🔔\A Nadie está llamando al mesero";white-space:pre;line-height:2.2}
-dialog{border-radius:26px;background:var(--bg);box-shadow:0 30px 80px rgba(0,0,0,.3)}
-.sw:checked{background:var(--acc)}
-.kp b{background:linear-gradient(135deg,#2b2d31,var(--acc));-webkit-background-clip:text;background-clip:text;color:transparent}
-.paidb{background:linear-gradient(145deg,#2bb56a,#1f9d55)}
-/* saludo del inicio */
-.hello{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px 0}
-.hello small{display:block;color:var(--mu);font-weight:700;text-transform:capitalize;letter-spacing:.01em}
-.hello h2{margin:2px 0 0;font-size:clamp(22px,3.2vw,30px);letter-spacing:-.025em;line-height:1.1}
-.hello h2 em{font-style:normal;color:var(--acc)}
-.hcoin{flex:none;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#c9382c,#8b1a1a 58%,#5a0f0f);box-shadow:5px 5px 12px var(--sd),-4px -4px 10px var(--sl),inset 0 0 0 5px rgba(255,255,255,.16),inset 0 0 0 9px rgba(0,0,0,.08);animation:coinSpin 6s ease-in-out infinite;display:grid;place-items:center;color:rgba(255,255,255,.85);font-weight:800;font-size:20px}
-@media (max-width:720px){.hello{padding:14px 14px 0}.hcoin{width:42px;height:42px;font-size:16px}.top{gap:12px}}
-@media (prefers-reduced-motion:reduce){.brand .mk,.hcoin{animation:none}}
-
-/* botón Abierto ahora / Local cerrado */
-.opn{display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border:0;border-radius:99px;background:var(--surf);box-shadow:var(--raise-s);font-size:13px;font-weight:700;color:#33363b;white-space:nowrap;transition:box-shadow .2s,color .2s}
+/* ===== ALTiro · identidad visual ===== */
+:root{--bg:#F5F6F8;--card:#fff;--ln:#E4E7EC;--tx:#0F172A;--mu:#64748B;--ink:#0F172A;--acc:#F2530F;--acc2:#D9440A;--accs:#FFF1EA;--blue:#2563EB;--red:#DC2626;--amb:#F59E0B;--grn:#16A34A;--sh1:0 1px 2px rgba(15,23,42,.06);--sh2:0 1px 3px rgba(15,23,42,.06),0 10px 28px rgba(15,23,42,.07)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+body{background:var(--bg)}
+/* cabecera */
+.top{gap:14px;background:#fff;border-bottom:1px solid var(--ln);box-shadow:0 1px 0 rgba(15,23,42,.02)}
+.al{flex:none;display:flex;align-items:center}.al img{width:34px;height:34px;display:block}
+.sep{flex:none;width:1px;height:26px;background:var(--ln)}
+.brand{font-weight:700;letter-spacing:-.01em;font-size:16px;gap:10px;min-width:0}
+.brand .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.brand .mk{width:34px;height:34px;border-radius:10px;background:var(--ink);color:#fff;font-size:13px;font-weight:800;letter-spacing:.02em;animation:none}
+.brand .mk.has{background:#fff;border:1px solid var(--ln)}
+nav{align-items:stretch;gap:2px}
+nav button{height:100%;border-radius:0;padding:0 13px;background:none;box-shadow:none;color:var(--mu)}
+nav button:hover{color:var(--tx)}
+nav button.on{color:var(--tx);background:none;box-shadow:none}
+nav button::after{display:block;background:var(--acc);height:3px;left:10px;right:10px}
+#cnt,#ccnt{background:var(--acc)}
+.ib{border:1px solid var(--ln);background:#fff;box-shadow:none;border-radius:10px}.ib:hover{background:var(--bg)}
+.ib.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.opn{display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border:1px solid var(--ln);border-radius:99px;background:#fff;font-size:13px;font-weight:700;color:var(--tx);white-space:nowrap;transition:background .2s,border-color .2s}
+.opn:not(:disabled):hover{background:var(--bg)}
 .opn::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--mu)}
 .opn.on::before{background:var(--grn);animation:live 2s infinite}
-.opn.off{color:var(--acc)}.opn.off::before{background:var(--red)}
-.opn:not(:disabled):active{box-shadow:var(--press)}
+.opn.off{color:var(--red);border-color:#FECACA;background:#FEF2F2}.opn.off::before{background:var(--red)}
 .opn:disabled{cursor:default}.opn[hidden]{display:none}
-
-/* verificación de correo / nueva contraseña */
-.coin[hidden],#vf[hidden]{display:none}
-#vf{margin:auto;animation:pop .45s cubic-bezier(.2,1.2,.3,1)}
-#vf .sub{word-break:break-word}
-.vrow{display:flex;justify-content:space-between;align-items:flex-start;gap:4px 10px;flex-wrap:wrap}
-#vsub:disabled,#lsub:disabled{opacity:.6}
+/* botones y campos */
+.pri{background:var(--acc);box-shadow:0 1px 2px rgba(217,68,10,.35)}.pri:hover{background:var(--acc2)}
+.gh{background:#fff;border:1px solid var(--ln)}.gh:hover{background:var(--bg)}
+.seg button{background:#fff;border:1px solid var(--ln)}.seg button:hover{color:var(--tx)}.seg button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+select,.srch,.fld input,dialog input,dialog select,dialog textarea{background:#fff;border:1px solid #CBD5E1;box-shadow:none}
+.fld input:focus,.pi:focus-within,.srch:focus-within,dialog input:focus,dialog textarea:focus,dialog select:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(242,83,15,.15);outline:0}
+.pi{background:#fff;border:1px solid #CBD5E1;box-shadow:none}
+.sw:checked{background:var(--acc)}
+/* tarjetas */
+.card,.lst,.kp div,.cc,.pv{background:#fff;border:1px solid var(--ln);border-radius:16px;box-shadow:var(--sh1)}
+.pvh{background:#fff;border:1px solid var(--ln);box-shadow:none}
+.kp b{background:none;color:var(--tx);-webkit-text-fill-color:currentColor}
+.rw:hover,.rw2:hover,.rw3:hover{background:#FAFAFB}
+.hello{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 20px 0}
+.hello small{display:block;color:var(--mu);font-weight:600;text-transform:capitalize}
+.hello h2{margin:2px 0 0;font-size:clamp(22px,3vw,28px);letter-spacing:-.025em;line-height:1.15}
+.hello h2 em{font-style:normal;color:var(--acc)}
+/* pedidos: nuevo = azul, preparando = ámbar, listo = verde */
+.tk{--c:var(--blue);border:1px solid var(--ln);border-radius:16px;background:#fff;box-shadow:var(--sh1)}
+.tk:hover{box-shadow:var(--sh2)}
+.tk.preparing{--c:var(--amb);--ct:#3B2300}.tk.ready{--c:var(--grn)}
+.hd{background:var(--c);padding:14px 18px}
+.mn{font-weight:800;letter-spacing:-.02em}
+.tk li{border-bottom:1px dashed var(--ln)}
+.go{border-top:1px solid var(--ln);font-weight:700}
+.pending .go{background:#FEF3C7;color:#78350F}.preparing .go{background:#DCFCE7;color:#14532D}.ready .go{background:var(--ink);color:#fff}
+.pending .go:hover{background:#FDE68A}.preparing .go:hover{background:#BBF7D0}.ready .go:hover{background:#1E293B}
+.cc{border-left:0;position:relative;overflow:hidden}
+.cc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--red)}.cc.pay::before{background:var(--grn)}.cc.help::before{background:var(--amb)}
+dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.3)}
+.paidb{background:var(--grn)}
+#bn:empty{display:none}
+@media (max-width:1380px){#clk{display:none}}
+@media (max-width:1180px){nav button{padding:0 10px}}
+/* inicio de sesión */
+#login{position:fixed;inset:0;z-index:30;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);background:#fff;overflow:auto}
+#login[hidden]{display:none}
+.lg-side{position:relative;overflow:hidden;color:#fff;padding:44px 56px;display:flex;flex-direction:column;justify-content:space-between;gap:28px;background:radial-gradient(760px 420px at 8% -6%,rgba(255,138,43,.42),transparent 62%),radial-gradient(640px 460px at 108% 108%,rgba(240,66,15,.34),transparent 62%),#0F172A}
+.lg-side img.lg-logo{height:40px;width:auto;display:block;align-self:flex-start}
+.lg-side h2{margin:0 0 14px;font-size:clamp(30px,3.4vw,46px);line-height:1.06;letter-spacing:-.035em;font-weight:800;max-width:15ch}
+.lg-side h2 em{font-style:normal;color:#FF8A2B}
+.lg-side .lead{margin:0;color:#CBD5E1;font-size:16.5px;max-width:44ch}
+.lg-feats{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:14px}
+.lg-feats li{display:flex;gap:12px;align-items:flex-start;color:#E2E8F0;font-size:15px}
+.lg-feats i{flex:none;width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.1);display:grid;place-items:center}
+.lg-feats svg{width:16px;height:16px;stroke:#FF8A2B;stroke-width:2.2}
+.lg-feats b{display:block;color:#fff;font-weight:700}
+.lg-demo{align-self:flex-start;width:min(300px,100%);background:#fff;color:var(--tx);border-radius:16px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.35);transform:rotate(-2deg)}
+.lg-demo .h{display:flex;justify-content:space-between;align-items:center;background:var(--blue);color:#fff;padding:12px 16px;font-weight:800;font-size:18px}.lg-demo .h small{font-weight:600;opacity:.9;font-size:13px}
+.lg-demo ul{list-style:none;margin:0;padding:6px 16px}.lg-demo li{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--ln);font-size:15px}.lg-demo li:last-child{border:0}.lg-demo li b{min-width:24px}
+.lg-demo .b{background:#FEF3C7;color:#78350F;text-align:center;font-weight:700;padding:12px;font-size:14px}
+.lg-main{display:flex;align-items:center;justify-content:center;padding:32px 24px}
+.lg-card{width:100%;max-width:392px}
+.lg-top{display:none;margin:0 0 26px}.lg-top img{height:38px;width:auto}
+.lg-card h1{margin:0 0 6px;font-size:28px;letter-spacing:-.025em;line-height:1.15}
+.lg-card .sub{margin:0 0 24px;color:var(--mu);font-size:15px}
+.lg-card form[hidden],#coin[hidden]{display:none}
+.fl{display:block;margin:0 0 14px;text-align:left}
+.fl[hidden]{display:none}
+.fl>span{display:block;margin:0 0 6px;font-size:13px;font-weight:600;color:#334155}
+.fl input{display:block;width:100%;height:46px;padding:0 14px;border:1px solid #CBD5E1;border-radius:12px;background:#fff;color:var(--tx);font-size:15px;outline:0;transition:border-color .15s,box-shadow .15s}
+.fl input::placeholder{color:#94A3B8}
+.fl input:focus{border-color:var(--acc);box-shadow:0 0 0 4px rgba(242,83,15,.14)}
+.fl.code input{height:58px;padding:0 0 0 .4em;text-align:center;font-size:26px;font-weight:700;letter-spacing:.4em;font-variant-numeric:tabular-nums}
+.vrow{display:flex;justify-content:space-between;align-items:center;gap:6px 12px;flex-wrap:wrap;margin:2px 0 18px}
+.rem{display:flex;align-items:center;gap:10px;margin:0;font-size:14px;color:#475569;cursor:pointer}
+.tg2{appearance:none;flex:none;width:38px;height:22px;margin:0;border-radius:99px;background:#CBD5E1;position:relative;cursor:pointer;transition:background .2s}
+.tg2::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s}
+.tg2:checked{background:var(--acc)}.tg2:checked::after{transform:translateX(16px)}
+.lnk{border:0;background:none;padding:0;color:var(--acc2);font-weight:700;font-size:inherit;cursor:pointer}
+.lnk:hover{text-decoration:underline}.lnk:disabled{opacity:.5;cursor:default;text-decoration:none}
+.nbtn{display:block;width:100%;height:48px;border:0;border-radius:12px;background:var(--acc);color:#fff;font-weight:700;font-size:15px;box-shadow:0 1px 2px rgba(0,0,0,.1),0 8px 18px rgba(242,83,15,.28);transition:background .2s,transform .15s}
+.nbtn:hover{background:var(--acc2)}.nbtn:active{transform:scale(.99)}.nbtn:disabled{opacity:.6}
+.alt{margin:20px 0 0;text-align:center;color:var(--mu);font-size:14px}
+#lerr,#serr,#verr{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#FEF2F2;color:#B91C1C;font-size:13.5px;font-weight:600;text-align:left}
+#lerr:empty,#serr:empty,#verr:empty{display:none}
+.lg-foot{margin-top:28px;text-align:center;color:#94A3B8;font-size:12.5px}
+@media (max-width:900px){#login{grid-template-columns:1fr}.lg-side{display:none}.lg-top{display:block}.lg-main{align-items:flex-start;padding:36px 22px}}
+@media (max-width:720px){.hello{padding:16px 14px 0}.top{gap:12px}.brand .t{max-width:120px}.sep{display:none}}
 /* impresión de comandas (ticket de cocina de 80 mm) */
 .prn{flex:none;border:0;background:rgba(0,0,0,.18);color:inherit;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;transition:background .2s}.prn:hover{background:rgba(0,0,0,.3)}
 .prn svg{width:18px;height:18px}.hd .rt{margin-left:auto}
@@ -348,7 +348,8 @@ dialog{border-radius:26px;background:var(--bg);box-shadow:0 30px 80px rgba(0,0,0
 </head>
 <body>
 <header class="top">
-  <div class="brand"><span class="mk"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span><span class="t">Fogón</span></div>
+  <a class="al" href="./" aria-label="ALTiro" title="ALTiro"><img src="icons/logo-mark.svg" alt="ALTiro" width="34" height="34"></a><span class="sep" aria-hidden="true"></span>
+  <div class="brand"><span class="mk">A</span><span class="t">ALTiro</span></div>
   <nav>
     <button data-v="orders" class="on">Pedidos<i id="cnt" data-v="0"></i></button>
     <button data-v="menu">Carta</button>
@@ -371,7 +372,7 @@ dialog{border-radius:26px;background:var(--bg);box-shadow:0 30px 80px rgba(0,0,0
 <div id="susp" hidden>Tu cuenta está suspendida: tus clientes no pueden hacer pedidos. Escríbenos por WhatsApp para reactivarla.</div>
 <main>
   <section class="view" id="orders">
-    <div class="hello"><div><small id="hDay"></small><h2 id="hName"></h2></div><div class="hcoin" aria-hidden="true">$</div></div>
+    <div class="hello"><div><small id="hDay"></small><h2 id="hName"></h2></div></div>
     <div class="tbr">
       <div class="seg" id="seg">
         <button data-f="" class="on">Todos <b>0</b></button>
@@ -499,34 +500,51 @@ dialog{border-radius:26px;background:var(--bg);box-shadow:0 30px 80px rgba(0,0,0
 </div></dialog>
 <dialog id="qrd"><div style="text-align:center"><h3 id="qrt"></h3><div id="qrb"></div><div class="bt" style="justify-content:center"><button class="gh" id="qrdl">Descargar PNG</button><button class="gh" id="qrx">Cerrar</button></div></div></dialog>
 <div id="login" hidden>
-  <div class="coin" id="coin">
-    <form id="lf" class="nc face">
-      <h2>Ingresar</h2><p class="sub">Entra a la cuenta de tu restaurante</p>
-      <div class="nf"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 011 1v.4l-10 6.6L2 6.4V6a1 1 0 011-1zM2 9v9a1 1 0 001 1h18a1 1 0 001-1V9l-10 6.6z"/></svg><input id="le" type="email" required placeholder="Correo" aria-label="Correo" autocomplete="username"></div>
-      <div class="nf"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3" fill="none" stroke="#8b1a1a" stroke-width="2.2" stroke-linecap="round"/></svg><input id="lp" type="password" required placeholder="Contraseña" aria-label="Contraseña" autocomplete="current-password"></div>
-      <div class="vrow"><label class="rem"><input type="checkbox" class="tg2" id="remMail"><span>Recordar mi correo</span></label><button type="button" class="lnk" id="goForgot" style="font-size:12.5px;margin:0 0 12px">¿Olvidaste tu contraseña?</button></div>
-      <p id="lerr" role="alert"></p>
-      <button class="nbtn" id="lsub" type="submit">Ingresar</button>
-      <p class="alt">¿No tienes cuenta? <button type="button" class="lnk" id="goSignup">Regístrate</button></p>
+  <aside class="lg-side" aria-hidden="true">
+    <img class="lg-logo" src="icons/logo-full-light.svg" alt="">
+    <div>
+      <h2>Pedidos <em>al tiro</em>, mesas felices.</h2>
+      <p class="lead">Tus clientes piden desde el celular con un QR y cocina lo ve al instante. Sin apps, sin errores de comanda.</p>
+      <ul class="lg-feats">
+        <li><i><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h3v3h-3zM20 14v6h-3"/></svg></i><span><b>Carta por QR en cada mesa</b>Se actualiza al momento, con fotos, agregados y promos.</span></li>
+        <li><i><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></i><span><b>Pedidos en vivo en cocina</b>Nuevo, en preparación y listo, con aviso sonoro.</span></li>
+        <li><i><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l1.5 2h-15zM10 21h4"/></svg></i><span><b>Llama al mesero con un toque</b>La cuenta, dudas o reclamos llegan directo al panel.</span></li>
+      </ul>
+    </div>
+    <div class="lg-demo"><div class="h"><span>Mesa 5</span><small>Recién</small></div><ul><li><b>2×</b>Pisco Sour</li><li><b>1×</b>Pastel de papa</li></ul><div class="b">Marcar en preparación</div></div>
+  </aside>
+  <div class="lg-main"><div class="lg-card">
+    <div class="lg-top"><img src="icons/logo-full.svg" alt="ALTiro"></div>
+    <div id="coin">
+      <form id="lf">
+        <h1>Ingresa a tu cuenta</h1><p class="sub">Administra los pedidos de tu restaurante.</p>
+        <label class="fl"><span>Correo</span><input id="le" type="email" required placeholder="tu@restaurante.cl" aria-label="Correo" autocomplete="username"></label>
+        <label class="fl"><span>Contraseña</span><input id="lp" type="password" required placeholder="Tu contraseña" aria-label="Contraseña" autocomplete="current-password"></label>
+        <div class="vrow"><label class="rem"><input type="checkbox" class="tg2" id="remMail"><span>Recordar mi correo</span></label><button type="button" class="lnk" id="goForgot">¿Olvidaste tu contraseña?</button></div>
+        <p id="lerr" role="alert"></p>
+        <button class="nbtn" id="lsub" type="submit">Ingresar</button>
+        <p class="alt">¿No tienes cuenta? <button type="button" class="lnk" id="goSignup">Regístrate</button></p>
+      </form>
+      <form id="sf" hidden inert>
+        <h1>Crea tu cuenta</h1><p class="sub">Registra tu restaurante en ALTiro.</p>
+        <label class="fl"><span>Nombre del restaurante</span><input id="sr" required maxlength="50" placeholder="Ej. Restaurante de JP" aria-label="Nombre del restaurante" autocomplete="organization"></label>
+        <label class="fl"><span>Correo</span><input id="se" type="email" required placeholder="tu@restaurante.cl" aria-label="Correo" autocomplete="email"></label>
+        <label class="fl"><span>Contraseña</span><input id="sp" type="password" required minlength="6" placeholder="Mínimo 6 caracteres" aria-label="Contraseña" autocomplete="new-password"></label>
+        <p id="serr" role="alert"></p>
+        <button class="nbtn" id="ssub" type="submit">Crear cuenta</button>
+        <p class="alt">¿Ya tienes cuenta? <button type="button" class="lnk" id="goLogin">Inicia sesión</button></p>
+      </form>
+    </div>
+    <form id="vf" hidden autocomplete="off">
+      <h1 id="vh">Verifica tu correo</h1><p class="sub" id="vs"></p>
+      <label class="fl code"><input id="vc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="••••••" aria-label="Código de verificación"></label>
+      <label class="fl" id="vpBox" hidden><span>Nueva contraseña</span><input id="vp" type="password" minlength="6" placeholder="Mínimo 6 caracteres" aria-label="Nueva contraseña" autocomplete="new-password"></label>
+      <p id="verr" role="alert"></p>
+      <button class="nbtn" id="vsub" type="submit">Verificar</button>
+      <p class="alt"><button type="button" class="lnk" id="vre">Reenviar código</button> · <button type="button" class="lnk" id="vback">Volver</button></p>
     </form>
-    <form id="sf" class="nc face back" inert>
-      <h2>Crear cuenta</h2><p class="sub">Registra tu restaurante</p>
-      <div class="nf"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 100-9 4.5 4.5 0 000 9zm0 2c-4.4 0-8 2.2-8 5v2h16v-2c0-2.8-3.6-5-8-5z"/></svg><input id="sr" required maxlength="50" placeholder="Nombre del restaurante" aria-label="Nombre del restaurante" autocomplete="organization"></div>
-      <div class="nf"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 011 1v.4l-10 6.6L2 6.4V6a1 1 0 011-1zM2 9v9a1 1 0 001 1h18a1 1 0 001-1V9l-10 6.6z"/></svg><input id="se" type="email" required placeholder="Correo" aria-label="Correo" autocomplete="email"></div>
-      <div class="nf"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3" fill="none" stroke="#8b1a1a" stroke-width="2.2" stroke-linecap="round"/></svg><input id="sp" type="password" required minlength="6" placeholder="Contraseña (mínimo 6)" aria-label="Contraseña" autocomplete="new-password"></div>
-      <p id="serr" role="alert"></p>
-      <button class="nbtn" id="ssub" type="submit">Crear cuenta</button>
-      <p class="alt">¿Ya tienes cuenta? <button type="button" class="lnk" id="goLogin">Inicia sesión</button></p>
-    </form>
-  </div>
-  <form id="vf" class="nc" hidden autocomplete="off">
-    <h2 id="vh">Verifica tu correo</h2><p class="sub" id="vs"></p>
-    <div class="nf code"><input id="vc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="••••••" aria-label="Código de verificación"></div>
-    <div class="nf" id="vpBox" hidden><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3" fill="none" stroke="#8b1a1a" stroke-width="2.2" stroke-linecap="round"/></svg><input id="vp" type="password" minlength="6" placeholder="Nueva contraseña (mínimo 6)" aria-label="Nueva contraseña" autocomplete="new-password"></div>
-    <p id="verr" role="alert"></p>
-    <button class="nbtn" id="vsub" type="submit">Verificar</button>
-    <p class="alt"><button type="button" class="lnk" id="vre">Reenviar código</button> · <button type="button" class="lnk" id="vback">Volver</button></p>
-  </form>
+    <p class="lg-foot">ALTiro · Pedidos al tiro para restaurantes</p>
+  </div></div>
 </div>
 <div id="bn" role="alert"></div><div id="toast" role="status"></div><div id="printArea" aria-hidden="true"></div>
 
@@ -583,7 +601,7 @@ const api = {
   /* cierra la mesa: completa sus pedidos, atiende sus llamadas y cambia su sesión (el cliente anterior ya no puede pedir) */
   async chargeTable(tid, name, upto, callId) { const { error } = await sb.rpc('charge_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name, p_upto: upto, p_call: callId || null }); if (error) { toast('No se pudo registrar el cobro: ' + error.message); return false; } return true; },
   async closeTable(tid, name, release = false) { const { error } = await sb.rpc('close_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name, p_release: release }); if (error) { toast('No se pudo cerrar la mesa: ' + error.message); return false; } return true; },
-  watch(cb) { let c = sb.channel('fogon'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls', 'product_addons'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, p => { try { orderEvent(p); } catch (e) {} cb(); })); c.subscribe(); }
+  watch(cb) { let c = sb.channel('altiro'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls', 'product_addons'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, p => { try { orderEvent(p); } catch (e) {} cb(); })); c.subscribe(); }
 };
 
 /* ===== ESTADO ===== */
@@ -842,13 +860,13 @@ $('#cfg').onclick = () => go('settings');
 
 /* ===== CONFIGURACIÓN: nombre y logo ===== */
 const initials = n => (String(n || '').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('') || '?').toUpperCase();
-const avatar = (name, url) => url ? `<img src="${esc(url)}" alt="">` : `<span>${esc(initials(name))}</span>`;
+const avatar = (name, url) => url ? `\x3Cimg src="${esc(url)}" alt="">` : `<span>${esc(initials(name))}</span>`;
 let pend = null;                                  // logo elegido sin guardar: {blob, url} | 'remove'
 function setBrand() {
   const mk = $('.brand .mk');
-  if (R && R.logo_url) { mk.innerHTML = `<img src="${esc(R.logo_url)}" alt="">`; mk.classList.add('has'); }
-  else { mk.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>'; mk.classList.remove('has'); }
-  $('.brand .t').textContent = R ? R.name : 'Fogón'; hello();
+  if (R && R.logo_url) { mk.innerHTML = `\x3Cimg src="${esc(R.logo_url)}" alt="">`; mk.classList.add('has'); }
+  else { mk.textContent = initials(R ? R.name : 'A'); mk.classList.remove('has'); }
+  $('.brand .t').textContent = R ? R.name : 'ALTiro'; hello();
   $('#susp').hidden = !(R && R.active === false); renderOpen();
 }
 function cfgPrev() {
@@ -946,7 +964,7 @@ async function refresh() {
 }
 const clk = () => $('#clk').textContent = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
 function hello() { const d = new Date(), h = d.getHours(), n = ($('.brand .t') || {}).textContent || '', g = h < 12 ? 'Buenos días' : h < 20 ? 'Buenas tardes' : 'Buenas noches';
-  $('#hDay').textContent = d.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' }); $('#hName').innerHTML = g + (n && n !== 'Fogón' && n !== 'Administrador' ? ', <em>' + esc(n) + '</em>' : '') + ' 👋'; }
+  $('#hDay').textContent = d.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' }); $('#hName').innerHTML = g + (n && n !== 'ALTiro' && n !== 'Administrador' ? ', <em>' + esc(n) + '</em>' : '') + ' 👋'; }
 hello(); setInterval(hello, 30000);
 clk(); setInterval(clk, 10000); setInterval(tick, 10000);
 function renderOpen() {
@@ -1160,19 +1178,11 @@ const authMsg = e => { const m = (e && e.message) || '';
   return m || 'No se pudo completar. Inténtalo otra vez.'; };
 try { const m = localStorage.getItem('cmd-mail'); if (m) { $('#le').value = m; $('#remMail').checked = true; } } catch (e) {}
 
-/* La tarjeta es una moneda: al cambiar entre "Ingresar" y "Crear cuenta" gira y se detiene mostrando la cara elegida.
-   Cada giro suma 1,5 vueltas (540°), así siempre termina en la otra cara. */
-let ang = 0, flipping = false;
-function flipTo(toSignup) {
-  if (flipping || signup === toSignup) return;
-  flipping = true; signup = toSignup; $('#lerr').textContent = $('#serr').textContent = '';
-  const coin = $('#coin'), act = toSignup ? $('#sf') : $('#lf'), oth = toSignup ? $('#lf') : $('#sf'), from = ang; ang += 540;
-  oth.inert = true;
-  const fin = () => { coin.style.transform = `rotateY(${ang}deg)`; flipping = false; act.inert = false; const f = act.querySelector('input'); if (f) f.focus({ preventScroll: true }); };
-  if (reduced) { fin(); return; }
-  coin.style.transform = `rotateY(${from}deg)`;
-  const an = coin.animate([{ transform: `rotateY(${from}deg) scale(1)` }, { transform: `rotateY(${from + 270}deg) scale(1.08)`, offset: .5 }, { transform: `rotateY(${ang}deg) scale(1)` }], { duration: 1300, easing: 'cubic-bezier(.4,.1,.2,1)', fill: 'forwards' });
-  an.onfinish = () => { fin(); an.cancel(); };
+function flipTo(toSignup) {                         // alterna entre "Ingresar" y "Crear cuenta"
+  if (signup === toSignup) return; signup = toSignup;
+  $('#lerr').textContent = $('#serr').textContent = '';
+  $('#lf').hidden = toSignup; $('#lf').inert = toSignup; $('#sf').hidden = !toSignup; $('#sf').inert = !toSignup;
+  const f = (toSignup ? $('#sf') : $('#lf')).querySelector('input'); if (f) f.focus({ preventScroll: true });
 }
 $('#goSignup').onclick = () => flipTo(true);
 $('#goLogin').onclick = () => flipTo(false);
