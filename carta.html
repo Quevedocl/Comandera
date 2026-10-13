@@ -269,6 +269,7 @@ dialog{background:var(--bg);border-radius:28px 28px 0 0}
 .tips button.on,.opt.on{background:linear-gradient(145deg,var(--acc2),var(--acc));color:#fff;box-shadow:inset 2px 2px 6px rgba(0,0,0,.3)}
 .opt.on small,.tips button.on small{color:rgba(255,255,255,.8)}
 @media (prefers-reduced-motion:reduce){.coin0{animation:none}.hero0{animation:none}}
+body.closed .add,body.closed .it .stp,body.closed #bar,body.closed #prodFoot{display:none!important}
 </style>
 </head>
 <body>
@@ -276,6 +277,7 @@ dialog{background:var(--bg);border-radius:28px 28px 0 0}
   <div class="wrap">
     <div class="top"><div class="bk"><img id="logo" alt="" hidden><h1 id="ttl">Carta</h1></div><div class="tr"><span class="mesa" id="mesaTag"></span><button class="callb" id="callBtn" hidden><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l1.5 2h-15zM10 21h4"/></svg>Mesero</button></div></div>
     <div class="lockbar" id="lockbar" hidden role="alert"><b>Esta mesa ya fue cerrada.</b><br>Gracias por tu visita. Si vuelves a sentarte, avisa a un mesero para que reabra la mesa y luego recarga esta página.</div>
+    <div class="lockbar" id="closedbar" hidden role="status"><b>El local está cerrado por ahora.</b><br>No estamos recibiendo pedidos nuevos. Si ya tienes pedidos en tu mesa, puedes ver tu cuenta o llamar a un mesero.</div>
     <div class="editbar" id="editbar" hidden><span>✏️ Estás modificando tu pedido</span><button id="editExit" type="button">Salir</button></div>
     <div class="track" id="track" hidden>
       <button class="tkm" id="trackOpen" type="button"><span class="ic" id="tkIc"></span><span class="tx"><b id="tkT"></b><small id="tkS"></small></span><span class="dots" id="tkD"><i></i><i></i><i></i></span></button>
@@ -603,6 +605,7 @@ $('#send').onclick = async () => {
   if (error) {
     btn.textContent = 'Enviar pedido · ' + clp(total());
     if (error.code === '42501' && await checkSession() === 'locked') return;   // la mesa se cerró justo ahora
+    if (error.code === '42501') { await checkOpen(); if (CLOSED) { fail('El local acaba de cerrar y ya no recibe pedidos nuevos.'); return; } }
     fail('No se pudo enviar el pedido. Revisa tu conexión e inténtalo otra vez.'); return;
   }
 
@@ -924,14 +927,17 @@ async function load() {
   if (gone.length) { toast('Se agotó: ' + gone.join(', ')); if ($('#cart').open) renderCart(); }
 }
 
-let sesState = 'ok';
+let sesState = 'ok', CLOSED = false;
+function setClosed(v) { CLOSED = v; document.body.classList.toggle('closed', v); $('#closedbar').hidden = !v; if (v) { try { $('#cart').close(); $('#prod').close(); } catch (e) {} } }
+async function checkOpen() { if (!sb || !RID) return; const { data } = await sb.from('restaurants').select('open_now').eq('id', RID).maybeSingle(); if (data && 'open_now' in data) setClosed(data.open_now === false); }
+setInterval(() => { if (!document.hidden) checkOpen(); }, 20000);
 async function init() {
   const bad = m => { $('#menu').innerHTML = `<p class="msg">${m}</p>`; };
   if (!sb || !SLUG) return bad('Enlace inválido. Escanea de nuevo el QR de tu mesa.');
   const { data: r } = await sb.from('restaurants').select('*').eq('slug', SLUG).maybeSingle();
   if (!r) return bad('No encontramos este restaurante. Avisa a un mesero.');
   if (r.active === false) return bad('Este local no está disponible por ahora.');
-  RID = r.id; NOMBRE = r.name; CART_KEY += '-' + RID;
+  RID = r.id; NOMBRE = r.name; setClosed(r.open_now === false); CART_KEY += '-' + RID;
   TIP_PCT = r.tip_pct == null ? 10 : Number(r.tip_pct); bill.tip = TIP_PCT;
   if (r.logo_url) { const im = $('#logo'); im.src = r.logo_url; im.hidden = false; im.onerror = () => { im.hidden = true; }; }
   if (TID_Q) {

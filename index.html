@@ -310,6 +310,14 @@ dialog{border-radius:26px;background:var(--bg);box-shadow:0 30px 80px rgba(0,0,0
 .hcoin{flex:none;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#c9382c,#8b1a1a 58%,#5a0f0f);box-shadow:5px 5px 12px var(--sd),-4px -4px 10px var(--sl),inset 0 0 0 5px rgba(255,255,255,.16),inset 0 0 0 9px rgba(0,0,0,.08);animation:coinSpin 6s ease-in-out infinite;display:grid;place-items:center;color:rgba(255,255,255,.85);font-weight:800;font-size:20px}
 @media (max-width:720px){.hello{padding:14px 14px 0}.hcoin{width:42px;height:42px;font-size:16px}.top{gap:12px}}
 @media (prefers-reduced-motion:reduce){.brand .mk,.hcoin{animation:none}}
+
+/* botón Abierto ahora / Local cerrado */
+.opn{display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border:0;border-radius:99px;background:var(--surf);box-shadow:var(--raise-s);font-size:13px;font-weight:700;color:#33363b;white-space:nowrap;transition:box-shadow .2s,color .2s}
+.opn::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--mu)}
+.opn.on::before{background:var(--grn);animation:live 2s infinite}
+.opn.off{color:var(--acc)}.opn.off::before{background:var(--red)}
+.opn:not(:disabled):active{box-shadow:var(--press)}
+.opn:disabled{cursor:default}.opn[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -326,7 +334,7 @@ dialog{border-radius:26px;background:var(--bg);box-shadow:0 30px 80px rgba(0,0,0
     <button data-v="admin" hidden>Admin</button>
   </nav>
   <div class="r">
-    <span class="live" id="mode"></span>
+    <button type="button" class="opn" id="mode" hidden></button>
     <time id="clk"></time>
     <button class="ib" id="cfg" hidden aria-label="Configuración" title="Configuración"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg></button>
     <button class="ib" id="logout" hidden aria-label="Cerrar sesión" title="Cerrar sesión"><svg viewBox="0 0 24 24"><path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/></svg></button>
@@ -789,7 +797,7 @@ function setBrand() {
   if (R && R.logo_url) { mk.innerHTML = `<img src="${esc(R.logo_url)}" alt="">`; mk.classList.add('has'); }
   else { mk.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>'; mk.classList.remove('has'); }
   $('.brand .t').textContent = R ? R.name : 'Fogón'; hello();
-  $('#susp').hidden = !(R && R.active === false);
+  $('#susp').hidden = !(R && R.active === false); renderOpen();
 }
 function cfgPrev() {
   const name = $('#cfgName').value.trim() || (R && R.name) || '', url = pend === 'remove' ? null : pend ? pend.url : R && R.logo_url;
@@ -879,7 +887,25 @@ function hello() { const d = new Date(), h = d.getHours(), n = ($('.brand .t') |
   $('#hDay').textContent = d.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' }); $('#hName').innerHTML = g + (n && n !== 'Fogón' && n !== 'Administrador' ? ', <em>' + esc(n) + '</em>' : '') + ' 👋'; }
 hello(); setInterval(hello, 30000);
 clk(); setInterval(clk, 10000); setInterval(tick, 10000);
-$('#mode').textContent = sb ? 'En vivo' : 'Modo demo';
+function renderOpen() {
+  const b = $('#mode'); if (!b) return;
+  if (!sb) { b.hidden = false; b.textContent = 'Modo demo'; b.className = 'opn'; b.disabled = true; return; }
+  if (!R) { b.hidden = true; return; }
+  const has = 'open_now' in R, open = R.open_now !== false;
+  b.hidden = false; b.className = 'opn ' + (open ? 'on' : 'off'); b.textContent = open ? 'Abierto ahora' : 'Local cerrado'; b.disabled = !has;
+  b.title = !has ? 'Falta ejecutar migracion-local-abierto.sql en Supabase' : open ? 'Toca para cerrar el local: los clientes dejan de poder hacer pedidos nuevos' : 'Toca para abrir el local y volver a recibir pedidos';
+}
+$('#mode').onclick = async () => {
+  if (!sb || !R || !('open_now' in R)) return;
+  const next = R.open_now === false;
+  if (!next && !confirm('¿Cerrar el local?\n\nLos clientes no podrán hacer pedidos nuevos. Las mesas que ya están abiertas siguen pudiendo llamar al mesero y pedir la cuenta.')) return;
+  const b = $('#mode'); b.disabled = true;
+  const { error } = await sb.from('restaurants').update({ open_now: next }).eq('id', R.id);
+  if (error) toast('No se pudo cambiar el estado del local: ' + error.message);
+  else { R = { ...R, open_now: next }; toast(next ? 'Local abierto: ya puedes recibir pedidos' : 'Local cerrado: no se reciben pedidos nuevos'); }
+  renderOpen();
+};
+renderOpen();
 
 /* ===== EFECTOS VISUALES ===== */
 function countTo(el, to, fmt = clp, ms = 800) {            // número que "corre" hasta su valor nuevo
@@ -1044,7 +1070,7 @@ async function start() {
   let { data: r } = await sb.from('restaurants').select('*').eq('owner_id', u.id).maybeSingle();
   if (!r && isAdmin) {                                   // cuenta solo de administrador: sin local propio
     $$('nav button').forEach(b => b.hidden = b.dataset.v !== 'admin'); $('#cfg').hidden = true; $('#logout').hidden = false;
-    $('.brand .t').textContent = 'Administrador'; $('#mode').textContent = 'Administrador'; started = true; go('admin'); return;
+    $('.brand .t').textContent = 'Administrador'; { const m = $('#mode'); m.hidden = false; m.textContent = 'Administrador'; m.className = 'opn'; m.disabled = true; } started = true; go('admin'); return;
   }
   if (!r) {
     const name = (u.user_metadata && u.user_metadata.restaurant_name) || 'Mi restaurante';

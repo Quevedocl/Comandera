@@ -26,3 +26,7 @@
 2. En el panel, la llamada "Quiere pagar" tiene dos botones: **Cobrar y cerrar mesa** (como antes) y **Cobrar y dejar abierta**.
    El segundo marca como pagado lo pedido hasta ese aviso; si el cliente sigue pidiendo, su próxima cuenta solo suma lo nuevo y muestra "Ya pagado antes".
 3. Los tickets cobrados muestran la etiqueta **Pagado**; en Ingresos, "Cobrado" incluye lo pagado aunque la mesa siga abierta.
+
+## Abierto ahora / Local cerrado
+1. **Supabase > SQL Editor**: ejecuta `supabase/migracion-local-abierto.sql` ANTES de subir los HTML.
+2. En el panel, el indicador de arriba (antes "En vivo") es ahora un botón: **Abierto ahora** / **Local cerrado**. Al cerrar, la carta del cliente muestra un aviso y no deja hacer pedidos nuevos; las mesas abiertas pueden seguir llamando al mesero y viendo su cuenta.
