@@ -7,7 +7,7 @@ const fs = require('fs'), path = require('path'), vm = require('vm');
 const root = path.join(__dirname, '..');
 let bad = 0; const fail = m => { bad++; console.error('✗ ' + m); }; const ok = m => console.log('✓ ' + m);
 
-for (const f of ['index.html', 'carta.html']) {
+for (const f of ['index.html', 'carta.html', 'cocina.html']) {
   const html = fs.readFileSync(path.join(root, f), 'utf8');
   const scripts = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map(m => m[1]);
   scripts.forEach((code, i) => { try { new vm.Script(code, { filename: f + '#script' + i }); } catch (e) { fail(`${f}: error de sintaxis en <script> #${i}: ${e.message}`); } });

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="no-referrer"><meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'">
+<title>kepasa · Cocina</title><link rel="icon" href="icons/favicon.svg"><script src="config.js"></script>
+<style>
+:root{--ink:#0F172A;--acc:#F2530F;--bg:#F5F6F8;--new:#2563EB;--prep:#D97706;--rdy:#16A34A;--bad:#DC2626;--mut:#64748B}
+*{box-sizing:border-box}html,body{margin:0;height:100%}body{font:16px/1.35 system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#fff;border-bottom:1px solid #E2E8F0}header b{font-size:18px}header .sp{flex:1}
+.pill{font-size:13px;padding:4px 10px;border-radius:99px;background:#E2E8F0;color:var(--mut)}.pill.ok{background:#DCFCE7;color:#166534}
+#warn{background:var(--bad);color:#fff;text-align:center;padding:8px;font-weight:600}
+#cols{flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:12px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-height:0}.col h2{margin:0 0 8px;font-size:15px;text-transform:uppercase;letter-spacing:.05em;display:flex;justify-content:space-between}
+.col .l{flex:1;overflow:auto;display:flex;flex-direction:column;gap:10px}.c0 h2{color:var(--new)}.c1 h2{color:var(--prep)}.c2 h2{color:var(--rdy)}
+.empty{color:var(--mut);text-align:center;padding:24px 0}
+.t{background:#fff;border-radius:12px;border-left:8px solid var(--new);padding:12px;box-shadow:0 1px 3px #0001}.t.s-preparing{border-color:var(--prep)}.t.s-ready{border-color:var(--rdy)}.t.s-cancelled{border-color:var(--bad);background:#FEF2F2}
+.t.fresh{animation:fl 1s ease-in-out 6}@keyframes fl{50%{box-shadow:0 0 0 4px var(--acc)}}@media(prefers-reduced-motion:reduce){.t.fresh{animation:none;box-shadow:0 0 0 3px var(--acc)}}
+.t .h{display:flex;justify-content:space-between;align-items:baseline}.t .h b{font-size:24px}.t .tm{color:var(--mut);font-weight:600}.tm.warn{color:var(--prep)}.tm.late{color:var(--bad)}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--acc);color:#fff;margin-top:4px}.tag.x{background:var(--bad)}
+.t ul{list-style:none;margin:8px 0;padding:0;font-size:18px}.t li{padding:3px 0}.t li b{margin-right:6px}.t small{display:block;color:var(--mut);font-size:14px}.t .nt{display:block;background:#FEF3C7;border-radius:6px;padding:2px 8px;margin-top:2px;font-size:15px;color:#92400E}
+.t button{width:100%;padding:14px;font-size:17px;font-weight:700;border:0;border-radius:10px;background:var(--ink);color:#fff;cursor:pointer}.t button.go{background:var(--acc)}.t button.back{background:#E2E8F0;color:var(--ink);font-size:14px;padding:8px;margin-top:6px}.t button:disabled{opacity:.5}
+#gate{position:fixed;inset:0;background:var(--ink);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px}#gate h1{margin:0}#gate p{max-width:420px;color:#CBD5E1;margin:0}
+#go{padding:16px 28px;font-size:18px;font-weight:700;border:0;border-radius:12px;background:var(--acc);color:#fff;cursor:pointer}
+@media(max-width:760px){#cols{grid-template-columns:1fr;overflow:auto}.col .l{overflow:visible}}
+</style></head><body>
+<div id="gate"><h1>Cocina</h1><p id="gname">Verificando enlace…</p><p id="gmsg"></p><button id="go" hidden>Iniciar turno</button></div>
+<header><b id="rn">kepasa</b><span class="sp"></span><span class="pill" id="pw">Pantalla</span><span class="pill" id="ps">Sonido</span></header>
+<div id="warn" hidden>Sin conexión con el servidor · reintentando… Si dura, avisa al encargado.</div>
+<main id="cols">
+<section class="col c0"><h2>Nuevos <span id="n0">0</span></h2><div class="l" id="l0"></div></section>
+<section class="col c1"><h2>Preparando <span id="n1">0</span></h2><div class="l" id="l1"></div></section>
+<section class="col c2"><h2>Listos <span id="n2">0</span></h2><div class="l" id="l2"></div></section>
+</main>
+<script>
+const CFG = window.FOGON || {}, $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+let K = (new URLSearchParams(location.search).get('k') || '').trim();
+if (K) { try { localStorage.setItem('kepasa-cocina', K); } catch (e) {} history.replaceState(null, '', location.pathname); }   // la llave no queda en la barra ni en el historial
+else { try { K = localStorage.getItem('kepasa-cocina') || ''; } catch (e) {} }
+async function rpc(fn, args) {
+  const r = await fetch(CFG.url + '/rest/v1/rpc/' + fn, { method: 'POST', headers: { apikey: CFG.key, Authorization: 'Bearer ' + CFG.key, 'content-type': 'application/json' }, body: JSON.stringify(args) });
+  if (!r.ok) throw new Error(r.status); return r.json();
+}
+let ac = null, wl = null, rows = [], seen = null, fresh = new Set(), dismissed = new Set(), fails = 0, busy = false;
+function beep() {
+  if (!ac) return; try { [880, 1175, 880].forEach((f, i) => { const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = f; o.connect(g); g.connect(ac.destination); const t = ac.currentTime + i * .22; g.gain.setValueAtTime(.35, t); g.gain.exponentialRampToValueAtTime(.001, t + .2); o.start(t); o.stop(t + .21); }); } catch (e) {}
+}
+async function keepAwake() { try { if (navigator.wakeLock && !document.hidden) { wl = await navigator.wakeLock.request('screen'); wl.onrelease = () => { $('#pw').className = 'pill'; $('#pw').textContent = 'Pantalla: se puede apagar'; }; $('#pw').className = 'pill ok'; $('#pw').textContent = 'Pantalla activa'; return; } } catch (e) {} $('#pw').textContent = 'Mantén la pantalla encendida'; }
+const mins = c => Math.max(0, Math.floor((Date.now() - new Date(c)) / 60000));
+function ticket(o) {
+  const m = mins(o.created_at), t = o.status === 'cancelled' ? '' : `<span class="tm ${m >= 20 ? 'late' : m >= 10 ? 'warn' : ''}">${m < 1 ? 'ahora' : m < 60 ? m + ' min' : Math.floor(m / 60) + ' h ' + m % 60 + ' min'}</span>`;
+  const li = (o.items || []).map(i => `<li><b>${esc(i.qty)}×</b>${esc(i.name)}${(i.addons || []).map(a => `<small>+ ${esc(a)}</small>`).join('')}${i.promo ? `<small>🏷 ${esc(i.promo)}</small>` : ''}${i.note ? `<span class="nt">» ${esc(i.note)}</span>` : ''}</li>`).join('');
+  const btn = { pending: `<button class="go" data-id="${o.id}" data-to="preparing">Preparar</button>`, preparing: `<button class="go" data-id="${o.id}" data-to="ready">Listo ✓</button><button class="back" data-id="${o.id}" data-to="pending">↩ Volver a nuevos</button>`, ready: `<button class="back" data-id="${o.id}" data-to="preparing">↩ Volver a preparando</button>`, cancelled: `<button data-x="${o.id}">Entendido</button>` }[o.status] || '';
+  return `<article class="t s-${o.status}${fresh.has(o.id) ? ' fresh' : ''}"><div class="h"><b>${esc(o.table_name)}</b>${t}</div>${o.status === 'cancelled' ? '<span class="tag x">CANCELADO · no preparar</span>' : o.modified_at ? '<span class="tag">MODIFICADO</span>' : ''}<ul>${li}</ul>${btn}</article>`;
+}
+function render() {
+  const g = [[], [], []];
+  rows.forEach(o => { if (o.status === 'cancelled') { if (!dismissed.has(o.id)) g[0].push(o); } else g[{ pending: 0, preparing: 1, ready: 2 }[o.status]]?.push(o); });
+  const L = document.querySelectorAll('.col .l'), N = document.querySelectorAll('.col h2 span');
+  g.forEach((a, i) => { L[i].innerHTML = a.length ? a.map(ticket).join('') : '<p class="empty">Sin pedidos</p>'; N[i].textContent = a.length; });
+}
+async function poll() {
+  if (busy) return; busy = true;
+  try {
+    rows = await rpc('kitchen_orders', { p_key: K });
+    if (!rows.length && (await rpc('kitchen_info', { p_key: K })) == null) { location.reload(); return; }   // enlace desactivado
+    fails = 0; $('#warn').hidden = true;
+    const sig = new Map(rows.map(o => [o.id, o.status + '|' + o.modified_at + '|' + o.cancelled_at])); let ring = false;
+    if (seen) rows.forEach(o => { const s = seen.get(o.id); if ((o.status === 'pending' && s === undefined) || (s !== undefined && s.split('|')[1] !== String(o.modified_at)) || (o.status === 'cancelled' && s !== undefined && !s.startsWith('cancelled'))) { ring = true; fresh.add(o.id); } });
+    seen = sig; fresh.forEach(id => { const o = rows.find(x => x.id === id); if (!o || o.status !== 'pending' && o.status !== 'cancelled') fresh.delete(id); });
+    render(); if (ring) beep();
+  } catch (e) { if (++fails >= 2) $('#warn').hidden = false; } finally { busy = false; }
+}
+$('#cols').addEventListener('click', async e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.x) { dismissed.add(b.dataset.x); render(); return; }
+  b.disabled = true;
+  try { const r = await rpc('kitchen_set_status', { p_key: K, p_order: b.dataset.id, p_status: b.dataset.to }); if (r !== 'ok') alert(r === 'closed' ? 'Ese pedido ya se cerró o se canceló.' : 'No se pudo cambiar el estado.'); } catch (x) { alert('Sin conexión: no se guardó el cambio.'); }
+  busy = false; poll();
+});
+async function init() {
+  if (!CFG.url || !UUID.test(K)) { $('#gname').textContent = 'Enlace de cocina inválido'; $('#gmsg').textContent = 'Pide al encargado el enlace desde Configuración > Pantalla de cocina.'; return; }
+  let name = null; try { name = await rpc('kitchen_info', { p_key: K }); } catch (e) { $('#gname').textContent = 'Sin conexión'; $('#gmsg').textContent = 'Revisa el internet y recarga.'; return; }
+  if (!name) { $('#gname').textContent = 'Enlace desactivado'; $('#gmsg').textContent = 'Este enlace ya no sirve. Pide uno nuevo al encargado.'; return; }
+  $('#rn').textContent = name; document.title = name + ' · Cocina'; $('#gname').textContent = name; $('#gmsg').textContent = 'Al iniciar se activa el sonido de pedidos nuevos y se mantiene la pantalla encendida.'; $('#go').hidden = false;
+}
+$('#go').onclick = () => {
+  try { ac = new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); } catch (e) {}
+  $('#ps').className = ac ? 'pill ok' : 'pill'; $('#ps').textContent = ac ? 'Sonido activo' : 'Sin sonido';
+  keepAwake(); $('#gate').hidden = true; poll(); setInterval(poll, 4000); setInterval(render, 20000);
+};
+document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('#gate').offsetParent) { keepAwake(); if (ac) ac.resume(); poll(); } });
+init();
+</script></body></html>

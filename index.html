@@ -426,6 +426,7 @@ document.addEventListener('gesturestart',function(e){e.preventDefault();});})();
         <div class="fld" id="cfgTipBox" style="margin-top:14px"><label for="cfgTip">Propina sugerida en la cuenta</label><select id="cfgTip"><option value="0">Sin sugerencia</option><option value="5">5%</option><option value="10">10% (habitual en Chile)</option><option value="15">15%</option><option value="20">20%</option></select><p class="hint" style="margin:6px 0 0">Tus clientes la ven al revisar la cuenta de su mesa. Es voluntaria y pueden cambiarla.</p></div>
         <div class="acts"><button class="gh" id="cfgReset" type="button">Descartar</button><button class="pri" id="cfgSave" type="button">Guardar cambios</button></div>
       </div>
+      <div class="card"><h3>Pantalla de cocina</h3><p class="hint">Enlace solo para el personal de cocina: ve los pedidos activos y los marca como preparando o listo. No ve cobros, ingresos ni la carta. Ábrelo en la tablet de cocina.</p><div class="fld"><input id="kLink" readonly aria-label="Enlace de cocina"></div><div class="acts"><button class="gh" id="kNew" type="button">Generar enlace nuevo</button><button class="pri" id="kCopy" type="button">Copiar enlace</button></div></div>
       <div class="card"><h3>Vista previa</h3><p class="hint">Así se ve la cabecera de tu carta en el celular del cliente.</p>
         <div class="pv"><div class="pvh"><div class="l"><div class="av" id="pvAv"></div><b id="pvName"></b></div><span class="tg">Mesa 5</span></div></div></div>
       <div class="card"><h3>Cuenta</h3><div class="acc"><span id="accMail"></span><button class="gh" id="logout2" type="button">Cerrar sesión</button></div></div>
@@ -824,7 +825,7 @@ function cfgPrev() {
   $('#cfgAv').innerHTML = $('#pvAv').innerHTML = avatar(name, url); $('#pvName').textContent = name;
   $('#lgDel').hidden = !url;
 }
-function cfgFill() { pend = null; $('#cfgTipBox').hidden = !(R && 'tip_pct' in R); $('#cfgTip').value = R && R.tip_pct != null ? String(R.tip_pct) : '10'; $('#cfgName').value = R ? R.name : ''; $('#accMail').textContent = mail; cfgPrev(); }
+function cfgFill() { loadKitchen(); pend = null; $('#cfgTipBox').hidden = !(R && 'tip_pct' in R); $('#cfgTip').value = R && R.tip_pct != null ? String(R.tip_pct) : '10'; $('#cfgName').value = R ? R.name : ''; $('#accMail').textContent = mail; cfgPrev(); }
 $('#cfgName').oninput = cfgPrev;
 $('#lgUp').onclick = () => $('#lgFile').click();
 $('#lgDel').onclick = () => { pend = 'remove'; cfgPrev(); };
@@ -855,6 +856,14 @@ $('#lgFile').onchange = async e => {
   try { const blob = await prepLogo(f); if (pend && pend.url) URL.revokeObjectURL(pend.url); pend = { blob, url: URL.createObjectURL(blob) }; cfgPrev(); }
   catch (err) { toast(err.message || 'No se pudo leer la imagen'); }
 };
+async function loadKitchen() {
+  if (!R) return;
+  let { data: k } = await sb.from('kitchen_access').select('key').eq('restaurant_id', R.id).maybeSingle();
+  if (!k) ({ data: k } = await sb.from('kitchen_access').insert({ restaurant_id: R.id }).select('key').maybeSingle());
+  $('#kLink').value = k ? new URL('cocina.html?k=' + k.key, location.href).href : '';
+}
+$('#kCopy').onclick = async () => { const v = $('#kLink').value; if (!v) return; try { await navigator.clipboard.writeText(v); toast('Enlace copiado'); } catch (e) { $('#kLink').select(); toast('Selecciona y copia el enlace'); } };
+$('#kNew').onclick = async () => { if (!R || !confirm('¿Generar un enlace nuevo?\n\nEl de la tablet de cocina dejará de funcionar y tendrás que abrir el nuevo allí.')) return; const { error } = await sb.from('kitchen_access').update({ key: crypto.randomUUID() }).eq('restaurant_id', R.id); if (error) { toast('No se pudo generar el enlace'); return; } await loadKitchen(); toast('Enlace nuevo generado'); };
 $('#cfgSave').onclick = async () => {
   const name = $('#cfgName').value.trim();
   if (name.length < 2) return toast('Escribe el nombre del negocio');

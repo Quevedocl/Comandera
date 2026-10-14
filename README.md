@@ -5,6 +5,7 @@
 Pedidos desde la mesa por QR para restaurantes, vendido como **suscripción mensual**. El cliente escanea el QR, ve la carta y pide; el restaurante ve los pedidos en vivo, llama al mesero y administra su carta. **No procesa pagos ni boletas: el cobro lo hace el mesero** (la app solo deja registrado qué mesa ya pagó).
 
 - `index.html` — panel del restaurante (pedidos, carta, agregados, promos, mesas, ingresos, llamadas, configuración) y panel de administrador de la plataforma.
+- `cocina.html` — pantalla solo para cocina (`cocina.html?k=<llave>`; el enlace se saca de Configuración).
 - `carta.html` — carta que ve el cliente (`carta.html?r=<slug>&t=<id de mesa>`).
 - `config.js` — URL y clave pública de Supabase (único lugar donde se cambian).
 - `supabase/` — base de datos (`schema.sql`, migraciones) y plantillas de correo.
@@ -36,6 +37,7 @@ Ejecuta en **SQL Editor**, en este orden, solo las que te falten (todas son repe
 6. `migracion-local-abierto.sql`
 7. **`migracion-7-seguridad.sql`** — precios calculados en el servidor, tope anti-spam, índices, fotos, historial y el permiso que faltaba para el botón *Abierto/Cerrado*.
 8. **`migracion-8-sesion-segura.sql`** — la sesión de cada mesa pasa a ser privada (el cliente entra por `join_table`), pedidos y llamadas solo con mesa válida, el nombre de la mesa lo fija el servidor, tope anti-spam por mesa y por local, y cupo diario para `scan-menu`. Súbela **antes** del `carta.html` nuevo; los QR actuales siguen sirviendo. (Para una instalación nueva ya viene incluida en `schema.sql`.)
+9. **`migracion-9-cocina.sql`** — pantalla de cocina (`cocina.html`): enlace secreto por local, solo ve pedidos activos sin precios y los marca preparando/listo. El dueño lo copia o lo regenera en *Configuración > Pantalla de cocina*. (Incluida en `schema.sql` para instalaciones nuevas.)
 
 ## Seguridad: qué garantiza la base de datos
 

@@ -119,3 +119,20 @@ reset role;
 select 'call_table='||table_name from waiter_calls where session_id=(select sid from ids2);
 \echo '--- T26 use_scan_quota: anónimo no puede ejecutarla (debe fallar)'
 set role anon; select use_scan_quota(); reset role;
+reset role;
+create temp table kk as select key from kitchen_access limit 1; create temp table ko as select id from orders where public_id='55555555-5555-5555-5555-555555555555';
+grant select on kk, ko to anon;
+set role anon;
+\echo '--- T30 anónimo lee kitchen_access (debe fallar)'
+select count(*) from kitchen_access;
+\echo '--- T31 kitchen_orders: con llave filas>0 y sin precios; con llave falsa 0 filas; kitchen_info falsa = vacío'
+select 'filas>0='||(count(*)>0)||' con_price='||bool_or(items::text like '%price%') from kk, kitchen_orders(key);
+select 'filas='||count(*) from kitchen_orders(gen_random_uuid());
+select 'info_falsa=['||coalesce(kitchen_info(gen_random_uuid()),'')||']';
+\echo '--- T32 estados: pending->ready invalid / ->preparing ok / llave falsa not_found / ->completed invalid'
+select kitchen_set_status(key, ko.id, 'ready') from kk, ko;
+select kitchen_set_status(key, ko.id, 'preparing') from kk, ko;
+select kitchen_set_status(gen_random_uuid(), ko.id, 'ready') from ko;
+select kitchen_set_status(key, ko.id, 'completed') from kk, ko;
+reset role;
+select 'status final='||status from orders where id=(select id from ko);
