@@ -15,6 +15,7 @@ for (const f of ['index.html', 'carta.html']) {
   for (const m of js.matchAll(/\$\$?\(\s*'#([A-Za-z][\w-]*)'/g)) if (!ids.has(m[1]) && !js.includes(`id="${m[1]}"`) && !js.includes(`id=\\"${m[1]}\\"`) && !js.includes(`.id = '${m[1]}'`)) fail(`${f}: el código usa #${m[1]} pero no existe en el HTML`);
   const markup = html.replace(/<script(?![^>]*\bsrc=)[^>]*>[\s\S]*?<\/script>/g, '');   // solo el HTML, no las plantillas dentro del JS
   for (const m of markup.matchAll(/(?:src|href)="([^"#?]+)"/g)) { const u = m[1]; if (/^(https?:|data:|mailto:|tel:|\/\/|javascript:)/.test(u) || u.includes('${')) continue; if (!fs.existsSync(path.join(root, u))) fail(`${f}: referencia a un archivo que no existe: ${u}`); }
+  if (f === 'carta.html' && /from\('dining_tables'\)/.test(html)) fail('carta.html no debe leer dining_tables (la sesión de mesa es privada: usa join_table)');
   if (!bad) ok(`${f}: sintaxis, elementos y archivos referenciados`);
 }
 for (const f of ['sw.js', 'config.js']) { try { new vm.Script(fs.readFileSync(path.join(root, f), 'utf8'), { filename: f }); ok(f + ': sintaxis'); } catch (e) { fail(f + ': ' + e.message); } }

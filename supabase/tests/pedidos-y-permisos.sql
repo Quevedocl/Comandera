@@ -90,3 +90,32 @@ reset role;
 set role authenticated; set request.jwt.claim.sub = '22222222-2222-2222-2222-222222222222';
 select * from admin_overview();
 reset role;
+reset role; set role anon;
+\echo '--- T20 anónimo lee dining_tables (debe fallar: permission denied)'
+select count(*) from dining_tables;
+\echo '--- T21 anónimo lee owner_id de restaurants (debe fallar) y name (debe funcionar)'
+select owner_id from restaurants;
+select 'name='||name from restaurants where slug='fogon-1';
+\echo '--- T22 join_table con id de mesa correcto devuelve 1 fila; con restaurante equivocado, 0'
+select 'filas='||count(*) from ids, join_table(rid, tid);
+select 'filas='||count(*) from ids, join_table(gen_random_uuid(), tid);
+\echo '--- T23 pedido SIN mesa (debe fallar por política)'
+insert into orders (restaurant_id,table_id,table_name,session_id,status,items) select rid,null,'Cualquiera',sid,'pending', jsonb_build_array(jsonb_build_object('id',pizza,'qty',1)) from ids;
+reset role;
+-- mesa nueva (la anterior ya se llenó y se cerró en T16/T17)
+insert into dining_tables (restaurant_id,name) select rid,'Mesa 2' from ids;
+create temp table ids2 as select i.rid, d.id tid, d.session_id sid, i.pizza from ids i, dining_tables d where d.name='Mesa 2';
+grant select on ids2 to anon;
+set role anon;
+\echo '--- T24 nombre de mesa falsificado: debe quedar como Mesa 2'
+insert into orders (restaurant_id,table_id,table_name,session_id,status,items,public_id) select rid,tid,'HACK-MESA',sid,'pending', jsonb_build_array(jsonb_build_object('id',pizza,'qty',1)),'55555555-5555-5555-5555-555555555555' from ids2;
+reset role;
+select 'table_name='||table_name from orders where public_id='55555555-5555-5555-5555-555555555555';
+set role anon;
+\echo '--- T25 llamada al mesero sin mesa (debe fallar) y con mesa pero nombre falso (queda Mesa 2)'
+insert into waiter_calls (restaurant_id,table_id,table_name,session_id,reason) select rid,null,'Falsa',sid,'help' from ids2;
+insert into waiter_calls (restaurant_id,table_id,table_name,session_id,reason) select rid,tid,'Falsa',sid,'help' from ids2;
+reset role;
+select 'call_table='||table_name from waiter_calls where session_id=(select sid from ids2);
+\echo '--- T26 use_scan_quota: anónimo no puede ejecutarla (debe fallar)'
+set role anon; select use_scan_quota(); reset role;

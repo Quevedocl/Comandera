@@ -35,11 +35,12 @@ Ejecuta en **SQL Editor**, en este orden, solo las que te falten (todas son repe
 5. `migracion-cobro-parcial.sql`
 6. `migracion-local-abierto.sql`
 7. **`migracion-7-seguridad.sql`** — precios calculados en el servidor, tope anti-spam, índices, fotos, historial y el permiso que faltaba para el botón *Abierto/Cerrado*.
+8. **`migracion-8-sesion-segura.sql`** — la sesión de cada mesa pasa a ser privada (el cliente entra por `join_table`), pedidos y llamadas solo con mesa válida, el nombre de la mesa lo fija el servidor, tope anti-spam por mesa y por local, y cupo diario para `scan-menu`. Súbela **antes** del `carta.html` nuevo; los QR actuales siguen sirviendo. (Para una instalación nueva ya viene incluida en `schema.sql`.)
 
 ## Seguridad: qué garantiza la base de datos
 
 - El **total y los precios** de cada pedido los calcula el servidor con los precios vigentes (incluye agregados y promociones); lo que mande el celular se ignora. Productos agotados, cantidades fuera de 1–20 o agregados que no corresponden se rechazan.
-- Máximo 40 pedidos por mesa cada 10 minutos. Un pedido nuevo nunca nace "pagado".
+- Máximo 40 pedidos por mesa (y 200 por local) cada 10 minutos; solo se pide con la mesa y sesión vigentes. Un pedido nuevo nunca nace "pagado".
 - Cada dueño solo ve y edita lo de su restaurante. Solo el administrador (tabla `admins`) puede suspender locales.
 - Fotos: solo imagen, máx. 5 MB, y cada dueño escribe/borra solo en su carpeta. El panel las reduce a WebP antes de subirlas.
 
@@ -59,3 +60,8 @@ Ejecuta en **SQL Editor**, en este orden, solo las que te falten (todas son repe
 - Paleta: azul noche `#0F172A` (texto y fondos oscuros), naranja `#F2530F` (acento y botones principales), fondo `#F5F6F8`. En los tickets: azul = nuevo, ámbar = en preparación, verde = listo.
 - Para cambiar el color de acento, edita `--acc` y `--acc2` en el bloque `kepasa · identidad visual` de `index.html` y en el de `carta.html`.
 - Cada restaurante ve su propio nombre y logo en el panel y en la carta; kepasa aparece como marca de la plataforma (logo en la barra superior y "Pedidos con kepasa" al pie de la carta).
+
+## Notas de seguridad
+
+- El **QR es la llave** de la mesa: el id de la mesa es un uuid imposible de adivinar y ya no se puede listar. Quien tenga el QR puede pedir; al cobrar/cerrar la mesa la sesión cambia. Si un QR se filtra, borra la mesa y crea otra.
+- `scan-menu` exige sesión de dueño, `ALLOWED_ORIGIN` y respeta el cupo diario.
