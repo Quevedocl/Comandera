@@ -1,4 +1,4 @@
-# kepasa
+# VAestilo
 
 > Pedidos **sin esperas** desde la mesa.
 
@@ -59,9 +59,9 @@ Ejecuta en **SQL Editor**, en este orden, solo las que te falten (todas son repe
 
 ## Identidad visual
 
-- Paleta: azul noche `#0F172A` (texto y fondos oscuros), naranja `#F2530F` (acento y botones principales), fondo `#F5F6F8`. En los tickets: azul = nuevo, ámbar = en preparación, verde = listo.
-- Para cambiar el color de acento, edita `--acc` y `--acc2` en el bloque `kepasa · identidad visual` de `index.html` y en el de `carta.html`.
-- Cada restaurante ve su propio nombre y logo en el panel y en la carta; kepasa aparece como marca de la plataforma (logo en la barra superior y "Pedidos con kepasa" al pie de la carta).
+- Paleta "salvia": fondo `#F6F7F4`, tarjetas blancas, acento verde grisáceo `#4E7162` (hover `#3F5C50`), tinte suave `#EDF2EE`. En los tickets: azul = nuevo, ámbar = en preparación, verde = listo.
+- Para cambiar el color de acento, edita `--acc`, `--acc2` y `--accs` en el bloque `VAestilo · diseño minimalista` de `index.html` y en el de `carta.html`.
+- Cada restaurante ve su propio nombre y logo en el panel y en la carta; VAestilo aparece como marca de la plataforma (logo en la barra superior y "Pedidos con VAestilo" al pie de la carta).
 
 ## Notas de seguridad
 

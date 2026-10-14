@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#F6F7F4">
 <title>Carta · Haz tu pedido</title>
 <meta name="description" content="Mira la carta y pide desde tu mesa.">
-<meta property="og:type" content="website"><meta property="og:title" content="Carta · Haz tu pedido con kepasa"><meta property="og:description" content="Mira la carta y pide desde tu mesa.">
+<meta property="og:type" content="website"><meta property="og:title" content="Carta · Haz tu pedido con VAestilo"><meta property="og:description" content="Mira la carta y pide desde tu mesa.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'">
-<link rel="icon" href="icons/logo-mark.svg?v=2" type="image/svg+xml"><link rel="icon" href="icons/icon-192.png?v=2" sizes="192x192" type="image/png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=2">
+<link rel="icon" href="icons/logo-mark.svg?v=4" type="image/svg+xml"><link rel="icon" href="icons/icon-192.png?v=4" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=4">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 <style>
@@ -230,51 +230,139 @@ dialog::backdrop{background:rgba(20,24,30,.5)}
 .wide{width:100%;margin-top:10px}
 #done .pri{margin-bottom:0}
 
-/* ===== kepasa · carta del cliente ===== */
-:root{--bg:#F5F6F8;--ln:#E4E7EC;--tx:#0F172A;--mu:#64748B;--ink:#0F172A;--acc:#F2530F;--acc2:#D9440A;--red:#DC2626;--grn:#16A34A;--sh1:0 1px 2px rgba(15,23,42,.06);--sh2:0 1px 3px rgba(15,23,42,.06),0 10px 26px rgba(15,23,42,.08)}
-:focus-visible{outline-color:var(--acc)}
-.mz input:focus,#callBody textarea:focus,#tipRow input:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(242,83,15,.15)}
-body{background:var(--bg)}
-.sticky{background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
-.top h1{font-weight:800;letter-spacing:-.025em}
-.callb{border:1px solid var(--ln);box-shadow:var(--sh1);color:var(--tx)}
-.chips button.on{background:var(--ink);border-color:var(--ink)}
-.tkm{border-radius:14px}.tkb{border-radius:14px;background:var(--ink)}
-/* bienvenida */
-.hero0{position:relative;overflow:hidden;margin:14px 12px 4px;padding:22px 20px;border-radius:20px;color:#fff;background:radial-gradient(420px 240px at 105% -10%,rgba(255,138,43,.5),transparent 62%),radial-gradient(300px 200px at -5% 120%,rgba(240,66,15,.28),transparent 60%),#0F172A;animation:rise .5s both}
-.hero0 small{display:block;font-weight:700;opacity:.75;letter-spacing:.08em;text-transform:uppercase;font-size:11px}
-.hero0 h2{margin:3px 0 4px;font-size:26px;line-height:1.1;letter-spacing:-.03em;overflow-wrap:anywhere}
-.hero0 p{margin:0;opacity:.82;font-size:14.5px;max-width:28ch}
-@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+/* ===== VAestilo · diseño minimalista (carta del cliente) =====
+   Paleta "salvia": fondo piedra muy pálido, superficies blancas, un solo acento verde grisáceo.
+   Tipografía: serif elegante para títulos (nombre del local, categorías) y sans del sistema para el resto. */
+:root{--bg:#F6F7F4;--card:#fff;--ln:#E8EAE5;--ln2:#D9DDD6;--tx:#2A322D;--mu:#7A857E;--ink:#2F3D35;
+  --acc:#4E7162;--acc2:#3F5C50;--accs:#EDF2EE;--accs2:#DCE7E0;--red:#B85450;--grn:#4E7162;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sh1:0 1px 2px rgba(42,50,45,.04);--sh2:0 10px 32px rgba(42,50,45,.09)}
+body{background:var(--bg);color:var(--tx);line-height:1.45;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+[hidden]{display:none!important}
+.mz input:focus,#callBody textarea:focus,#tipRow input:focus,.note:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(78,113,98,.14)}
+
+/* cabecera: logo, mesa y mesero; el nombre grande vive en la portada */
+.sticky{background:rgba(246,247,244,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--ln)}
+.top{padding:12px 18px 8px}
+.top h1{font:600 19px/1.2 var(--serif);letter-spacing:0;transition:opacity .25s}
+body.io:not(.scrolled):not(.locked) .top h1{opacity:0}
+.bk img{width:34px;height:34px;border:1px solid var(--ln)}
+.mesa{background:var(--accs);color:var(--acc2);font-weight:600;font-size:13px;padding:5px 12px}
+.callb{height:34px;padding:0 13px;border:1px solid var(--ln2);background:#fff;box-shadow:none;color:var(--tx);font-weight:600;font-size:13.5px}
+.callb svg{width:15px;height:15px;stroke-width:1.8}
+.lockbar,.editbar{background:#FBF6E8;border:1px solid #EFE2BE;color:#76601F;font-weight:500;border-radius:14px}
+.editbar button{background:#76601F}
+
+/* categorías */
+.chips{padding:2px 18px 12px;gap:6px}
+.chips button{height:34px;padding:0 14px;border:0;background:transparent;color:var(--mu);font-weight:600;font-size:14px}
+.chips button.on{background:var(--accs2);color:var(--acc2)}
+
+/* portada: solo texto, sin cajas */
+.hero0{margin:26px 18px 4px;padding:0;border-radius:0;background:none;color:var(--tx);overflow:visible;animation:none}
+.hero0 h2{margin:0 0 6px;font:600 33px/1.1 var(--serif);letter-spacing:-.01em;overflow-wrap:anywhere}
+.hero0 p{margin:0;max-width:none;opacity:1;color:var(--mu);font-size:15px}
 body.locked .hero0{display:none}
+
 /* platos */
-main{padding-bottom:24px}
-section h2{margin:26px 6px 10px;color:var(--tx);font-size:17px;font-weight:800;letter-spacing:-.015em;display:flex;align-items:center;gap:10px}
-section h2::before{content:"";width:4px;height:18px;border-radius:3px;background:var(--acc)}
-.lst{border-radius:16px;box-shadow:var(--sh1)}
-.it{grid-template-columns:76px 1fr auto;gap:14px;padding:12px 14px}
-.ph{width:76px;height:76px;border-radius:14px}
-.nm b{font-size:16px;letter-spacing:-.01em}
-.pr{color:var(--tx);font-size:16px}
-.add{background:var(--acc);box-shadow:0 4px 10px rgba(242,83,15,.35)}
-.stp button:not(:first-child){background:var(--acc)}
-.cnt{background:var(--ink)}
-.ag{color:var(--acc2)}
+main{padding:4px 12px 24px}
+section h2,.ph2{margin:32px 6px 12px;display:block;font:600 21px/1.2 var(--serif);letter-spacing:0;color:var(--tx)}
+section h2::before{content:none}
+.lst{background:var(--card);border:1px solid var(--ln);border-radius:18px;box-shadow:none}
+.it{grid-template-columns:72px 1fr auto;gap:14px;padding:14px 16px;border-bottom:1px solid var(--ln)}
+.it:last-child{border:0}
+.ph{width:72px;height:72px;border-radius:14px;background-color:var(--accs);color:var(--acc);font:600 22px var(--serif)}
+.nm b{font-weight:600;font-size:16px;letter-spacing:0}
+.ds{-webkit-line-clamp:2;font-size:13.5px;line-height:1.35;margin:2px 0 4px}
+.pr{font-weight:600;font-size:15px;color:var(--tx)}
+.ag{color:var(--red);font-weight:600}
+.add,.stp button:not(:first-child){width:36px;height:36px;background:var(--accs2);color:var(--acc2);box-shadow:none;font-size:21px}
+.stp button:first-child{width:36px;height:36px;border:1px solid var(--ln2);color:var(--mu)}
+.stp b{font-weight:600}
+@media (hover:hover){.add:hover,.stp button:not(:first-child):hover{background:var(--acc);color:#fff}}
+.cnt{background:var(--acc);color:#fff}
+.it.off .nm b,.it.off .pr{color:var(--mu)}
+.tag{margin-top:4px;background:var(--accs);color:var(--acc2);font-weight:600;font-size:12px;border-radius:99px;padding:2px 10px}
+.tag.ex{margin-left:6px;background:#EEF2F6;color:#43607F}
+.promos{margin:18px 0 0}.pm{background:var(--accs);color:var(--acc2);font-weight:500;border-bottom:1px solid var(--accs2)}
+
 /* barra del pedido */
-#bar{background:linear-gradient(to top,var(--bg) 55%,rgba(245,246,248,0))}
-#open{height:58px;border-radius:16px;background:var(--acc);box-shadow:0 12px 28px rgba(242,83,15,.4)}
-#bn{display:grid;place-items:center;min-width:30px;height:30px;border-radius:50%;background:#fff;color:var(--acc2);font-weight:800;font-size:14px;line-height:1;padding:0}
+#bar{background:linear-gradient(to top,var(--bg) 55%,rgba(246,247,244,0))}
+#open{height:56px;border-radius:18px;background:var(--acc);font-weight:600;box-shadow:0 10px 28px rgba(63,92,80,.26)}
+#bn{display:grid;place-items:center;min-width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-weight:600;font-size:14px;line-height:1;padding:0}
+
 /* hojas y botones */
-dialog{background:#fff;border-radius:22px 22px 0 0}
-.pri{background:var(--acc);box-shadow:0 8px 20px rgba(242,83,15,.3);border-radius:14px}.pri.dk{background:var(--ink);box-shadow:none}
-.adr input{accent-color:var(--acc)}.adr:has(input:checked){border-color:var(--acc);background:#FFF7F3}
-.opt.on{border-color:var(--acc);background:#FFF7F3;color:var(--tx)}
-.tips button.on,.seg2 button.on{background:var(--ink);border-color:var(--ink);color:#fff}
-.oc.mine{border-color:var(--acc)}.chip.me{background:var(--acc)}
-.steps .done i,.steps .done::before{background:var(--grn)}
-/* pie */
-.pw{padding:18px 16px calc(110px + env(safe-area-inset-bottom,0px));text-align:center;color:#94A3B8;font-size:12.5px}
-.pw a{display:inline-flex;align-items:center;gap:6px;color:inherit;text-decoration:none;font-weight:600}.pw img{width:16px;height:16px;border-radius:4px}.pw b{color:#475569}
+dialog{background:var(--card);border-radius:24px 24px 0 0}
+dialog::backdrop{background:rgba(42,50,45,.34);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.sh{padding:20px 22px 8px}.sh h3{font:600 22px/1.2 var(--serif)}
+.x{border:0;background:var(--bg);color:var(--mu)}
+.ft{border-top:1px solid var(--ln)}
+.tot{font-weight:600}
+.pri{height:52px;background:var(--acc);box-shadow:none;border-radius:14px;font-weight:600;font-size:16px}
+.pri:disabled{opacity:.55}
+.pri.dk{background:var(--accs2);color:var(--acc2)}
+.gh{border:1px solid var(--ln2);border-radius:14px;font-weight:600}
+.note{background:var(--bg);border:1px solid var(--ln)}
+.mz input,#callBody textarea,#tipRow input{border:1px solid var(--ln2)}
+#err{color:var(--red)}
+.hero{background-color:var(--accs);color:var(--acc)}
+.hero .x{background:#fff;box-shadow:0 2px 12px rgba(42,50,45,.18)}
+.pb h3{font:600 26px/1.2 var(--serif);letter-spacing:0}
+.pb .pp{font-weight:600}
+.adr{border:1px solid var(--ln);border-radius:14px}
+.adr input{accent-color:var(--acc)}
+.adr:has(input:checked){border-color:var(--acc);background:var(--accs)}
+
+/* llamar al mesero */
+.opt{border:1px solid var(--ln);border-radius:16px;font-weight:600}
+.opt.on{border-color:var(--acc);background:var(--accs);color:var(--tx)}
+.opt .ic{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--accs);color:var(--acc2);font-size:0}
+.opt.on .ic{background:#fff}
+.ic svg,.ok svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.opt .ic svg,.tkm .ic svg{width:20px;height:20px;stroke-width:1.8}
+
+/* cómo va mi pedido */
+.tkm{border:1px solid var(--ln);border-radius:16px;background:#fff}
+.tkm .ic{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:var(--accs);color:var(--acc2);font-size:0}
+.tkm.ready{background:var(--accs);border-color:var(--accs2)}
+.tkm.ready .ic{background:#fff}
+.tkm b{font-weight:600}
+.dots i{background:var(--ln2)}.dots i.on{background:var(--acc)}
+.tkb{border-radius:16px;background:var(--accs2);color:var(--acc2);font-weight:600}
+.oc{border:1px solid var(--ln);border-radius:16px}
+.oc.mine{border-color:#B7CABD}
+.chip{background:#F0F2EE;color:var(--mu)}
+.chip.me{background:var(--acc);color:#fff}.chip.md{background:#EEF2F6;color:#43607F}.chip.cx{background:#F6E9E8;color:#8F3F3B}.chip.pd{background:var(--accs2);color:var(--acc2)}
+.steps i{background:var(--ln)}.steps div::before{background:var(--ln)}
+.steps .done i,.steps .done::before{background:var(--acc)}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(78,113,98,.4)}100%{box-shadow:0 0 0 9px rgba(78,113,98,0)}}
+.oi .nn{color:#8A6A1F}
+.oa button{border:1px solid var(--ln2);font-weight:600}
+.oa .dg{border-color:#EBCFCD;color:#9C4743}
+.oa .go2{background:var(--acc);border-color:var(--acc)}
+.cfm{background:#F8ECEB;color:#8F3F3B}.cfm .y{background:var(--red)}
+.hint button{color:var(--acc2)}
+
+/* cuenta */
+.bl{border:1px solid var(--ln);border-radius:16px}
+.bl .tt{background:var(--accs)}.bl .ds2{color:var(--acc)}
+.pnl{background:var(--bg);border-radius:14px}
+.seg2 button,.tips button{border:1px solid var(--ln2);font-weight:600}
+.seg2 button.on,.tips button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.tips button.on small{color:rgba(255,255,255,.8)}
+.res{background:var(--accs);color:var(--tx);border:1px solid var(--accs2);border-radius:16px}
+.res .rr{color:var(--mu)}.res .big{border-top:1px solid var(--accs2)}
+.res .big b{font:600 30px var(--serif);letter-spacing:0}.res small{color:var(--mu)}
+#cart .sm{color:var(--acc)}
+
+/* confirmación y avisos */
+#done{background:var(--bg)}
+.ok{background:var(--accs2);color:var(--acc2)}.ok svg{stroke:var(--acc2);stroke-width:2.4}
+#done h2{font:600 28px var(--serif)}
+#toast{background:var(--ink);border-radius:12px;font-weight:500}
+.pw{padding:18px 16px calc(110px + env(safe-area-inset-bottom,0px));text-align:center;color:#A3ABA5;font-size:12.5px}
+.pw a{display:inline-flex;align-items:center;gap:6px;color:inherit;text-decoration:none;font-weight:500}.pw img{width:16px;height:16px;border-radius:4px}.pw b{color:var(--mu);font-weight:600}
 body.closed .add,body.closed .it .stp,body.closed #bar,body.closed #prodFoot{display:none!important}
 </style>
 <script>
@@ -289,17 +377,17 @@ document.addEventListener('gesturestart',function(e){e.preventDefault();});})();
     <div class="top"><div class="bk"><img id="logo" alt="" hidden><h1 id="ttl">Carta</h1></div><div class="tr"><span class="mesa" id="mesaTag"></span><button class="callb" id="callBtn" hidden><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l1.5 2h-15zM10 21h4"/></svg>Mesero</button></div></div>
     <div class="lockbar" id="lockbar" hidden role="alert"><b>Esta mesa ya fue cerrada.</b><br>Gracias por tu visita. Si vuelves a sentarte, avisa a un mesero para que reabra la mesa y luego recarga esta página.</div>
     <div class="lockbar" id="closedbar" hidden role="status"><b>El local está cerrado por ahora.</b><br>No estamos recibiendo pedidos nuevos. Si ya tienes pedidos en tu mesa, puedes ver tu cuenta o llamar a un mesero.</div>
-    <div class="editbar" id="editbar" hidden><span>✏️ Estás modificando tu pedido</span><button id="editExit" type="button">Salir</button></div>
+    <div class="editbar" id="editbar" hidden><span>Estás modificando tu pedido</span><button id="editExit" type="button">Salir</button></div>
     <div class="track" id="track" hidden>
-      <button class="tkm" id="trackOpen" type="button"><span class="ic" id="tkIc"></span><span class="tx"><b id="tkT"></b><small id="tkS"></small></span><span class="dots" id="tkD"><i></i><i></i><i></i></span></button>
+      <button class="tkm" id="trackOpen" type="button"><span class="ic" id="tkIc" aria-hidden="true"></span><span class="tx"><b id="tkT"></b><small id="tkS"></small></span><span class="dots" id="tkD"><i></i><i></i><i></i></span></button>
       <button class="tkb" id="billOpen" type="button">Cuenta</button>
     </div>
     <div class="chips" id="chips"></div>
   </div>
 </div>
-<div class="wrap"><div class="hero0" id="hero0"><div><small>Bienvenido</small><h2 id="heroT">Carta</h2><p>Elige tus platos y pide desde tu mesa</p></div></div></div>
+<div class="wrap"><div class="hero0" id="hero0"><div><h2 id="heroT">Carta</h2><p>Elige tus platos y pide desde tu mesa.</p></div></div></div>
 <main class="wrap" id="menu"><p class="msg">Cargando carta…</p></main>
-<footer class="pw"><a href="./" aria-label="kepasa"><img src="icons/logo-mark.svg?v=2" alt="">Pedidos con <b>kepasa</b></a></footer>
+<footer class="pw"><a href="./" aria-label="VAestilo"><img src="icons/logo-mark.svg?v=4" alt="">Pedidos con <b>VAestilo</b></a></footer>
 
 <div id="bar" hidden>
   <button id="open"><span id="bn">0</span><span id="bl">Ver pedido</span><b id="bt"></b></button>
@@ -342,9 +430,9 @@ document.addEventListener('gesturestart',function(e){e.preventDefault();});})();
   <div class="sh"><h3 id="callT">¿Necesitas al mesero?</h3><button class="x" id="callClose" aria-label="Cerrar">×</button></div>
   <div id="callForm">
     <div class="opts" id="opts">
-      <button class="opt on" data-r="pay"><span class="ic">💳</span><span>Quiero pagar<small>Un mesero llega a cobrarte</small></span></button>
-      <button class="opt" data-r="complaint"><span class="ic">⚠️</span><span>Tengo una queja o problema<small>Un mesero viene a atenderte</small></span></button>
-      <button class="opt" data-r="help"><span class="ic">🙋</span><span>Necesito otra cosa<small>Cubiertos, la cuenta, una duda…</small></span></button>
+      <button class="opt on" data-r="pay"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2.5"/><path d="M3 10.5h18M7 15h3"/></svg></span><span>Quiero pagar<small>Un mesero llega a cobrarte</small></span></button>
+      <button class="opt" data-r="complaint"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.2v.1"/></svg></span><span>Tengo una queja o problema<small>Un mesero viene a atenderte</small></span></button>
+      <button class="opt" data-r="help"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.5 2.5 0 114 2c-.9.6-1.6 1-1.6 2M12 16.8v.1"/></svg></span><span>Necesito otra cosa<small>Cubiertos, la cuenta, una duda…</small></span></button>
     </div>
     <div id="callBody">
       <div class="mz" id="callMz" hidden><label for="callMesa">Tu mesa</label><input id="callMesa" maxlength="30" autocomplete="off" placeholder="Ej. 5 o Terraza 2"></div>
@@ -437,8 +525,8 @@ function discounts() {
   return out;
 }
 const total = () => [...cart.values()].reduce((a, l) => a + unit(l) * l.qty, 0) - [...discounts().values()].reduce((a, x) => a + x.d, 0);
-const badge = p => { const x = promoFor(p.id); return x ? `<span class="tag">🏷 ${esc(x.title)}</span>` : ''; };
-const promoBox = () => { const l = promos.filter(live); return l.length ? `<div class="promos"><h2 style="margin:0 4px 8px;font-size:15px;color:var(--mu)">Promociones</h2><div class="lst">${l.map(x => `<div class="pm">🏷 ${esc(x.title)}</div>`).join('')}</div></div>` : ''; };
+const badge = p => { const x = promoFor(p.id); return x ? `<span class="tag">${esc(x.title)}</span>` : ''; };
+const promoBox = () => { const l = promos.filter(live); return l.length ? `<div class="promos"><h2 class="ph2">Promociones</h2><div class="lst">${l.map(x => `<div class="pm">${esc(x.title)}</div>`).join('')}</div></div>` : ''; };
 
 /* quita del pedido lo que ya no existe o se agotó, y actualiza precios; devuelve los nombres quitados */
 function prune() {
@@ -480,7 +568,7 @@ function render() {
   $('#menu').innerHTML = (cat ? '' : promoBox()) + show.map(c => `<section><h2>${esc(c)}</h2><div class="lst">${
     products.filter(p => p.category === c).map(p => `<article class="it${p.is_available ? '' : ' off'}" data-id="${esc(p.id)}">
       <div class="ph" data-open style="${p.image_url ? `background-image:url('${esc(p.image_url)}')` : ''}">${p.image_url ? '' : esc((p.name || '?')[0])}</div>
-      <div class="nm" data-open role="button" tabindex="0"><b>${esc(p.name)}</b>${p.description ? `<div class="ds">${esc(p.description)}</div>` : ''}<span class="pr">${clp(p.price)}</span>${addonsFor(p).length ? '<span class="tag" style="background:#e0f2fe;color:#075985;margin-left:6px">+ extras</span>' : ''}${badge(p)}</div>
+      <div class="nm" data-open role="button" tabindex="0"><b>${esc(p.name)}</b>${p.description ? `<div class="ds">${esc(p.description)}</div>` : ''}<span class="pr">${clp(p.price)}</span>${addonsFor(p).length ? '<span class="tag ex">+ extras</span>' : ''}${badge(p)}</div>
       <div class="ctl">${ctl(p)}</div></article>`).join('')}</div></section>`).join('');
 }
 
@@ -573,7 +661,7 @@ function renderCart() {
     <div class="stp"><button data-a="dec" aria-label="Quitar uno de ${esc(l.name)}">−</button><b>${l.qty}</b><button data-a="inc" aria-label="Agregar uno de ${esc(l.name)}">+</button></div></div>
     <input class="note" maxlength="80" placeholder="Nota (ej. sin cebolla)" value="${esc(l.note)}" aria-label="Nota para ${esc(l.name)}"></li>`).join('');
   const dm = discounts();
-  $('#sm').innerHTML = [...dm.values()].map(x => `<div><span>🏷 ${esc(x.title)}</span><span>−${clp(x.d)}</span></div>`).join('');
+  $('#sm').innerHTML = [...dm.values()].map(x => `<div><span>${esc(x.title)}</span><span>−${clp(x.d)}</span></div>`).join('');
   $('#tot').textContent = clp(total());
   $('#send').textContent = (editing ? 'Guardar cambios · ' : 'Enviar pedido · ') + clp(total());
   $('#mz').hidden = !!mesa;
@@ -642,15 +730,22 @@ function rememberOrder(p) {
   mine.add(p);
   try { const a = (JSON.parse(localStorage.getItem(MINE_KEY())) || []).filter(x => x.s === pinned); a.push({ p, s: pinned, t: Date.now() }); localStorage.setItem(MINE_KEY(), JSON.stringify(a)); } catch (e) {}
 }
+const SVG = d => `<svg viewBox="0 0 24 24">${d}</svg>`;
+const IC = {
+  pending: SVG('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"/>'),
+  preparing: SVG('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+  ready: SVG('<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/>'),
+  table: SVG('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/>'),
+};
 const TXT = {
-  pending: ['🧾', 'Pedido recibido', 'Esperando que cocina lo tome'],
-  preparing: ['🍳', 'Se está preparando', 'Ya está en cocina'],
-  ready: ['✅', '¡Tu pedido está listo!', 'Un mesero lo lleva a tu mesa'],
+  pending: [IC.pending, 'Pedido recibido', 'Esperando que cocina lo tome'],
+  preparing: [IC.preparing, 'Se está preparando', 'Ya está en cocina'],
+  ready: [IC.ready, 'Tu pedido está listo', 'Un mesero lo lleva a tu mesa'],
 };
 const STEP = { pending: 1, preparing: 2, ready: 3 };
 
 function notifyStatus(o) {
-  const m = { preparing: '🍳 Tu pedido empezó a prepararse', ready: '✅ ¡Tu pedido está listo!' }[o.status];
+  const m = { preparing: 'Tu pedido empezó a prepararse', ready: 'Tu pedido está listo' }[o.status];
   if (!m) return; toast(m);
   try { if (navigator.vibrate) navigator.vibrate(o.status === 'ready' ? [120, 60, 120] : 60); } catch (e) {}
 }
@@ -677,8 +772,8 @@ function renderTrack() {
     const o = act.reduce((a, b) => (STEP[a.status] || 0) <= (STEP[b.status] || 0) ? a : b);   // manda el más atrasado: se ve lo que falta
     [ic, t, sub] = TXT[o.status] || TXT.pending; st = STEP[o.status] || 1; if (o.status === 'ready' && act.every(x => x.status === 'ready')) cls = 'ready';
     if (act.length > 1) sub = act.length + ' pedidos · ' + sub;
-  } else { ic = '🍽️'; t = 'Pedidos de tu mesa'; sub = liveO.length + (liveO.length === 1 ? ' pedido en cuenta' : ' pedidos en cuenta'); }
-  $('#tkIc').textContent = ic; $('#tkT').textContent = t; $('#tkS').textContent = sub;
+  } else { ic = IC.table; t = 'Pedidos de tu mesa'; sub = liveO.length + (liveO.length === 1 ? ' pedido en cuenta' : ' pedidos en cuenta'); }
+  $('#tkIc').innerHTML = ic; $('#tkT').textContent = t; $('#tkS').textContent = sub;
   $('#trackOpen').className = 'tkm ' + cls;
   [...$('#tkD').children].forEach((d, i) => { d.className = i < st ? 'on' : ''; if (i === st - 1 && st < 3) d.classList.add('cur'); });
   el.hidden = false;
@@ -965,6 +1060,8 @@ async function init() {
   }
   $('#callBtn').hidden = !TID;
   $('#ttl').textContent = NOMBRE; $('#heroT').textContent = NOMBRE; document.title = NOMBRE + ' · Haz tu pedido';
+  // el nombre grande vive en la portada; arriba solo aparece cuando la portada sale de pantalla
+  try { if ('IntersectionObserver' in window) { document.body.classList.add('io'); new IntersectionObserver(e => document.body.classList.toggle('scrolled', !e[0].isIntersecting)).observe($('#hero0')); } } catch (e) {}
   loadCart();
   if (!TID) lockUp('<b>Escanea el QR de tu mesa</b><br>Así sabemos en qué mesa estás. Desde este enlace solo puedes ver la carta.');
   else if (sesState === 'cerrada') lockUp();

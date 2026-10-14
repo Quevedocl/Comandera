@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#ffffff">
-<title>kepasa · Panel del restaurante</title>
-<meta name="description" content="kepasa: pedidos desde la mesa. Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
-<meta property="og:type" content="website"><meta property="og:title" content="kepasa · Panel del restaurante"><meta property="og:description" content="Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="kepasa">
+<meta name="theme-color" content="#F6F7F4">
+<title>VAestilo · Panel del restaurante</title>
+<meta name="description" content="VAestilo: pedidos desde la mesa. Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
+<meta property="og:type" content="website"><meta property="og:title" content="VAestilo · Panel del restaurante"><meta property="og:description" content="Pedidos, mesas y llamadas al mesero de tu restaurante en tiempo real.">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="VAestilo">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; font-src 'self' data:; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
-<link rel="icon" href="icons/logo-mark.svg?v=2" type="image/svg+xml"><link rel="icon" href="icons/icon-192.png?v=2" sizes="192x192" type="image/png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=2"><link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/logo-mark.svg?v=4" type="image/svg+xml"><link rel="icon" href="icons/icon-192.png?v=4" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=4"><link rel="manifest" href="manifest.webmanifest">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
@@ -231,78 +231,6 @@ nav button:hover{color:var(--tx)}
 .cf{position:fixed;width:9px;height:14px;z-index:40;pointer-events:none;border-radius:2px;animation:cf 1.3s cubic-bezier(.2,.7,.4,1) forwards}
 @keyframes cf{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
 
-/* ===== kepasa · identidad visual ===== */
-:root{--bg:#F5F6F8;--card:#fff;--ln:#E4E7EC;--tx:#0F172A;--mu:#64748B;--ink:#0F172A;--acc:#F2530F;--acc2:#D9440A;--accs:#FFF1EA;--blue:#2563EB;--red:#DC2626;--amb:#F59E0B;--grn:#16A34A;--sh1:0 1px 2px rgba(15,23,42,.06);--sh2:0 1px 3px rgba(15,23,42,.06),0 10px 28px rgba(15,23,42,.07)}
-:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-body{background:var(--bg)}
-/* cabecera */
-.top{gap:14px;background:#fff;border-bottom:1px solid var(--ln);box-shadow:0 1px 0 rgba(15,23,42,.02)}
-.al{flex:none;display:flex;align-items:center}.al img{width:34px;height:34px;display:block}
-.sep{flex:none;width:1px;height:26px;background:var(--ln)}
-.brand{font-weight:700;letter-spacing:-.01em;font-size:16px;gap:10px;min-width:0}
-.brand .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
-.brand .mk{width:34px;height:34px;border-radius:10px;background:var(--ink);color:#fff;font-size:13px;font-weight:800;letter-spacing:.02em;animation:none}
-.brand .mk.has{background:#fff;border:1px solid var(--ln)}
-nav{align-items:stretch;gap:2px}
-nav button{height:100%;border-radius:0;padding:0 13px;background:none;box-shadow:none;color:var(--mu)}
-nav button:hover{color:var(--tx)}
-nav button.on{color:var(--tx);background:none;box-shadow:none}
-nav button::after{display:block;background:var(--acc);height:3px;left:10px;right:10px}
-#cnt,#ccnt{background:var(--acc)}
-.ib{border:1px solid var(--ln);background:#fff;box-shadow:none;border-radius:10px}.ib:hover{background:var(--bg)}
-.ib.on{background:var(--ink);border-color:var(--ink);color:#fff}
-.opn{display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border:1px solid var(--ln);border-radius:99px;background:#fff;font-size:13px;font-weight:700;color:var(--tx);white-space:nowrap;transition:background .2s,border-color .2s}
-.opn:not(:disabled):hover{background:var(--bg)}
-.opn::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--mu)}
-.opn.on::before{background:var(--grn);animation:live 2s infinite}
-.opn.off{color:var(--red);border-color:#FECACA;background:#FEF2F2}.opn.off::before{background:var(--red)}
-.opn:disabled{cursor:default}.opn[hidden]{display:none}
-/* botones y campos */
-.pri{background:var(--acc);box-shadow:0 1px 2px rgba(217,68,10,.35)}.pri:hover{background:var(--acc2)}
-.gh{background:#fff;border:1px solid var(--ln)}.gh:hover{background:var(--bg)}
-.seg button{background:#fff;border:1px solid var(--ln)}.seg button:hover{color:var(--tx)}.seg button.on{background:var(--ink);border-color:var(--ink);color:#fff}
-select,.srch,.fld input,dialog input,dialog select,dialog textarea{background:#fff;border:1px solid #CBD5E1;box-shadow:none}
-.fld input:focus,.pi:focus-within,.srch:focus-within,dialog input:focus,dialog textarea:focus,dialog select:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(242,83,15,.15);outline:0}
-.pi{background:#fff;border:1px solid #CBD5E1;box-shadow:none}
-.sw:checked{background:var(--acc)}
-/* tarjetas */
-.card,.lst,.kp div,.cc,.pv{background:#fff;border:1px solid var(--ln);border-radius:16px;box-shadow:var(--sh1)}
-.pvh{background:#fff;border:1px solid var(--ln);box-shadow:none}
-.kp b{background:none;color:var(--tx);-webkit-text-fill-color:currentColor}
-.rw:hover,.rw2:hover,.rw3:hover{background:#FAFAFB}
-.hello{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 20px 0}
-.hello small{display:block;color:var(--mu);font-weight:600;text-transform:capitalize}
-.hello h2{margin:2px 0 0;font-size:clamp(22px,3vw,28px);letter-spacing:-.025em;line-height:1.15}
-.hello h2 em{font-style:normal;color:var(--acc)}
-/* pedidos: nuevo = azul, preparando = ámbar, listo = verde */
-.tk{--c:var(--blue);border:1px solid var(--ln);border-radius:16px;background:#fff;box-shadow:var(--sh1)}
-.tk:hover{box-shadow:var(--sh2)}
-.tk.preparing{--c:var(--amb);--ct:#3B2300}.tk.ready{--c:var(--grn)}
-.hd{background:var(--c);padding:14px 18px}
-.mn{font-weight:800;letter-spacing:-.02em}
-.tk li{border-bottom:1px dashed var(--ln)}
-.go{border-top:1px solid var(--ln);font-weight:700}
-.pending .go{background:#FEF3C7;color:#78350F}.preparing .go{background:#DCFCE7;color:#14532D}.ready .go{background:var(--ink);color:#fff}
-.pending .go:hover{background:#FDE68A}.preparing .go:hover{background:#BBF7D0}.ready .go:hover{background:#1E293B}
-.cc{border-left:0;position:relative;overflow:hidden}
-.cc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--red)}.cc.pay::before{background:var(--grn)}.cc.help::before{background:var(--amb)}
-dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.3)}
-.paidb{background:var(--grn)}
-#bn:empty{display:none}
-@media (max-width:1380px){#clk{display:none}}
-@media (max-width:1180px){nav button{padding:0 10px}}
-/* inicio de sesión */
-#login{position:fixed;inset:0;z-index:30;background:var(--bg);display:grid;place-items:center;padding:20px;overflow:auto}
-#login[hidden]{display:none}
-#lf,#vf{width:min(380px,100%);background:#fff;border:1px solid var(--ln);border-radius:16px;padding:28px;box-shadow:0 10px 40px rgba(16,24,40,.08);animation:pop .3s}
-#lf h2,#vf h2{margin:14px 0 2px;font-size:22px}#lf p,#vf p{margin:0;color:var(--mu)}
-#lf label,#vf label{display:block;margin:16px 0 6px;font-size:13px;font-weight:600;color:var(--mu)}
-#lf input,#vf input{width:100%;height:44px;padding:0 12px;border:1px solid var(--ln);border-radius:9px;outline:0}#lf input:focus,#vf input:focus{border-color:#2563eb}
-#lf .pri,#vf .pri{width:100%;height:46px;justify-content:center;margin-top:18px}
-#lerr,#verr{color:var(--red)!important;font-size:13.5px;font-weight:600;min-height:20px;margin-top:10px!important}
-#lf .lnk,#vf .lnk{display:block;margin:14px auto 0;border:0;background:none;padding:0;color:var(--mu);font-weight:600;font-size:13px;cursor:pointer}
-#lf .lnk:hover,#vf .lnk:hover{color:var(--ink);text-decoration:underline}.lnk:disabled{opacity:.5;cursor:default;text-decoration:none}
-@media (max-width:720px){.hello{padding:16px 14px 0}.top{gap:12px}.brand .t{max-width:120px}.sep{display:none}}
 /* impresión de comandas (ticket de cocina de 80 mm) */
 .prn{flex:none;border:0;background:rgba(0,0,0,.18);color:inherit;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;transition:background .2s}.prn:hover{background:rgba(0,0,0,.3)}
 .prn svg{width:18px;height:18px}.hd .rt{margin-left:auto}
@@ -315,6 +243,177 @@ dialog{border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.
   #printArea h1{margin:0 0 2px;font-size:24px}#printArea p{margin:0 0 6px}#printArea hr{border:0;border-top:1px dashed #000;margin:6px 0}
   #printArea ul{list-style:none;margin:0;padding:0}#printArea li{margin:0 0 6px;font-size:15px}#printArea li small{display:block;font-size:12px;padding-left:22px}
 }
+
+/* ===== VAestilo · diseño minimalista (panel del restaurante) =====
+   Paleta "salvia": fondo piedra muy pálido, superficies blancas, un solo acento verde grisáceo.
+   Estados de pedido en tonos suaves: nuevo = azul, preparando = ámbar, listo = salvia. */
+:root{--bg:#F6F7F4;--card:#fff;--ln:#E8EAE5;--ln2:#D9DDD6;--tx:#2A322D;--mu:#7A857E;--ink:#2F3D35;
+  --acc:#4E7162;--acc2:#3F5C50;--accs:#EDF2EE;--accs2:#DCE7E0;--red:#B85450;--amb:#C79A3B;--grn:#4E7162;--blue:#6D93BD;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sh1:0 1px 2px rgba(42,50,45,.04);--sh2:0 10px 32px rgba(42,50,45,.09);--gx:max(28px,calc((100% - 1120px)/2))}
+body{background:var(--bg);color:var(--tx);-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+/* cabecera */
+.top{gap:16px;padding:0 28px;height:calc(64px + env(safe-area-inset-top,0px));background:#fff;border-bottom:1px solid var(--ln);box-shadow:none}
+.al img{width:28px;height:28px}
+.sep{height:22px}
+.brand{font-weight:600;font-size:15px;letter-spacing:0;gap:10px}
+.brand .t{max-width:220px}
+.brand .mk{width:32px;height:32px;border-radius:50%;background:var(--accs2);color:var(--acc2);font-size:12px;font-weight:700}
+.brand .mk.has{background:#fff;border:1px solid var(--ln)}
+nav{align-items:center;gap:2px;margin-left:8px}
+nav button{height:36px;padding:0 14px;border-radius:10px;font-weight:600;font-size:14px;color:var(--mu);transition:background .2s,color .2s}
+nav button::after{content:none}
+nav button:hover{color:var(--tx);background:var(--bg)}
+nav button.on{color:var(--acc2);background:var(--accs)}
+#cnt,#ccnt{background:var(--acc);color:#fff;min-width:20px;height:20px;font:600 11.5px/20px var(--f)}
+#ccnt{background:var(--red)}
+.r{gap:10px}
+.ib{border:1px solid var(--ln);background:#fff;color:var(--mu);border-radius:10px;box-shadow:none}
+.ib:hover{background:var(--bg);color:var(--tx)}
+.ib.on{background:var(--accs2);border-color:var(--accs2);color:var(--acc2)}
+.ib[aria-pressed=true]{color:var(--acc);border-color:var(--ln);background:#fff}
+#snd.need{color:#7A5A1A;border-color:#E6CF98;background:#FBF1DB}
+.opn{display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border:1px solid var(--ln);border-radius:99px;background:#fff;font-size:13px;font-weight:600;color:var(--tx);white-space:nowrap;transition:background .2s,border-color .2s}
+.opn:not(:disabled):hover{background:var(--bg)}
+.opn::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--mu)}
+.opn.on::before{background:var(--acc);animation:live 2s infinite}
+.opn:disabled{cursor:default}.opn[hidden]{display:none}
+@keyframes live{0%{box-shadow:0 0 0 0 rgba(78,113,98,.45)}100%{box-shadow:0 0 0 8px rgba(78,113,98,0)}}
+.opn.off{color:#8F3F3B;border-color:#EBCFCD;background:#F8ECEB}.opn.off::before{background:var(--red)}
+#clk{font-weight:600;color:var(--mu)}
+#susp{background:#F8ECEB;color:#8F3F3B;border-bottom:1px solid #EBCFCD;font-weight:500}
+
+/* submenú de Carta (Productos · Agregados · Promociones) */
+#subnav{flex:none;padding:14px var(--gx) 0}
+.subnav{display:inline-flex;gap:2px;padding:3px;border-radius:12px;background:#ECEEE9}
+.subnav button{height:32px;padding:0 16px;border:0;border-radius:9px;background:none;font-weight:600;font-size:13.5px;color:var(--mu);transition:background .2s,color .2s}
+.subnav button:hover{color:var(--tx)}
+.subnav button.on{background:#fff;color:var(--tx);box-shadow:0 1px 2px rgba(42,50,45,.1)}
+
+/* márgenes laterales unificados y centrados */
+.tbr,.hello,.tf{padding-left:var(--gx);padding-right:var(--gx);max-width:none}
+.grid,.cl,.pg,.rv,.adm{padding-left:var(--gx);padding-right:var(--gx);max-width:none;width:100%}
+.tbr{padding-top:18px;padding-bottom:14px}
+.hello{padding-top:30px;padding-bottom:0}
+.hello small{display:block;color:var(--mu);font-weight:500;text-transform:none}.hello small::first-letter{text-transform:uppercase}
+.hello h2{margin:2px 0 0;font:600 clamp(26px,3.2vw,34px)/1.12 var(--serif);letter-spacing:-.01em}
+.hello h2 em{font-style:normal;color:inherit}
+.stt{color:var(--mu);font-weight:500}
+
+/* botones y campos */
+.pri{background:var(--acc);box-shadow:none;font-weight:600;height:40px;border-radius:11px}
+.pri:hover{background:var(--acc2)}
+.gh{background:#fff;border:1px solid var(--ln2);font-weight:600;height:40px;border-radius:11px}
+.gh:hover{background:var(--bg)}
+.seg button{background:transparent;border:0;color:var(--mu);font-weight:600;height:36px}
+.seg button:hover{color:var(--tx);background:#ECEEE9}
+.seg button.on{background:var(--accs2);color:var(--acc2)}
+.seg b{opacity:.7}
+select,.srch,.fld input,.fld select,dialog input,dialog select,dialog textarea,#rvDay,.tf input,.pi,#lf input,#vf input{background:#fff;border:1px solid var(--ln2);box-shadow:none;border-radius:11px}
+.fld input:focus,.fld select:focus,.pi:focus-within,.srch:focus-within,dialog input:focus,dialog textarea:focus,dialog select:focus,#lf input:focus,#vf input:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(78,113,98,.14);outline:0}
+.sw{background:#CDD3CC}.sw:checked{background:var(--acc)}
+.del{border:1px solid var(--ln);border-radius:10px}
+.del:hover{color:var(--red);border-color:#EBCFCD;background:#F8ECEB}.del.ed:hover{color:var(--acc2);border-color:var(--accs2);background:var(--accs)}
+
+/* tarjetas y listas */
+.card,.lst,.kp div,.cc,.pv,.rvk div{background:#fff;border:1px solid var(--ln);border-radius:18px;box-shadow:none}
+.card{padding:24px}
+.card h3{font-size:16px;font-weight:600}
+.pvh{border:1px solid var(--ln);box-shadow:none}
+.pvh .tg{background:var(--accs);color:var(--acc2);font-weight:600}
+.pv{background:var(--bg)}
+.pg h3{margin:28px 0 10px;font:600 19px/1.2 var(--serif);color:var(--tx)}
+.pg h3:first-child{margin-top:8px}
+.rw,.rw2,.rw3{padding-top:12px;padding-bottom:12px;border-bottom:1px solid var(--ln)}
+.rw:hover,.rw2:hover,.rw3:hover{background:#FBFBF9}
+.ph{background-color:var(--accs);color:var(--acc);font-family:var(--serif);font-weight:600}
+.av{background:var(--accs);color:var(--acc2);border:1px solid var(--accs2)}
+.nm b{font-weight:600}
+.st{color:var(--acc)}.rw.off .st{color:var(--red)}
+.bd{background:var(--accs2);color:var(--acc2);font-weight:600}.bd.off{background:#F6E9E8;color:#8F3F3B}
+.kp b{font:600 26px var(--serif);letter-spacing:0;color:var(--tx)}
+.vt{background:var(--accs);color:var(--acc2);border:1px solid var(--accs2);font-weight:600}
+.rw.saved{animation:savedsoft 1s}@keyframes savedsoft{30%{background:var(--accs)}}
+
+/* pedidos: nuevo = azul, preparando = ámbar, listo = salvia (tonos suaves) */
+.grid{gap:18px;padding-top:6px;padding-bottom:32px}
+.tk{--c:#E8EFF7;--ct:#2F4C70;--dot:var(--blue);background:#fff;border:1px solid var(--ln);border-radius:18px;box-shadow:none}
+.tk.preparing{--c:#FBF1DB;--ct:#6F5217;--dot:#D3A441}
+.tk.ready{--c:#E3EEE7;--ct:#2F5240;--dot:#5E8C73}
+.tk::before{height:3px;background:var(--dot);opacity:.85}
+.hd{background:var(--c);color:var(--ct);padding:16px 20px 14px}
+.mn{font-weight:700;font-size:21px;letter-spacing:-.01em}
+.hd small{opacity:.8;font-weight:500}
+.lt{background:#F6E1DF;color:#8F3F3B}
+.prn{background:rgba(0,0,0,.06)}.prn:hover{background:rgba(0,0,0,.12)}
+.tk ul{padding:8px 20px}
+.tk li{border-bottom:1px solid var(--ln);font-size:15.5px}
+.nt{color:#8A6A1F}.nt.ad{color:var(--acc2)}
+.go{border-top:1px solid var(--ln);font-weight:600;padding:15px}
+.pending .go{background:#FBF1DB;color:#6F5217}.preparing .go{background:#E3EEE7;color:#2F5240}.ready .go{background:var(--bg);color:var(--ink)}
+.pending .go:hover{background:#F6E6BF}.preparing .go:hover{background:#D5E6DB}.ready .go:hover{background:#ECEEE9}
+.tk:hover,.cc:hover,.rvk div:hover{transform:none;box-shadow:var(--sh1)}
+.paidb{background:var(--accs2);color:var(--acc2)}
+.modb{background:#EAF0F7;color:#3D5A80}
+.sk{background:linear-gradient(100deg,#ECEEE9 30%,#F6F7F4 50%,#ECEEE9 70%) 0 0/200% 100%}
+@keyframes ping{50%{box-shadow:0 0 0 3px rgba(109,147,189,.4)}}
+@keyframes flash{0%,100%{box-shadow:none}25%{box-shadow:0 0 0 4px rgba(109,147,189,.4)}}
+
+/* llamadas al mesero */
+.cl{gap:18px;padding-top:6px}
+.cc{border-left:0;position:relative;overflow:hidden;padding:18px 20px}
+.cc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--red)}.cc.pay::before{background:var(--acc)}.cc.help::before{background:var(--amb)}
+.cc .nt2{color:#8A6A1F}
+
+/* ingresos */
+.rvk{gap:14px}
+.rvk div.big{background:var(--accs);color:var(--tx);border-color:var(--accs2)}.rvk div.big span{color:var(--acc2)}
+.rvk b{font:600 26px var(--serif);letter-spacing:0}
+.chart .bar{background:#B5CBBE;border-radius:6px 6px 0 0}.chart .c:hover .bar{background:var(--acc);filter:none}
+.t5 .bb{background:var(--accs)}.t5 .bb i{background:var(--acc)}
+
+/* diálogos y avisos */
+dialog{border-radius:22px;padding:28px;background:#fff;box-shadow:0 24px 70px rgba(42,50,45,.22)}
+dialog::backdrop{background:rgba(42,50,45,.32);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+dialog h3{font:600 22px/1.2 var(--serif)}
+#bn{background:#fff;color:var(--tx);border:1px solid var(--ln);box-shadow:var(--sh2);border-radius:14px}
+#bn::before{background:var(--acc)}
+#toast{background:var(--ink);border-radius:12px;font-weight:500}
+
+/* inicio de sesión */
+#login{position:fixed;inset:0;z-index:30;background:var(--bg);display:grid;place-items:center;padding:20px;overflow:auto}
+#login[hidden]{display:none}
+#lf,#vf{width:min(400px,100%);background:#fff;border:1px solid var(--ln);border-radius:22px;padding:36px 32px;box-shadow:0 12px 44px rgba(42,50,45,.08);animation:pop .3s}
+#lf .mk,#vf .mk{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;overflow:hidden;background:#fff;border:1px solid var(--ln)}
+#lf .mk img,#vf .mk img{width:100%;height:100%}
+#lf h2,#vf h2{margin:18px 0 4px;font:600 28px/1.15 var(--serif)}
+#lf p,#vf p{margin:0;color:var(--mu)}
+#lf label,#vf label{display:block;margin:18px 0 6px;font-size:13px;font-weight:500;color:var(--mu)}
+#lf input,#vf input{width:100%;height:46px;padding:0 14px;outline:0}
+#lf .pri,#vf .pri{width:100%;height:48px;border-radius:12px;justify-content:center;margin-top:20px}
+#lf .gh,#vf .gh{width:100%;height:46px;margin-top:10px}
+#lerr,#verr{color:var(--red)!important;font-size:13.5px;font-weight:500;min-height:20px;margin-top:10px!important}
+#lf .lnk,#vf .lnk{display:block;margin:16px auto 0;border:0;background:none;padding:0;color:var(--mu);font-weight:600;font-size:13px;cursor:pointer}
+#lf .lnk:hover,#vf .lnk:hover{color:var(--tx);text-decoration:underline}.lnk:disabled{opacity:.5;cursor:default;text-decoration:none}
+
+@media (max-width:1380px){#clk{display:none}}
+@media (max-width:1180px){nav button{padding:0 11px}}
+/* los pedidos y llamadas ocupan solo lo que miden (evita que se monten unos sobre otros) */
+.grid,.cl{grid-auto-rows:max-content}
+@media (max-width:720px){
+  :root{--gx:14px}
+  /* en el celular la cabecera pasa a dos filas: arriba el local y los controles, abajo el menú deslizable */
+  .top{flex-wrap:wrap;height:auto;padding:10px 12px 0;padding-top:calc(10px + env(safe-area-inset-top,0px));gap:8px 10px;row-gap:6px}
+  .brand .t{display:block;max-width:150px}.brand span.t{display:block}.sep{display:none}
+  .r{margin-left:auto;gap:8px}
+  nav{order:3;flex:0 0 100%;height:46px;margin:0 -12px;padding:0 8px;border-top:1px solid var(--ln);align-items:center}
+  nav button{height:34px}
+  .hello{padding-top:20px}
+  .rw{gap:8px;padding-left:12px;padding-right:12px}.rw .pi{padding:0 8px}.rw .pi input{width:56px;font-size:15px}.rw .nm b{font-size:14px}
+  .card{padding:20px}dialog{padding:22px}
+}
 </style>
 <script>
 /* evita el zoom por doble toque en iOS/Android (el touch-action ya lo cubre; esto es un respaldo) */
@@ -324,16 +423,16 @@ document.addEventListener('gesturestart',function(e){e.preventDefault();});})();
 </head>
 <body>
 <header class="top">
-  <a class="al" href="./" aria-label="kepasa" title="kepasa"><img src="icons/logo-mark.svg?v=2" alt="kepasa" width="34" height="34"></a><span class="sep" aria-hidden="true"></span>
-  <div class="brand"><span class="mk">k</span><span class="t">kepasa</span></div>
+  <a class="al" href="./" aria-label="VAestilo" title="VAestilo"><img src="icons/logo-mark.svg?v=4" alt="VAestilo" width="34" height="34"></a><span class="sep" aria-hidden="true"></span>
+  <div class="brand"><span class="mk">V</span><span class="t">VAestilo</span></div>
   <nav>
     <button data-v="orders" class="on">Pedidos<i id="cnt" data-v="0"></i></button>
-    <button data-v="menu">Carta</button>
-    <button data-v="addons">Agregados</button>
-    <button data-v="promos">Promos</button>
-    <button data-v="revenue">Ingresos</button>
     <button data-v="calls">Llamadas<i id="ccnt" data-v="0"></i></button>
+    <button data-v="menu">Carta</button>
     <button data-v="tables">Mesas</button>
+    <button data-v="revenue">Ingresos</button>
+    <button data-v="addons" hidden>Agregados</button>
+    <button data-v="promos" hidden>Promos</button>
     <button data-v="admin" hidden>Admin</button>
   </nav>
   <div class="r">
@@ -346,6 +445,11 @@ document.addEventListener('gesturestart',function(e){e.preventDefault();});})();
 </header>
 
 <div id="susp" hidden>Tu cuenta está suspendida: tus clientes no pueden hacer pedidos. Escríbenos por WhatsApp para reactivarla.</div>
+<div id="subnav" hidden><div class="subnav" role="tablist" aria-label="Secciones de la carta">
+  <button type="button" data-go="menu" role="tab">Productos</button>
+  <button type="button" data-go="addons" role="tab">Agregados</button>
+  <button type="button" data-go="promos" role="tab">Promociones</button>
+</div></div>
 <main>
   <section class="view" id="orders">
     <div class="hello"><div><small id="hDay"></small><h2 id="hName"></h2></div></div>
@@ -478,8 +582,8 @@ document.addEventListener('gesturestart',function(e){e.preventDefault();});})();
 <dialog id="qrd"><div style="text-align:center"><h3 id="qrt"></h3><div id="qrb"></div><div class="bt" style="justify-content:center"><button class="gh" id="qrdl">Descargar PNG</button><button class="gh" id="qrx">Cerrar</button></div></div></dialog>
 <div id="login" hidden>
   <form id="lf">
-    <span class="mk has"><img src="icons/logo-mark.svg?v=2" alt=""></span>
-    <h2>kepasa</h2><p>Ingresa o crea la cuenta de tu restaurante</p>
+    <span class="mk has"><img src="icons/logo-mark.svg?v=4" alt=""></span>
+    <h2>VAestilo</h2><p>Ingresa o crea la cuenta de tu restaurante</p>
     <div id="rn" hidden><label for="lr">Nombre del restaurante</label><input id="lr" maxlength="50" autocomplete="organization"></div>
     <label for="le">Correo</label><input id="le" type="email" required autocomplete="username">
     <label for="lp">Contraseña</label><input id="lp" type="password" required autocomplete="current-password">
@@ -488,7 +592,7 @@ document.addEventListener('gesturestart',function(e){e.preventDefault();});})();
     <button type="button" class="lnk" id="goForgot">¿Olvidaste tu contraseña?</button>
   </form>
   <form id="vf" hidden autocomplete="off">
-    <span class="mk has"><img src="icons/logo-mark.svg?v=2" alt=""></span>
+    <span class="mk has"><img src="icons/logo-mark.svg?v=4" alt=""></span>
     <h2 id="vh">Verifica tu correo</h2><p id="vs"></p>
     <label for="vc">Código</label><input id="vc" inputmode="numeric" autocomplete="one-time-code" maxlength="10">
     <div id="vpBox" hidden><label for="vp">Nueva contraseña</label><input id="vp" type="password" minlength="6" autocomplete="new-password"></div>
@@ -552,7 +656,7 @@ const api = {
   /* cierra la mesa: completa sus pedidos, atiende sus llamadas y cambia su sesión (el cliente anterior ya no puede pedir) */
   async chargeTable(tid, name, upto, callId) { const { error } = await sb.rpc('charge_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name, p_upto: upto, p_call: callId || null }); if (error) { toast('No se pudo registrar el cobro: ' + error.message); return false; } return true; },
   async closeTable(tid, name, release = false) { const { error } = await sb.rpc('close_table', { p_restaurant: R.id, p_table: tid || null, p_table_name: name, p_release: release }); if (error) { toast('No se pudo cerrar la mesa: ' + error.message); return false; } return true; },
-  watch(cb) { let c = sb.channel('kepasa'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls', 'product_addons'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, p => { try { orderEvent(p); } catch (e) {} cb(); })); c.subscribe(); }
+  watch(cb) { let c = sb.channel('VAestilo'); ['orders', 'products', 'promotions', 'dining_tables', 'waiter_calls', 'product_addons'].forEach(t => c = c.on('postgres_changes', { event: '*', schema: 'public', table: t, filter: 'restaurant_id=eq.' + R.id }, p => { try { orderEvent(p); } catch (e) {} cb(); })); c.subscribe(); }
 };
 
 /* ===== ESTADO ===== */
@@ -618,7 +722,7 @@ function alertNew(list) {
 function ticketHTML(o) {
   const n = (o.items || []).reduce((a, i) => a + Number(i.qty || 0), 0);
   return `<div class="hd"><div><b class="mn">${esc(tn(o))}</b><small>${n} ${n === 1 ? 'ítem' : 'ítems'}${o.modified_at ? '<span class="modb">Modificado</span>' : ''}${o.paid_at ? '<span class="paidb">Pagado</span>' : ''}</small></div><div class="rt"><span class="lt">Atrasado</span><span class="ago"></span></div><button class="prn" type="button" data-print title="Imprimir comanda" aria-label="Imprimir comanda"><svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a1 1 0 01-1-1v-6a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1h-2M7 14h10v7H7z"/></svg></button></div>
-  <ul>${(o.items || []).map(i => `<li><b>${esc(i.qty)}×</b><span>${esc(i.name)}</span>${(i.addons || []).map(a => `<span class="nt ad">+ ${esc(a.name)}</span>`).join('')}${i.promo ? `<span class="nt">🏷 ${esc(i.promo)}</span>` : ''}${i.note ? `<span class="nt">${esc(i.note)}</span>` : ''}</li>`).join('')}</ul><button class="go"></button>`;
+  <ul>${(o.items || []).map(i => `<li><b>${esc(i.qty)}×</b><span>${esc(i.name)}</span>${(i.addons || []).map(a => `<span class="nt ad">+ ${esc(a.name)}</span>`).join('')}${i.promo ? `<span class="nt">${esc(i.promo)}</span>` : ''}${i.note ? `<span class="nt">${esc(i.note)}</span>` : ''}</li>`).join('')}</ul><button class="go"></button>`;
 }
 function renderOrders() {
   const g0 = $('#grid'); if (g0.hasAttribute('data-loading')) { g0.removeAttribute('data-loading'); g0.querySelectorAll('.sk').forEach(x => x.remove()); }
@@ -664,7 +768,7 @@ $('#mesa').onchange = e => { mf = e.target.value; renderOrders(); };
 $('#seg').onclick = e => { const b = e.target.closest('button'); if (!b) return; sf = b.dataset.f; $$('#seg button').forEach(x => x.classList.toggle('on', x === b)); renderOrders(); };
 function printTicket(o) {                         // comanda para cocina: solo lo que hay que preparar (sin precios)
   const hora = new Date(o.created_at).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
-  $('#printArea').innerHTML = `<h1>${esc(tn(o))}</h1><p>${esc(R ? R.name : '')} · ${esc(hora)}${o.modified_at ? ' · MODIFICADO' : ''}</p><hr><ul>${(o.items || []).map(i => `<li><b>${esc(i.qty)}×</b> ${esc(i.name)}${(i.addons || []).map(a => `<small>+ ${esc(a.name)}</small>`).join('')}${i.promo ? `<small>🏷 ${esc(i.promo)}</small>` : ''}${i.note ? `<small>» ${esc(i.note)}</small>` : ''}</li>`).join('')}</ul><hr>`;
+  $('#printArea').innerHTML = `<h1>${esc(tn(o))}</h1><p>${esc(R ? R.name : '')} · ${esc(hora)}${o.modified_at ? ' · MODIFICADO' : ''}</p><hr><ul>${(o.items || []).map(i => `<li><b>${esc(i.qty)}×</b> ${esc(i.name)}${(i.addons || []).map(a => `<small>+ ${esc(a.name)}</small>`).join('')}${i.promo ? `<small>${esc(i.promo)}</small>` : ''}${i.note ? `<small>» ${esc(i.note)}</small>` : ''}</li>`).join('')}</ul><hr>`;
   window.print();
 }
 $('#grid').addEventListener('click', async e => {
@@ -698,7 +802,7 @@ async function chargeUI(c) {
 }
 
 /* ===== LLAMADAS AL MESERO ===== */
-const WHY = { pay: ['💳 Quiere pagar', 'pay'], complaint: ['⚠️ Queja o problema', 'complaint'], help: ['🙋 Necesita algo', 'help'] };
+const WHY = { pay: ['Quiere pagar', 'pay'], complaint: ['Queja o problema', 'complaint'], help: ['Necesita algo', 'help'] };
 let seenCalls = null;
 function renderCalls() {
   const calls = data.calls || [], ids = new Set(calls.map(c => c.id));
@@ -770,7 +874,7 @@ const GEN = ['Comida', 'Bebida', 'Alcohol', 'Postre', 'Entradas', 'Desayuno', 'C
 function fillCats() {
   const el = $('#f-cat'), cur = el.value, own = [...new Set(data.products.map(p => p.category))].filter(c => !GEN.includes(c));
   const o = a => a.map(c => `<option>${esc(c)}</option>`).join('');
-  el.innerHTML = `<option value="" disabled selected>Elige una categoría</option><optgroup label="Principales">${o(GEN)}</optgroup>${own.length ? `<optgroup label="Tus categorías">${o(own)}</optgroup>` : ''}<optgroup label="Más categorías">${o(SUGG.filter(c => !GEN.includes(c) && !own.includes(c)))}</optgroup><option value="__new">➕ Otra categoría…</option>`;
+  el.innerHTML = `<option value="" disabled selected>Elige una categoría</option><optgroup label="Principales">${o(GEN)}</optgroup>${own.length ? `<optgroup label="Tus categorías">${o(own)}</optgroup>` : ''}<optgroup label="Más categorías">${o(SUGG.filter(c => !GEN.includes(c) && !own.includes(c)))}</optgroup><option value="__new">+ Otra categoría…</option>`;
   if (cur) el.value = cur;
 }
 $('#f-cat').onchange = e => { const n = e.target.value === '__new'; $('#f-cat2').hidden = !n; $('#f-cat2').required = n; if (n) $('#f-cat2').focus(); };
@@ -798,7 +902,9 @@ $('#frm').addEventListener('submit', async () => {
 /* ===== NAVEGACIÓN Y ARRANQUE ===== */
 function go(v) {
   view = v;
-  $$('nav button').forEach(x => x.classList.toggle('on', x.dataset.v === v)); $('#cfg').classList.toggle('on', v === 'settings');
+  const nv = (v === 'addons' || v === 'promos') ? 'menu' : v;
+  $$('nav button').forEach(x => x.classList.toggle('on', x.dataset.v === nv)); $('#cfg').classList.toggle('on', v === 'settings');
+  $('#subnav').hidden = nv !== 'menu'; $$('#subnav [data-go]').forEach(x => { const on = x.dataset.go === v; x.classList.toggle('on', on); x.setAttribute('aria-selected', on); });
   $$('main > .view').forEach(x => x.hidden = x.id !== v);
   if (v === 'menu') { menuMeta(); renderMenu(true); }
   if (v === 'settings') cfgFill();
@@ -807,6 +913,7 @@ function go(v) {
   if (v === 'revenue') { $('#rvDay').value = revDay; $('#rvDay').max = dayStr(new Date()); loadRevenue(); }
 }
 $$('nav button').forEach(b => b.onclick = () => go(b.dataset.v));
+$$('#subnav [data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
 $('#cfg').onclick = () => go('settings');
 
 /* ===== CONFIGURACIÓN: nombre y logo ===== */
@@ -817,7 +924,7 @@ function setBrand() {
   const mk = $('.brand .mk');
   if (R && R.logo_url) { mk.innerHTML = `\x3Cimg src="${esc(R.logo_url)}" alt="">`; mk.classList.add('has'); }
   else { mk.textContent = initials(R ? R.name : 'A'); mk.classList.remove('has'); }
-  $('.brand .t').textContent = R ? R.name : 'kepasa'; hello();
+  $('.brand .t').textContent = R ? R.name : 'VAestilo'; hello();
   $('#susp').hidden = !(R && R.active === false); renderOpen();
 }
 function cfgPrev() {
@@ -923,7 +1030,7 @@ async function refresh() {
 }
 const clk = () => $('#clk').textContent = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
 function hello() { const d = new Date(), h = d.getHours(), n = ($('.brand .t') || {}).textContent || '', g = h < 12 ? 'Buenos días' : h < 20 ? 'Buenas tardes' : 'Buenas noches';
-  $('#hDay').textContent = d.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' }); $('#hName').innerHTML = g + (n && n !== 'kepasa' && n !== 'Administrador' ? ', <em>' + esc(n) + '</em>' : '') + ' 👋'; }
+  $('#hDay').textContent = d.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' }); $('#hName').innerHTML = g + (n && n !== 'VAestilo' && n !== 'Administrador' ? ', <em>' + esc(n) + '</em>' : '') ; }
 hello(); setInterval(hello, 30000);
 clk(); setInterval(clk, 10000); setInterval(tick, 10000);
 function renderOpen() {
@@ -955,7 +1062,7 @@ function countTo(el, to, fmt = clp, ms = 800) {            // número que "corre
   el._raf = requestAnimationFrame(step);
 }
 function confetti(x = innerWidth / 2, y = 90) {
-  if (reduced) return; const cols = ['#e5484d', '#f5a524', '#1f9d55', '#2563eb', '#a855f7'];
+  if (reduced) return; const cols = ['#9DB8A8', '#C9D9CF', '#E3C98B', '#9FB6CF', '#D8B4B0'];
   for (let i = 0; i < 26; i++) {
     const c = document.createElement('i'), a = Math.random() * Math.PI * 2, d = 90 + Math.random() * 170; c.className = 'cf';
     c.style.cssText = `left:${x}px;top:${y}px;background:${cols[i % cols.length]};--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d + 120}px;--r:${Math.random() * 720 - 360}deg`;

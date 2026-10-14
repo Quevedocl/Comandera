@@ -1,8 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 64" role="img" aria-label="kepasa">
-  <defs><linearGradient id="g" x1="8" y1="4" x2="56" y2="62" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF8A2B"/><stop offset="1" stop-color="#F0420F"/></linearGradient></defs>
-  <rect width="64" height="64" rx="16" fill="url(#g)"/>
-  <path d="M22 14v36" fill="none" stroke="#fff" stroke-width="7.5" stroke-linecap="round"/>
-  <path d="M45 16 25 33" fill="none" stroke="#fff" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M30 32l15 18" fill="none" stroke="#0F172A" stroke-opacity=".92" stroke-width="6.5" stroke-linecap="round"/>
-  <text x="78" y="46" font-family="Inter,'Segoe UI',Helvetica,Arial,sans-serif" font-size="40" letter-spacing="-1.2"><tspan font-weight="800" fill="#0F172A">ke</tspan><tspan font-weight="600" fill="#F2530F">pasa</tspan></text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 64" role="img" aria-label="VAestilo">
+  <defs><linearGradient id="g" x1="8" y1="4" x2="56" y2="62" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#6C9080"/><stop offset="1" stop-color="#4E7162"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g)"/><path d="M17 18l15 29" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M47 18L32 47" fill="none" stroke="#CFE0D5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="78" y="46" font-family="Inter,'Segoe UI',Helvetica,Arial,sans-serif" font-size="38" letter-spacing="-1"><tspan font-weight="700" fill="#2F3D35">VA</tspan><tspan font-weight="500" fill="#4E7162">estilo</tspan></text>
 </svg>
